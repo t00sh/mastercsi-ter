@@ -1,5 +1,6 @@
 import SimpleHTTPServer
 import SocketServer
+import logging
 
 class ProxyHTTP:
     """
@@ -7,15 +8,12 @@ class ProxyHTTP:
     It handles HTTP connections from clients and redirects to HTTPS servers.
     """
 
-    def __init__(self, port, verbose):
+    def __init__(self, port):
         handler = SimpleHTTPServer.SimpleHTTPRequestHandler
 
         self.__port = port
         self.__httpd = SocketServer.TCPServer(("", port), handler)
-        self.__verbose = verbose
 
     def run(self):
-        if self.__verbose:
-            print("[+] Running proxy on port {}".format(self.__port))
-
+        logging.info("Running proxy on port {}".format(self.__port))
         self.__httpd.serve_forever()

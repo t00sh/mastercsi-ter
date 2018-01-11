@@ -12,6 +12,7 @@ __license__ = 'GPL'
 __status__  = 'Development'
 
 
+import logging
 from sslmitm.Options import Options
 from sslmitm.ProxyHTTP import ProxyHTTP
 
@@ -19,5 +20,12 @@ if __name__ == "__main__":
     options = Options(__author__, __version__, __license__)
     options.parse()
 
-    proxy = ProxyHTTP(options.port, options.verbose)
+    logLevel = logging.INFO
+    if options.verbose:
+        logLevel = logging.DEBUG
+
+    logging.basicConfig(format='[%(levelname)s] %(message)s',
+                        filename=options.logFile, level=logLevel)
+
+    proxy = ProxyHTTP(options.port)
     proxy.run()
