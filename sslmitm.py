@@ -13,7 +13,11 @@ __status__  = 'Development'
 
 
 from sslmitm.Options import Options
+from sslmitm.ProxyHTTP import ProxyHTTP
 
 if __name__ == "__main__":
     options = Options(__author__, __version__, __license__)
     options.parse()
+
+    proxy = ProxyHTTP(options.port, options.verbose)
+    proxy.run()
