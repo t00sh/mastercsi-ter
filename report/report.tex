@@ -1,0 +1,188 @@
+%%% Document class %%%
+\documentclass[a4paper,12pt]{memoir}
+
+%%% Packages %%%
+\usepackage[margin=1.2in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage[Algorithme]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{makeidx}
+\usepackage{lmodern}
+\usepackage{palatino}
+
+
+%%% Translate algorithmic package %%%
+\renewcommand{\algorithmicend}{\textbf{Fin}}
+\renewcommand{\algorithmicif}{\textbf{Si}}
+\renewcommand{\algorithmicthen}{\textbf{Alors}}
+\renewcommand{\algorithmicelse}{\textbf{Sinon}}
+\renewcommand{\algorithmicfunction}{\textbf{Fonction}}
+
+%%% Define some commands %%%
+\newcommand{\authors}[1]{\def\theauthors{#1}\author{#1}}
+\newcommand{\supervisor}[1]{\def\thesupervisor{#1}}
+
+\newcommand{\supervisorname}{Supervisor}
+\addto{\captionsfrench}{\renewcommand{\supervisorname}{Superviseur}}
+
+
+%%% Authors %%%
+\authors{Simon Duret \texttt{<simon.duret@etu.u-bordeaux.fr>}\\
+  Amélie Risi \texttt{<amélie.risi@etu.u-bordeaux.fr>} \\
+  Brendan Guevel \texttt{<brendan.guevel@etu.u-bordeaux.fr}}
+
+\supervisor{Aurélien Esnard \texttt{<aurelien.esnard@labri.fr>}}
+
+%%%%% Report Title %%%%%
+\title{Attaques sur connexions HTTPS}
+
+%%% Header %%%
+\newcommand{\authorname}{Auteurs}
+\newcommand{\thepartname}{Partie}
+
+\pretitle{\flushleft\Huge\textsf}
+\posttitle{\\[-.65em]\rule{\linewidth}{1.5mm}\\[-.65em]
+\centering
+\vfill
+\includegraphics{Universite_de_Bordeaux.pdf}
+\vfill
+{\Huge TER première année} \\
+\vspace{1.25em}
+\LARGE
+Master \emph{Sciences et Technologies},\\
+Mention \emph{Informatique},\\
+Parcours \emph{Cryptologie et Sécurité Informatique}.\\
+\par\hfill%
+}
+
+\preauthor{\vspace{\fill}\\
+\flushleft\textbf{\large\authorname}\\
+\small}
+\postauthor{\vspace{1em}
+  \newline\textbf{\large\supervisorname}\\\thesupervisor
+\\[-.25em]
+\rule{\linewidth}{1mm}\\[-.25em]}
+\predate{\hspace{\fill}}
+\postdate{}
+
+%%% Chapters style %%%
+\chapterstyle{veelo}
+
+
+%%% Parts style %%%
+\renewcommand*{\thepart}{\arabic{part}}
+\renewcommand*{\parttitlefont}{\chaptitlefont\Huge}
+\renewcommand*{\partnamefont}{\chapnamefont\HUGE}
+\renewcommand*{\partnumfont}{\chapnumfont\HUGE}
+\renewcommand{\beforepartskip}{\vspace*{\fill}}
+\renewcommand{\midpartskip}{\vspace{.5em}\hrule height 1.5mm \vspace{.5em}}
+\renewcommand{\afterpartskip}{\vspace*{\fill}}
+
+%%% Table of contents style %%%
+\renewcommand*{\cftpartname}{\thepartname}
+\renewcommand*{\cftpartpresnum}{\space}
+\renewcommand*{\cftpartaftersnum}{.}
+\renewcommand*{\cftpartaftersnumb}{\space}
+
+\cftpagenumbersoff{part}
+\renewcommand{\cftpartafterpnum}{\protect\\[-.75em]%
+  \protect\mbox{}\protect\hrule\par}
+
+\renewcommand{\cftchapterdotsep}{4}
+
+%%%%% Useful macros %%%%%
+\newcommand{\latinloc}[1]{\ifx\undefined\lncs\relax\emph{#1}\else\textrm{#1}\fi\xspace}
+\newcommand{\etc}{\latinloc{etc}}
+\newcommand{\eg}{\latinloc{e.g.}}
+\newcommand{\ie}{\latinloc{i.e.}}
+\newcommand{\st}{\ensuremath{\text{\xspace s.t.\xspace}}}
+
+
+%%% Hyperefs style %%%
+\hypersetup{backref,
+  pdfpagemode=FullScreen,
+  colorlinks=true}
+
+%%% Add some keywords to C language %%%
+\lstdefinelanguage{Cext}{
+  language     = C,
+  morekeywords = {NULL, size_t},
+}
+
+%%% Code syntax highlighting (default) %%%
+\lstset{
+  frameround=fttt,
+  language=Cext,
+  numbers=left,
+  breaklines=true,
+  keywordstyle=\color{red}\bfseries,
+  basicstyle=\ttfamily\color{blue},
+  numberstyle=\color{black},
+}
+
+%%% Code syntax highlighting (shell) %%%
+\lstdefinestyle{ShellStyle}{
+  language=bash,
+  basicstyle=\small\sffamily,
+  numbers=none,
+  numberstyle=\color{black},
+  keywordstyle=\color{red}\bfseries,
+  backgroundcolor=\color{yellow!18},
+  linewidth=0.9\linewidth,
+  xleftmargin=0.1\linewidth
+}
+
+%%% Code syntax highlighting (shell output) %%%
+\lstdefinestyle{ShellOutputStyle}{
+  language=sh,
+  showspaces=false,
+  showstringspaces=false,
+  basicstyle=\small\sffamily,
+  numbers=none,
+  keywordstyle=\small\sffamily,
+  backgroundcolor=\color{yellow!18},
+  linewidth=0.9\linewidth,
+  xleftmargin=0.1\linewidth
+}
+
+%%% Code syntax highlighting (python) %%%
+\lstdefinestyle{PythonStyle}{
+  language=python,
+  basicstyle=\small\sffamily,
+  numbers=none,
+  numberstyle=\color{black},
+  keywordstyle=\color{red}\bfseries,
+  backgroundcolor=\color{yellow!18},
+  linewidth=0.9\linewidth,
+  xleftmargin=0.1\linewidth
+}
+
+%%% Document %%%
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\tableofcontents*
+
+\newpage
+
+\input{./chapter-state-of-the-art.tex}
+
+\input{./chapter-sslstrip.tex}
+
+\input{./refs.tex}
+
+\end{document}
