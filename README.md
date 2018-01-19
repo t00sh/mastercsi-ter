@@ -13,7 +13,22 @@ Référence :
 
 - [https://moxie.org/software/sslstrip/](https://moxie.org/software/sslstrip/)
 
-----------------------------------
+### Utilisation de l'outil
+
+Pour utiliser l'outil, il suffit de le lancer avec la commande :
+
+```
+$ ./sslstrip/sslstrip.py
+```
+
+Vous pouvez également afficher l'aide pour connaître les différentes options :
+
+```
+$ ./sslstrip/sslstrip.py -h
+```
+
+
+### Auteurs
 
 - Amélie Risi
 
