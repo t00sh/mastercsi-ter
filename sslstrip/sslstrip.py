@@ -13,8 +13,8 @@ __status__  = 'Development'
 
 
 import logging
-from sslmitm.Options import Options
-from sslmitm.ProxyHTTP import ProxyHTTP
+from Options import Options
+from ProxyHTTP import ProxyHTTP
 
 if __name__ == "__main__":
     options = Options(__author__, __version__, __license__)
