@@ -14,7 +14,7 @@ __status__  = 'Development'
 
 import logging
 from Options import Options
-from ProxyHTTP import ProxyHTTP
+from Proxy import Proxy
 
 if __name__ == "__main__":
     options = Options(__author__, __version__, __license__)
@@ -27,5 +27,5 @@ if __name__ == "__main__":
     logging.basicConfig(format='[%(levelname)s] %(message)s',
                         filename=options.logFile, level=logLevel)
 
-    proxy = ProxyHTTP(options.port)
+    proxy = Proxy(options.port)
     proxy.run()
