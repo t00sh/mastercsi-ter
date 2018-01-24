@@ -19,12 +19,19 @@ Blablabla \cite{berserk}
 \section{Attaques liées à la cryptographie}
 
 \subsection{BEAST (2011)}
-L'attaque BEAST, Browser Exploit Against SSL/TLS concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en Man-in-the-Middle, peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Voici le déroulement de l'attaque :
+L'attaque BEAST, Browser Exploit Against SSL/TLS concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en Man-in-the-Middle, peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Cette technique est qualifiée d'attaque à clair connu. La faille du protocole réside dans le chiffrement par bloc. En effet, les blocs sont chiffrés les uns après les autres en utilisant le précédent.
+
+Voici le déroulement de l'attaque :
 
 \begin{enumerate}
-  \item 
+\item Injection du code chez la victime
+\item La victime envoie de données forgées via SSL
+\item L'attaquant écoute le trafic
+\item Il renvoit les informations nécessaires à son code injecté
+\item La victime réenvoit les données forgées et on repète les deux étapes précédentes
+  \item L'attaquant dérive tous les cookies
 \end{enumerate}
-Blablabla \cite{beast}
+\cite{beast}
 
 \subsection{Cassage de RC4 (2013)}
 
