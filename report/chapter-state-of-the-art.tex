@@ -72,7 +72,8 @@ Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer 
 
 \subsection{BREACH (2012)}
 
-Blablabla \cite{breach}
+\cite{breach}
+L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée.
 
 \subsection{POODLE (2014)}
 
@@ -97,7 +98,12 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 
 \subsection{FREAK (2015)}
 
-Blablabla \cite{freak}
+\cite{freak}
+FREAK (factorising RSA export keys)
+\begin{enumerate}
+    \item A pour origine l'exportation de la cryptographie des USA qui gardait pour eux les meilleurs systèmes et partageait les moins bons avec le reste du monde, afin que la NSA puisse les craquer avec leur puissance de calcul supérieur.
+    \item Vers 2010 avec la montée en puissance constante des ordinateurs, tout le monde est maintenant capable avec un "bon pc" de craquer ces clés plus faibles, les "export-keys".
+    \item Le but de l'attaque est donc de forcer la connexion client/serveur de la victime a utiliser ces clefs plus faibles au lieu des clefs RSA standards plus fortes utilisées aujourd'hui.
 
 \subsection{WeakDH (2015)}
 
