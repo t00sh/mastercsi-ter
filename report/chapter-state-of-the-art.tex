@@ -73,7 +73,24 @@ Blablabla \cite{breach}
 
 \subsection{POODLE (2014)}
 
-Blablabla \cite{poodle}
+\cite{poodle}
+
+L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un peu après.
+Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
+
+Bien que le TLS soit un protocol plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
+
+La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs de donnés avec SSL. L'attaquant a besoin de deux choses pour se faire :
+\begin{enumerate}
+    \item L'attaquant doit pouvoir changer une partie du message injecté par le client dans l'algorithme
+    \item Il doit avoir un retour sur le texte chiffré par SSL.
+\end{enumerate}
+
+Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du milieu. L'attaquant doit toutefois avoir un contrôle également sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
+
+En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut ammener l'attaquant à envoyer énormément de réquêtes pour obtenir le message dans son intégralité.
+
+L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement.
 
 \subsection{FREAK (2015)}
 
