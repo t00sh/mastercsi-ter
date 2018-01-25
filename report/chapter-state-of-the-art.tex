@@ -19,7 +19,7 @@ Blablabla \cite{berserk}
 \section{Attaques liées à la cryptographie}
 
 \subsection{BEAST (2011)}
-L'attaque BEAST, Browser Exploit Against SSL/TLS concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en Man-in-the-Middle, peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Cette technique est qualifiée d'attaque à clair connu. La faille du protocole réside dans le chiffrement par bloc. En effet, les blocs sont chiffrés les uns après les autres en utilisant le précédent.
+L'attaque BEAST, Browser Exploit Against SSL/TLS concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en Man-in-the-Middle, peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Cette technique est qualifiée d'attaque à clair connu. La faille du protocole réside dans le chiffrement par bloc. En effet, les blocs sont chiffrés les uns après les autres en utilisant le précédent \cite{beast}.
 
 Voici le déroulement de l'attaque :
 
@@ -31,7 +31,6 @@ Voici le déroulement de l'attaque :
 \item La victime réenvoit les données forgées et on repète les deux étapes précédentes
   \item L'attaquant dérive tous les cookies
 \end{enumerate}
-\cite{beast}
 
 \subsection{Cassage de RC4 (2013)}
 
@@ -65,19 +64,15 @@ Blablabla \cite{robot}
 
 \subsection{CRIME (2012)}
 
-\cite{crime}
 CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier correspondant au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
 
-Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même.
+Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
 
 \subsection{BREACH (2012)}
 
-\cite{breach}
-L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée.
+L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
 
 \subsection{POODLE (2014)}
-
-\cite{poodle}
 
 L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un peu après.
 Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
@@ -85,6 +80,7 @@ Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cr
 Bien que le TLS soit un protocol plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
 
 La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs de donnés avec SSL. L'attaquant a besoin de deux choses pour se faire :
+
 \begin{enumerate}
     \item L'attaquant doit pouvoir changer une partie du message injecté par le client dans l'algorithme
     \item Il doit avoir un retour sur le texte chiffré par SSL.
@@ -94,16 +90,15 @@ Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du
 
 En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut ammener l'attaquant à envoyer énormément de réquêtes pour obtenir le message dans son intégralité.
 
-L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement.
+L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement \cite{poodle}.
 
 \subsection{FREAK (2015)}
 
-\cite{freak}
-FREAK (factorising RSA export keys)
-\begin{enumerate}
-    \item A pour origine l'exportation de la cryptographie des USA qui gardait pour eux les meilleurs systèmes et partageait les moins bons avec le reste du monde, afin que la NSA puisse les craquer avec leur puissance de calcul supérieur.
-    \item Vers 2010 avec la montée en puissance constante des ordinateurs, tout le monde est maintenant capable avec un "bon pc" de craquer ces clés plus faibles, les "export-keys".
-    \item Le but de l'attaque est donc de forcer la connexion client/serveur de la victime a utiliser ces clefs plus faibles au lieu des clefs RSA standards plus fortes utilisées aujourd'hui.
+FREAK (factorising RSA export keys) a pour origine l'exportation de la cryptographie des USA qui gardait pour eux les meilleurs systèmes et partageait les moins bons avec le reste du monde, afin que la NSA puisse les craquer avec leur puissance de calcul supérieur.
+
+Vers 2010 avec la montée en puissance constante des ordinateurs, tout le monde est maintenant capable avec un "bon pc" de craquer ces clés plus faibles, les "export-keys".
+
+Le but de l'attaque est donc de forcer la connexion client/serveur de la victime a utiliser ces clefs plus faibles au lieu des clefs RSA standards plus fortes utilisées aujourd'hui \cite{freak}.
 
 \subsection{WeakDH (2015)}
 
