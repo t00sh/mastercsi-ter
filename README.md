@@ -21,12 +21,6 @@ Pour utiliser l'outil, il suffit de le lancer avec la commande :
 $ ./sslstrip/sslstrip.py
 ```
 
-Vous pouvez également afficher l'aide pour connaître les différentes options :
-
-```
-$ ./sslstrip/sslstrip.py -h
-```
-
 Un environnement de test est disponible : [sslstrip-vm.tgz](https://repo.t0x0sh.org/misc/mastercsi/sslstrip-vm.tgz). Celui-ci est à lancer grâce à l'outil [qemunet.sh](https://gitlab.inria.fr/qemunet/core).
 
 ### Auteurs
