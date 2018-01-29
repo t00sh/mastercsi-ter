@@ -8,16 +8,16 @@
 \section{Attaques liées à l'implémentation}
 
 \subsection{Heartbleed (2014)}
-Cette faille est une faille d'OpenSSL basée sur SSL/TLS. Cette vulnérabilité permet de lire la mémoire du serveur. Cette faille est due à une erreur de programmation dans la focntion Heartbeat qui permet de maintenir la connexion sécurisée entre le navigateur et le serveur.
+Cette faille est une faille d'OpenSSL basée sur SSL/TLS. Cette vulnérabilité permet de lire la mémoire du serveur. Cette faille est due à une erreur de programmation dans la fonction Heartbeat qui permet de maintenir la connexion sécurisée entre le navigateur et le serveur.
 
-En effet, l'attaquant peut mentir sur le poids de la requête qu'il envoit et obtenir des données qui ne lui était pas destinées mais qui se trouve en mémoire. Il peut donc récupérer les informations comme des identifiants, des mots de passes, des cookies de sessions ou encore des clés de chiffrements \cite{heartbleed}.
+En effet, l'attaquant peut mentir sur le poids de la requête qu'il envoie et obtenir des données qui ne lui était pas destinées mais qui se trouve en mémoire. Il peut donc récupérer les informations comme des identifiants, des mots de passes, des cookies de sessions ou encore des clés de chiffrements \cite{heartbleed}.
 
 \subsection{BERserk (2014)}
 Cette faille concerne la bibliothèque Network Security Services présente dans certains navigateurs. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
 
-Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de la faille Bleichenbacher PKCS#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
+Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de la faille Bleichenbacher PKCS\#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
 
-Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il vera toujours du https \cite{berserk}.
+Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du https \cite{berserk}.
 
 \section{Attaques liées à la cryptographie}
 
@@ -30,14 +30,19 @@ Voici le déroulement de l'attaque :
 \item Injection du code chez la victime
 \item La victime envoie de données forgées via SSL
 \item L'attaquant écoute le trafic
-\item Il renvoit les informations nécessaires à son code injecté
-\item La victime réenvoit les données forgées et on repète les deux étapes précédentes
+\item Il renvoie les informations nécessaires à son code injecté
+\item La victime renvoie les données forgées et on répète les deux étapes précédentes
   \item L'attaquant dérive tous les cookies
 \end{enumerate}
 
 \subsection{Cassage de RC4 (2013)}
+RC4 est un algorithme qui était majoritairement utilisé pour protéger le traffic TLS.
 
-Blablabla \cite{rc4}
+La première attaque mise en place pour casser l'algorithme RC4 se base sur une multi-session attaque. C'est-à-dire que l'on a besoin d'un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On exploite un octet sur le 256 initiaux des flux de clés RC4. Puisque les 36 premiers octets du texte clair sont formés à partir d'un message fini imprévisible, lorsque SHA-1 est l'algorithme de hachage séléctionné dans le protocle TLS, ces 36 premiers octets ne peuvent pas être récupérés. Cela signifie que l'attaque permet de récupérer 220 octets de textes clair cryptés par TLS. Le nombre de connexion nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS puis se reconnecter automatiquement et retransmettre un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par des logiciels malveillants côté client, comme pour l'attaque BEAST.
+
+La deuxième attaque s'applique à TLS et peut être effectuée grâce à une seule connexion. On exploite certains double octets dans le flux de clés RC4. On cible les octets en clair situés à n'importe quellle position dans le flux de texte clair TLS. Le nombre de cryptage nécessaire pour récupérer de façon fiable un ensemble de 16 octets de textes clair ciblés consécutifs est d'environ $10*2^{30}$, mais avec seulement $6*2^{30}$, ces octets peuvent être récupérer avec une fiabilité de 50\%. Cette attaque peut être plus efficace en pratique.
+
+Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin réseau entre le client et le serveur\cite{rc4}.
 
 \subsection{Lucky13 (2013)}
 
@@ -80,7 +85,7 @@ L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compressi
 L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un peu après.
 Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
 
-Bien que le TLS soit un protocol plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
+Bien que le TLS soit un protocole plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
 
 La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs de donnés avec SSL. L'attaquant a besoin de deux choses pour se faire :
 
@@ -91,7 +96,7 @@ La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs
 
 Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du milieu. L'attaquant doit toutefois avoir un contrôle également sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
 
-En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut ammener l'attaquant à envoyer énormément de réquêtes pour obtenir le message dans son intégralité.
+En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut amener l'attaquant à envoyer énormément de requêtes pour obtenir le message dans son intégralité.
 
 L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement \cite{poodle}.
 
