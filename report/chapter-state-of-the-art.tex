@@ -39,7 +39,7 @@ Voici le déroulement de l'attaque :
 \subsection{Cassage de RC4 (2013)}
 RC4 est un algorithme qui était majoritairement utilisé pour protéger le traffic TLS.
 
-La première attaque mise en place pour casser l'algorithme RC4 se base sur une multi-session attaque. C'est-à-dire que l'on a besoin d'un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On exploite un octet sur le 256 initiaux des flux de clés RC4. Puisque les 36 premiers octets du texte clair sont formés à partir d'un message fini imprévisible, lorsque SHA-1 est l'algorithme de hachage séléctionné dans le protocle TLS, ces 36 premiers octets ne peuvent pas être récupérés. Cela signifie que l'attaque permet de récupérer 220 octets de textes clair cryptés par TLS. Le nombre de connexion nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS puis se reconnecter automatiquement et retransmettre un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par des logiciels malveillants côté client, comme pour l'attaque BEAST.
+La première attaque mise en place pour casser l'algorithme RC4 se base sur une multi-session attaque. C'est-à-dire que l'on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On exploite un octet sur le 256 initiaux des flux de clés RC4. Puisque les 36 premiers octets du texte clair sont formés à partir d'un message fini imprévisible, lorsque SHA-1 est l'algorithme de hachage séléctionné dans le protocle TLS, ces 36 premiers octets ne peuvent pas être récupérés. Cela signifie que l'attaque permet de récupérer 220 octets de textes clair cryptés par TLS. Le nombre de connexion nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS puis se reconnecter automatiquement et retransmettre un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par des logiciels malveillants côté client, comme pour l'attaque BEAST.
 
 La deuxième attaque s'applique à TLS et peut être effectuée grâce à une seule connexion. On exploite certains double octets dans le flux de clés RC4. On cible les octets en clair situés à n'importe quellle position dans le flux de texte clair TLS. Le nombre de cryptage nécessaire pour récupérer de façon fiable un ensemble de 16 octets de textes clair ciblés consécutifs est d'environ $10*2^{30}$, mais avec seulement $6*2^{30}$, ces octets peuvent être récupérer avec une fiabilité de 50\%. Cette attaque peut être plus efficace en pratique.
 
@@ -47,7 +47,16 @@ Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin
 
 \subsection{Lucky13 (2013)}
 
-Blablabla \cite{lucky13}
+Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieur échantillons pour une même heure car il y a souvent des perturbations.
+
+Le nombre de session nécessaire est donc :
+
+\begin{itemize}
+\item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC de TLS.
+\item 219 si le texte clair est codé en base64.
+  \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu. 
+\end{itemize}
+\cite{lucky13}.
 
 \subsection{Logjam (2015)}
 
