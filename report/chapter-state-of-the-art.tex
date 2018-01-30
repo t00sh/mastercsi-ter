@@ -57,13 +57,14 @@ Le nombre de session nécessaire est donc :
 \begin{itemize}
 \item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC de TLS.
 \item 219 si le texte clair est codé en base64.
-  \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
+\item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
 \end{itemize}
 \cite{lucky13}.
 
 \subsection{Logjam (2015)}
 
-Blablabla \cite{logjam}
+Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment du handshake. Cet algorithme permet d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en MITM, peut écouter toutes connexions TLS qui utilisent de la crytographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requièrt un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglémentation de années 90
+\cite{logjam}.
 
 \subsection{DROWN (2016)}
 
