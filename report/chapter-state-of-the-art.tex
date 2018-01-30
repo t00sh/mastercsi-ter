@@ -8,9 +8,12 @@
 \section{Attaques liées à l'implémentation}
 
 \subsection{Heartbleed (2014)}
-Cette faille est une faille d'OpenSSL basée sur SSL/TLS. Cette vulnérabilité permet de lire la mémoire du serveur. Cette faille est due à une erreur de programmation dans la fonction Heartbeat qui permet de maintenir la connexion sécurisée entre le navigateur et le serveur.
 
-En effet, l'attaquant peut mentir sur le poids de la requête qu'il envoie et obtenir des données qui ne lui était pas destinées mais qui se trouve en mémoire. Il peut donc récupérer les informations comme des identifiants, des mots de passes, des cookies de sessions ou encore des clés de chiffrements \cite{heartbleed}.
+CVE-2014-0160
+
+Il s'agit d'une vulnérabilité présente la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connection active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de fuiter la mémoire d'un serveur. Ici, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. Dans ce cas, le serveur vulnérable répondra avec un paquet contenant une partie de sa mémoire.
+
+On pouvait donc récupérer à travers cette vulnérabilité un certains nombre d'informations confidentielles : clefs de sessions, clefs privées, cookies de sessions, mots de passe utilisateurs...\cite{heartbleed}.
 
 \subsection{BERserk (2014)}
 
@@ -54,7 +57,7 @@ Le nombre de session nécessaire est donc :
 \begin{itemize}
 \item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC de TLS.
 \item 219 si le texte clair est codé en base64.
-  \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu. 
+  \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
 \end{itemize}
 \cite{lucky13}.
 
