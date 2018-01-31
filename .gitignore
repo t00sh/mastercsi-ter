@@ -1,5 +1,9 @@
 *~
 __pycache__
 *.pyc
-*.qcow2
 *.tgz
+
+# ignore qemunet sessions files
+vm/*.sh
+session
+*.qcow2
