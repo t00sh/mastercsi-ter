@@ -55,7 +55,7 @@ Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un atta
 Le nombre de session nécessaire est donc :
 
 \begin{itemize}
-\item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC de TLS.
+\item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC(Message authentication code) de TLS.
 \item 219 si le texte clair est codé en base64.
 \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
 \end{itemize}
@@ -68,12 +68,11 @@ Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protoco
 
 \subsection{DROWN (2016)}
 
-Drown(Decrypting RSA with Obsolete and Weakened eNcryption) affecte HTTPS, SSL et TLS. Lors de la découverte de cette attaque, les serveurs utilisait majoritairement TLS, néanmoins, ils supportaient aussi SSLv2. Cette prise en charge a constitué une menace, car l'attaquant peut déchiffrer des connexions TLS en envoyant des sondes à un serveur qui prend en charge SSLv2 et utilise la même clé. L'exploitation de cette faille passe par une attaque à chiffré choisi.
-\cite{drown}.
+Drown(Decrypting RSA with Obsolete and Weakened eNcryption) affecte HTTPS, SSL et TLS. Lors de la découverte de cette attaque, les serveurs utilisait majoritairement TLS, néanmoins, ils supportaient aussi SSLv2. Cette prise en charge a constitué une menace, car l'attaquant peut déchiffrer des connexions TLS en envoyant des sondes à un serveur qui prend en charge SSLv2 et utilise la même clé. L'exploitation de cette faille passe par une attaque à chiffré choisi\cite{drown}.
 
 \subsection{SLOTH (2016)}
 
-Blablabla \cite{sloth}
+Sloth(Security Losses from Obsolete and Truncated Transcript Hashes) s'intéresse à la perte de sécurité due à l'utilisation d'algorithmes de hachages obsolètes au sein des protocoles cryptographiques. Les algorithmes particulièrement ciblés sont SHA-1 et MD5 utilisés à cette époque dans TLS 1.1, TLS 1.2 et TLS 1.3 . Sloth est basée sur une attaque de collision par transposition et permet de réduire la sécurité de 128 bits à 64 bits\cite{sloth}.
 
 \subsection{SWEET32 (2016)}
 
@@ -97,7 +96,9 @@ L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compressi
 
 \subsection{POODLE (2014)}
 
-L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un peu après.
+L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un pThe researchers’ paper describes a number of attacks that require some processing muscle, leaving them in the arena of well-resourced nation-state attackers for now. One transcript collision attack against TLS server signatures using MD5 cut the effective security in half from 128 bits to 64 bits. The security loss for other attacks against TLS authentication were worse, the researchers said, making such attacks much more practical.
+
+“In all cases, the complexity of our transcript collision attacks are significantly lower than the estimated work for a second preimage attack on the underlying hash function. This definitively settles the debate on whether the security of mainstream cryptographic protocols depend on collision resistance,” the researchers wrote. “The answer is yes, cryptographers were right. Except in rare cases, mainstream protocols do require collision resistance for protection against man-in-the-middle transcript collision attacks. Consequently, we strongly recommend that weak hash functions like MD5 and SHA-1 should not just be deprecated; they should be forcefully disabled in existing protocols.”eu après.
 Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
 
 Bien que le TLS soit un protocole plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
