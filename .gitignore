@@ -4,6 +4,6 @@ __pycache__
 *.tgz
 
 # ignore qemunet sessions files
-vm/*.sh
+sslstrip/*.sh
 session
 *.qcow2
