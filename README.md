@@ -13,19 +13,15 @@ Référence :
 
 - [https://moxie.org/software/sslstrip/](https://moxie.org/software/sslstrip/)
 
-### Utilisation de l'outil
+### Attaques implémentées
 
-Pour utiliser l'outil, il suffit de le lancer avec la commande :
+- SSLstrip (voir sslstrip/README.md)
 
-```
-$ ./sslstrip/sslstrip.py
-```
+- HTTPS interception (en cours d'implémentation)
 
-Un environnement de test est disponible grâce à l'outil [qemunet.sh](https://gitlab.inria.fr/qemunet/core). On peut le lancer avec la commande :
+- SSLstrip+ (en cours d'implémentation)
 
-```
-$ ./qemunet.sh -x -S vm
-```
+Afin de démontrer les attaques dans les meilleures conditions, nous utilisons l'outil [qemunet](https://gitlab.inria.fr/qemunet/core) afin de simuler un environnement vulnérable.
 
 ### Auteurs
 
