@@ -7,49 +7,59 @@
   \fbox{\includegraphics[width=\textwidth]{./history-tls-attacks.png}}
 \end{figure}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Heartbleed (2014)}
+\subsection{Interception HTTPS}
 
 \begin{tabularx}{0.96\textwidth}{|c|X|}
   \hline
   \textbf{CVE(s)} & \textbf{Catégorie} \\
   \hline
-  CVE-2014-0160 & implémentation \\
+  - & protocole \\
   \hline
 \end{tabularx}
 
-\vspace{1em}
-
-Il s'agit d'une vulnérabilité présente la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connection active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. Dans ce cas, le serveur vulnérable répondra avec un paquet contenant une partie de sa mémoire.
-
-Il est alors possible de récupérer à travers cette vulnérabilité un certains nombre d'informations confidentielles : clefs de sessions, clefs privées, cookies de sessions, mots de passe utilisateurs...\cite{heartbleed}.
+Blablabla \cite{https-interception}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{BERserk (2014)}
+\subsection{SSLsniff (2002)}
 
 \begin{tabularx}{0.96\textwidth}{|c|X|}
   \hline
   \textbf{CVE(s)} & \textbf{Catégorie} \\
   \hline
-  CVE-2014-1569 & implémentation, cryptographie \\
+  - & implémentation, certificats \\
   \hline
 \end{tabularx}
 
 \vspace{1em}
 
-Cette vulnérability concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
+Blablabla \cite{sslsniff-website}
 
-Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
 
-Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du https \cite{berserk}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{SSLstrip (2009)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  - & protocole, humain \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+Blablabla \cite{sslstrip-website}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,6 +90,46 @@ Voici le déroulement de l'attaque :
 \item La victime renvoie les données forgées et on répète les deux étapes précédentes
   \item L'attaquant dérive tous les cookies
 \end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{CRIME (2012)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  CVE-2012-4929 & cryptographie, protocole \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier correspondant au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
+
+Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{BREACH (2012)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  - & cryptographie, protocole \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+
+L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,6 +184,129 @@ Le nombre de session nécessaire est donc :
 \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
 \end{itemize}
 \cite{lucky13}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Heartbleed (2014)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  CVE-2014-0160 & implémentation \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+Il s'agit d'une vulnérabilité présente la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connection active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. Dans ce cas, le serveur vulnérable répondra avec un paquet contenant une partie de sa mémoire.
+
+Il est alors possible de récupérer à travers cette vulnérabilité un certains nombre d'informations confidentielles : clefs de sessions, clefs privées, cookies de sessions, mots de passe utilisateurs...\cite{heartbleed}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{BERserk (2014)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  CVE-2014-1569 & implémentation, cryptographie \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+Cette vulnérability concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
+
+Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
+
+Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du https \cite{berserk}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{POODLE (2014)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  CVE-2014-3566 & cryptographie, protocole \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un pThe researchers’ paper describes a number of attacks that require some processing muscle, leaving them in the arena of well-resourced nation-state attackers for now. One transcript collision attack against TLS server signatures using MD5 cut the effective security in half from 128 bits to 64 bits. The security loss for other attacks against TLS authentication were worse, the researchers said, making such attacks much more practical.
+
+“In all cases, the complexity of our transcript collision attacks are significantly lower than the estimated work for a second preimage attack on the underlying hash function. This definitively settles the debate on whether the security of mainstream cryptographic protocols depend on collision resistance,” the researchers wrote. “The answer is yes, cryptographers were right. Except in rare cases, mainstream protocols do require collision resistance for protection against man-in-the-middle transcript collision attacks. Consequently, we strongly recommend that weak hash functions like MD5 and SHA-1 should not just be deprecated; they should be forcefully disabled in existing protocols.”eu après.
+Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
+
+Bien que le TLS soit un protocole plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
+
+La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs de donnés avec SSL. L'attaquant a besoin de deux choses pour se faire :
+
+\begin{enumerate}
+    \item L'attaquant doit pouvoir changer une partie du message injecté par le client dans l'algorithme
+    \item Il doit avoir un retour sur le texte chiffré par SSL.
+\end{enumerate}
+
+Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du milieu. L'attaquant doit toutefois avoir un contrôle également sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
+
+En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut amener l'attaquant à envoyer énormément de requêtes pour obtenir le message dans son intégralité.
+
+L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement \cite{poodle}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{FREAK (2015)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  CVE-2015-0204 & cryptographie, protocole \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+FREAK (factorising RSA export keys) a pour origine l'exportation de la cryptographie des USA qui gardait pour eux les meilleurs systèmes et partageait les moins bons avec le reste du monde, afin que la NSA puisse les craquer avec leur puissance de calcul supérieur.
+
+Vers 2010 avec la montée en puissance constante des ordinateurs, tout le monde est maintenant capable avec un "bon pc" de craquer ces clés plus faibles, les "export-keys".
+
+Le but de l'attaque est donc de forcer la connexion client/serveur de la victime a utiliser ces clefs plus faibles au lieu des clefs RSA standards plus fortes utilisées aujourd'hui \cite{freak}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{WeakDH (2015)}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  - & cryptographie \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+Blablabla \cite{weakdh}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -230,181 +403,6 @@ Sweet32 est une attaque qui vise des algorithmes de chiffrements utilisant des b
 \vspace{1em}
 
 Blablabla \cite{robot}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{CRIME (2012)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  CVE-2012-4929 & cryptographie, protocole \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier correspondant au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
-
-Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{BREACH (2012)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  - & cryptographie, protocole \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-
-L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{POODLE (2014)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  CVE-2014-3566 & cryptographie, protocole \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un pThe researchers’ paper describes a number of attacks that require some processing muscle, leaving them in the arena of well-resourced nation-state attackers for now. One transcript collision attack against TLS server signatures using MD5 cut the effective security in half from 128 bits to 64 bits. The security loss for other attacks against TLS authentication were worse, the researchers said, making such attacks much more practical.
-
-“In all cases, the complexity of our transcript collision attacks are significantly lower than the estimated work for a second preimage attack on the underlying hash function. This definitively settles the debate on whether the security of mainstream cryptographic protocols depend on collision resistance,” the researchers wrote. “The answer is yes, cryptographers were right. Except in rare cases, mainstream protocols do require collision resistance for protection against man-in-the-middle transcript collision attacks. Consequently, we strongly recommend that weak hash functions like MD5 and SHA-1 should not just be deprecated; they should be forcefully disabled in existing protocols.”eu après.
-Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
-
-Bien que le TLS soit un protocole plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
-
-La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs de donnés avec SSL. L'attaquant a besoin de deux choses pour se faire :
-
-\begin{enumerate}
-    \item L'attaquant doit pouvoir changer une partie du message injecté par le client dans l'algorithme
-    \item Il doit avoir un retour sur le texte chiffré par SSL.
-\end{enumerate}
-
-Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du milieu. L'attaquant doit toutefois avoir un contrôle également sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
-
-En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut amener l'attaquant à envoyer énormément de requêtes pour obtenir le message dans son intégralité.
-
-L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement \cite{poodle}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{FREAK (2015)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  CVE-2015-0204 & cryptographie, protocole \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-FREAK (factorising RSA export keys) a pour origine l'exportation de la cryptographie des USA qui gardait pour eux les meilleurs systèmes et partageait les moins bons avec le reste du monde, afin que la NSA puisse les craquer avec leur puissance de calcul supérieur.
-
-Vers 2010 avec la montée en puissance constante des ordinateurs, tout le monde est maintenant capable avec un "bon pc" de craquer ces clés plus faibles, les "export-keys".
-
-Le but de l'attaque est donc de forcer la connexion client/serveur de la victime a utiliser ces clefs plus faibles au lieu des clefs RSA standards plus fortes utilisées aujourd'hui \cite{freak}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{WeakDH (2015)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  - & cryptographie \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-Blablabla \cite{weakdh}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{SSLsniff (2002)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  - & implémentation, certificats \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-Blablabla \cite{sslsniff-website}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{SSLstrip (2009)}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  - & protocole, humain \\
-  \hline
-\end{tabularx}
-
-\vspace{1em}
-
-Blablabla \cite{sslstrip-website}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{Interception HTTPS}
-
-\begin{tabularx}{0.96\textwidth}{|c|X|}
-  \hline
-  \textbf{CVE(s)} & \textbf{Catégorie} \\
-  \hline
-  - & protocole \\
-  \hline
-\end{tabularx}
-
-Blablabla \cite{https-interception}
 
 
 
