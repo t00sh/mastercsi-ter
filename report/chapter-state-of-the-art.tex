@@ -21,6 +21,8 @@
   \hline
 \end{tabularx}
 
+\vspace{1em}
+
 L'interception et le déchiffrement des flux HTTPS (et plus généralement SSL/TLS), est un problème inhérent au fonctionnement du protocole et des CA (certificat authorities).
 
 Un équipement positionné en homme du milieu sur le réseau a la possibilité de fonctionner à la manière d'un proxy : les connections initiées par les clients pourront être déchiffrées par le proxy, puis rechiffrées vers le serveur. Pour être réalisé de manière transparente, l'idée est de présenter un faux certificat (qui pourra être généré à la volée) au client, qui si il est accepté, permettra le déchiffrement complet des communications entre lui et le serveur.
