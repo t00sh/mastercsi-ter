@@ -254,10 +254,9 @@ Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-
 
 \vspace{1em}
 
-L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout les chiffrements SSL 3.0, bien qu'une variante de la faille fut trouver sur TLS un pThe researchers’ paper describes a number of attacks that require some processing muscle, leaving them in the arena of well-resourced nation-state attackers for now. One transcript collision attack against TLS server signatures using MD5 cut the effective security in half from 128 bits to 64 bits. The security loss for other attacks against TLS authentication were worse, the researchers said, making such attacks much more practical.
+L'anagramme POODLE signifie "padding oracle on downgraded legacy encryption". L'attaque concerne surtout le protocole SSLv3, bien qu'une variante de la faille fut trouver sur TLS peu de temps après.
 
-“In all cases, the complexity of our transcript collision attacks are significantly lower than the estimated work for a second preimage attack on the underlying hash function. This definitively settles the debate on whether the security of mainstream cryptographic protocols depend on collision resistance,” the researchers wrote. “The answer is yes, cryptographers were right. Except in rare cases, mainstream protocols do require collision resistance for protection against man-in-the-middle transcript collision attacks. Consequently, we strongly recommend that weak hash functions like MD5 and SHA-1 should not just be deprecated; they should be forcefully disabled in existing protocols.”eu après.
-Le padding dont parle le nom de l'attaque vient des méthodes de chiffrements cryptographiques. Lorsqu'un message envoyé un trop court pour l'algorithme de chiffrement, on lui rajoute une partie arbitraire, le "padding" pour qu'on puisse appliquer l'algorithme dessus.
+Lorsque le message à envoyer est trop court pour l'algorithme de chiffrement par bloc sous-jacent, on lui rajoute un ``padding'' afin de pouvoir appliquer l'algorithme sur le message.
 
 Bien que le TLS soit un protocole plus sûr que SSL et recommandé aujourd'hui, de nombreux serveurs continuent d'accepter le SSL 3.0 si une connexion par TLS venait à être impossible. L'attaque POODLE se sert de ce fait pour forcer la connexion à se faire en SSL.
 
