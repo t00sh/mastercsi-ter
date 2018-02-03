@@ -40,13 +40,13 @@ Pour que ce faux certificat soit accepté, il faut bien sûr que les noms de dom
   \hline
   \textbf{CVE(s)} & \textbf{Catégorie} \\
   \hline
-  - & implémentation, certificats \\
+  CAN-2002-0862 & implémentation, certificats \\
   \hline
 \end{tabularx}
 
 \vspace{1em}
 
-Blablabla \cite{sslsniff-website}
+SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. La validation d'un certificat par ce navigateur n'était pas réalisée de manière adéquate. Un certificat feuille signé par une autorité de certification légitime pouvait alors signer un certificat pour n'importe quel domaine, et être accepté par le navigateur. Ceci était possible, car le navigateur ne vérifiait pas le champ ``Basic Constraints'' du certificat, précisant si le certificat est une CA ou non. L'outil SSLsniff permet l'automatisation de cette attaque \cite{sslsniff-website}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
