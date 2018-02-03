@@ -65,7 +65,9 @@ SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. L
 
 \vspace{1em}
 
-Blablabla \cite{sslstrip-website}
+L'attaque SSLstrip attaque non plus les connections HTTPS chiffrées et authentifiées, mais les connections HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut alors modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (https://) par leurs version non-sécurisée (http://) en prenant également en compte les éventuelles redirections (code HTTP 302).
+
+Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connection HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
