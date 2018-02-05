@@ -18,7 +18,7 @@ HTTPS_URL           = [b'/index.html']
 FORWARD_HOST        = 'www.t0x0sh.org'
 FORWARD_HTTP_PORT   = 80
 FORWARD_HTTPS_PORT  = 443
-PROXY_HOST          = '127.0.0.1'
+PROXY_HOST          = '0.0.0.0'
 PROXY_PORT          = 4242
 BUFFER_SIZE         = 65537
 
