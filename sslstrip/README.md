@@ -1,5 +1,16 @@
 ### Attaque SSLstrip
 
+## Configuration du serveur
+
+Pour générer le certificat côté serveur, on peut utiliser openssl :
+
+```
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+```
+
+
+## Démo
+
 Pour lancer l'attaque, il faut démarrer tout d'abords l'environnement de test de la façon suivante :
 
 ```
@@ -17,5 +28,5 @@ $ ./qemunet/qemunet.sh -x -S sslstrip
 Ensuite, sur immortal il faut lancer le script d'attaque comme suit :
 
 ```
-$ /mnt/host/sslstrip.py
+$ /mnt/host/attack.sh
 ```
