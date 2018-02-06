@@ -4,6 +4,8 @@ __pycache__
 *.tgz
 
 # ignore qemunet sessions files
-sslstrip/*.sh
+immortal.sh
+opeth.sh
+grave.sh
 session
 *.qcow2
