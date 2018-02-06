@@ -14,8 +14,8 @@ __status__  = 'Development'
 
 import select, socket, ssl, sys, re
 
-HTTPS_URL           = [b'/index.html']
-FORWARD_HOST        = 'www.t0x0sh.org'
+HTTPS_URL           = [b'/secure.html']
+FORWARD_HOST        = '147.210.12.1'
 FORWARD_HTTP_PORT   = 80
 FORWARD_HTTPS_PORT  = 443
 PROXY_HOST          = '0.0.0.0'
