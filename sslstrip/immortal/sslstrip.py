@@ -16,6 +16,7 @@ import select, socket, ssl, sys, re
 
 HTTPS_URL           = [b'/secure.html']
 FORWARD_HOST        = '147.210.12.1'
+FORWARD_CERT        = "/mnt/host/cert.pem"
 FORWARD_HTTP_PORT   = 80
 FORWARD_HTTPS_PORT  = 443
 PROXY_HOST          = '0.0.0.0'
@@ -41,6 +42,7 @@ class SSLstrip:
     def __new_https_conn(self, csock):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ssl_ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        ssl_ctx.load_verify_locations(FORWARD_CERT)
         sock = ssl_ctx.wrap_socket(sock, server_hostname=FORWARD_HOST)
         sock.connect((FORWARD_HOST, FORWARD_HTTPS_PORT))
         self.__csockets[csock] = sock
