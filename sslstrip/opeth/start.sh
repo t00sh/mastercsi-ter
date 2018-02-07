@@ -9,5 +9,6 @@ service php7.0-fpm restart
 
 ### NGINX load new configuration ###
 cp /mnt/host/nginx.conf /etc/nginx/sites-enabled/default
-## Restart service ##
+chmod -R 0755 /mnt/
+chown www-data: -R /mnt/host/www
 service nginx restart
