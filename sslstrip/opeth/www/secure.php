@@ -27,6 +27,7 @@ if(isset($_POST["submit"])){
     <title>Secure page</title>
   </head>
   <body>
+    <h1>Secure page</h1>
     <p><?php echo $msg; ?></p>
   </body>
 </html>
