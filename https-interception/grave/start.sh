@@ -1,4 +1,6 @@
-#!/bin/sh
-hostname grave
-ifconfig eth0 147.210.13.2/24
-route add -net 147.210.12.0/24 gw 147.210.13.1
+#!/bin/bash
+
+ifconfig eth0 add 147.210.13.2 netmask 255.255.255.0 up
+route add default gw 147.210.13.1
+
+cp /mnt/host/cert.pem /etc/ssl/certs/
