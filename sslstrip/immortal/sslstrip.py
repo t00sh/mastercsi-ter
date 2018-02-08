@@ -115,5 +115,7 @@ class SSLstrip:
                     self.__recv(s)
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        PROXY_PORT = int(sys.argv[1])
     sslstrip = SSLstrip()
     sslstrip.run()

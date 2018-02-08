@@ -1,6 +1,8 @@
 #!/bin/sh
 
-iptables -t nat -F
-iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 4242
+PROXY_PORT=4242
 
-/mnt/host/sslstrip.py
+iptables -t nat -F
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port $PROXY_PORT
+
+/mnt/host/sslstrip.py $PROXY_PORT
