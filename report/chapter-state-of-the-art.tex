@@ -313,7 +313,7 @@ Le but de l'attaque est donc de forcer la connexion client/serveur de la victime
 
 \vspace{1em}
 
-Blablabla \cite{weakdh}
+La vulnerabilité WeakDH concerne les paramètres du protocole Diffie-Hellman utilisés dans certaines implémentations, en particulier le corps $\mathbb{Z}/p\mathbb{Z}$ choisi. En effet, le nombre premier utilisé par celles-ci (environ 8.4\% du top million Alexa lors de la découverte de WeakDH)), est d'une part relativement petit (1024 bits) ce qui le rends vulnérable à la recherche du logarithme discret en un temps raisonable, et d'autre part, puisque le même nombre premier était utilisé, les efforts pour attaquer un site était le même que pour attaquer l'ensemble des sites utilisant ce nombre premier\cite{weakdh}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -409,10 +409,11 @@ Sweet32 est une attaque qui vise des algorithmes de chiffrements utilisant des b
 
 \vspace{1em}
 
-Blablabla \cite{robot}
-
+La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une attaque sur le padding RSA PKCS#1 v1.5 de certaines implémentations de SSL/TLS (F5, Citrix, Radware, Cisco, Erlang, Bouncy Castle et WolfSSL). Celle-ci permet de déchiffrer l'intégralité des messages chiffrés avec l'algorithme RSA ou de forger des signatures grâce à un oracle de padding et les travaux de Bleichenbacher\cite{robot}.
 
 
 \section{Contremesures et protections}
 
-blabla
+\subsection{HSTS}
+
+\subsection{HPKP}
