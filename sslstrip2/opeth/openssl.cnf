@@ -1,0 +1,26 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+
+[req_distinguished_name]
+countryName = FR
+countryName_default = FR
+stateOrProvinceName = France
+stateOrProvinceName_default = France
+localityName = None
+localityName_default = None
+organizationalUnitName = None
+organizationalUnitName_default = None
+commonName = www.opeth.local
+commonName_max = 64
+
+[ v3_req ]
+# Extensions to add to a certificate request
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = www.opeth.secure
+DNS.2 = opeth.secure
+DNS.3 = opeth.local
