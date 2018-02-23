@@ -14,11 +14,11 @@ L'environnement de test consiste en trois machines virtuelles :
 
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
-## Machine "grave"
+## Machine "grave" (147.210.13.2)
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
-## Machine "opeth"
+## Machine "opeth" (147.210.12.1)
 
 Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl :
 
@@ -26,9 +26,13 @@ Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certif
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 
-Cette machine a l'adresse IPv4 : 147.210.12.1.
+Le serveur héberge deux pages :
 
-## Machine "immortal"
+  - une page index.php que l'on accéde en HTTP et présentant un formulaire de login.
+
+  - une page secure.php que l'on accéde en HTTPS depuis la page index.php.
+
+## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
 C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier "/mnt/host/attack.sh". Cette VM est configuré pour forwarder les paquets entre opeth et grave.
 
@@ -50,7 +54,11 @@ Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine gra
 
 ![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen1.png)
 
+L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
+
 ![screen2](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen2.png)
+
+Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée.
 
 ![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen3.png)
 
@@ -58,18 +66,18 @@ Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine gra
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
-```
-$ /mnt/host/attack.sh
-```
-
 ![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen4.png)
 
 ## Etape 3 : pendant l'attaque
 
-Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://. La machine immortal voit donc tout le trafic en clair et a pût capturer les identifiants de la machine grave :
+Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://. La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
 ![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen5.png)
 
+Nous constatons que nous arrivons sur la page secure.php en HTTP : notre navigation n'est pas sécurisée !
+
 ![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen6.png)
+
+La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
 
 ![screen7](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen7.png)
