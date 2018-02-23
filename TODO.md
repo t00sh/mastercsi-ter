@@ -1,19 +1,33 @@
-### TODO LIST
+# TODO LIST
 
-1. Documenter chacune des attaques sur SSL/TLS presentées dans le rapport (partie "Etat de l'art").
+## Rapport
 
-2. Documenter en particulier SSLStrip de manière plus détaillée, dans un chapitre à part.
+    - compléter la partie contremesures.
 
-3. Configurer l'environnement virtuel :
+    - rédiger la partie "SSLstrip" (utiliser des graphiques, images, etc). S'inspirer du README de l'attaque.
 
-    * Créer une topologie réseau adaptée.
+    - rédiger la partie HTTPS-interception.
 
-    * Configurer les différentes machines : client, attaquant, serveur.
+    - rédiger la partie SSLstrip+
 
-    * Pour le serveur, créer au moins deux pages web pour simuler l'attaque.
+## SSLstrip
 
-    * Toujours côté serveur, configurer le serveur web avec HTTPS activé sur la page login.php.
+    - Finaliser la rédaction de la démo.
 
-    * Bien documenter chaque étape de la configuration pour le rapport/oral.
+## HTTPS-interception
 
-4. Développer l'outil SSLStrip.
+    - Désactiver le HTTP sur le serveur
+
+    - Réaliser la démo (README.md), avec screenshots.
+
+    - Peut être revoir la génération des certificats pour avoir une autorité de certification trustée par le client.
+
+## SSLstrip+
+
+    - Tenter de faire fonctionner HSTS (côté client et côté serveur)
+
+    - Mettre en place un serveur DNS sur "Opeth"
+
+    - Mettre en place un serveur DNS sur "Immortal"
+
+    - Réaliser la démo (README.md), avec screenshots.
