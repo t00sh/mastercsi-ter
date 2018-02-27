@@ -112,7 +112,7 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
-- fermer la connexion, si l'on a reçu 0 donnée
+- fermer la connexion, si l'on a reçu aucune donnée
 - établir une connexion https, dans le cas où le client demande la page "secure.php"
 - établir une connexion http, dans le cas où le client demande la page d'accueil
 
