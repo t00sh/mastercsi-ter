@@ -36,7 +36,7 @@ HOST debian10  opeth    s1
 ```
 
 
-Cette topologie n'est pas forcément réalise car rare sont les cas où l'attaquant est dans le réseau du client attaqué. 
+Cette topologie n'est pas forcément réaliste car rare sont les cas où l'attaquant est dans le réseau du client attaqué.
 
 Toutes les configurations initiales des machines se trouvent dans le fichier __"start.sh"__ de chaque dossier correspondant aux machines.
 
@@ -90,7 +90,7 @@ Nous voici sur la page secure.php, nos données ont transitées de manière chif
 
 ## Etape 2 : lancement de l'attaque
 
-Comme préciser précédement, pour lancer l'attaque, il faut lancer le fichier __"/mnt/host/attack.sh"__ depuis immortal. 
+Comme expliqué précédement, pour lancer l'attaque, il suffit d'exécuter le fichier __"/mnt/host/attack.sh"__ depuis immortal.
 Voici son contenu :
 
 ```
@@ -101,7 +101,7 @@ iptables -t nat -A PREROUTING -d 147.210.12.1 -p tcp --dport 443 -j REDIRECT --t
 /mnt/host/https-interception.py $PROXY_PORT
 ```
 
-Il nous est nécessaire de rediriger tout le flux TCP sur le port d'écoute afin de traiter les requêtes.
+On peut constater que les flux TCP à destination du port 443 (HTTPS) sont redirigées vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes.
 
 Sur la machine immortal, nous lançons le script de l'attaque :
 
