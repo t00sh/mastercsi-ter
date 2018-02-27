@@ -5,3 +5,7 @@ route add default gw 147.210.13.1
 
 echo "147.210.12.1 www.opeth.local" >> /etc/hosts
 echo "147.210.12.1 www.opeth.secure" >> /etc/hosts
+
+# Add CA certificate to firefox
+su - toto -c 'certutil -A -n "ca@ca.local" -t "C,C,C" -i /mnt/host/cert.pem
+              -d /home/toto/.mozilla/firefox/*.default'
