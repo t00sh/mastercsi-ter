@@ -33,8 +33,7 @@ HOST debian10  immortal s1 s2
 HOST debian10  opeth    s1
 ```
 
-
-Cette topologie n'est pas forcément réalise car rare sont les cas où l'attaquant est dans le réseau du client attaqué. 
+Cette topologie n'est pas forcément réaliste car rare sont les cas où l'attaquant est dans le réseau du client attaqué.
 
 Toutes les configurations initiales des machines se trouvent dans le fichier __"start.sh"__ de chaque dossier correspondant aux machines.
 
@@ -89,7 +88,7 @@ Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voi
 
 ## Etape 2 : lancement de l'attaque
 
-Comme préciser précédement, pour lancer l'attaque, il faut lancer le fichier __"/mnt/host/attack.sh"__ depuis immortal. 
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier __"/mnt/host/attack.sh"__ depuis immortal.
 Voici son contenu :
 
 ```
@@ -100,7 +99,7 @@ iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port
 
 /mnt/host/sslstrip.py $PROXY_PORT
 ```
-Il nous est nécessaire de rediriger tout le flux TCP sur le port d'écoute afin de traiter les requêtes.
+On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes.
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
@@ -108,11 +107,11 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 ### Explication du code
 
-#### Réception de requêtes
+#### Réception des requêtes
 
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
-- fermer la connexion, si l'on a reçu aucune donnée
+- fermer la connexion (le client ou le serveur a fermé la connection)
 - établir une connexion https, dans le cas où le client demande la page "secure.php"
 - établir une connexion http, dans le cas où le client demande la page d'accueil
 
@@ -139,7 +138,7 @@ def __recv(self, csock):
 
 ```
 
-A la fin, on transforme tous les liens __https__ trouvé en __http__. Et, on recalcule la taille de la requête.
+A la fin, on transforme tous les liens __https__ trouvé en __http__ et on recalcule la taille de la requête (entête Content-Length).
 
 #### Transformation des liens
 
@@ -157,8 +156,7 @@ def __replace_content_length(self, data):
         return data
 ```
 
-La transformation se fait à l'aide d'une rechercher expression qui remplace __https__ par __http__.
-De même, quand on recalcule la longueur de la requête, on replace directement le champ __Content-Length__ directement. 
+La transformation se fait à l'aide d'une expression régulière qui remplace __https://__ par __http://__. La deuxième fonction recalcule le Content-Length en recherchant le début des données (après la séquence "\r\n\r\n").
 
 ## Etape 3 : pendant l'attaque
 
