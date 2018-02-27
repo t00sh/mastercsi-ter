@@ -9,3 +9,7 @@ opeth.sh
 grave.sh
 session
 *.qcow2
+CA/*.key
+CA/*.pem
+CA/*.csr
+CA/*.srl
