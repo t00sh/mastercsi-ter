@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Create and sign certificate with CA's private key
+
 if test ! -f root-ca.pem || test ! -f root-ca.key
 then
     echo "[-] First, create CA !"
