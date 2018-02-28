@@ -14,7 +14,7 @@ if(isset($_POST["submit"])){
         $msg = "Invalid Login";
     }
 } else {
-    if(session_status() === PHP_SESSION_ACTIVE) {
+    if(isset($_SESSION["user_data"])) {
         $msg = "Welcome back, " . $_SESSION["user_data"]["username"];
     } else {
         $msg = "Not logged in";
