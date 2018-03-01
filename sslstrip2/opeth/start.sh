@@ -17,6 +17,6 @@ service nginx restart
 
 ### DNSMASQ configuration ###
 cp /mnt/host/dnsmasq.conf /etc/
-echo "147.210.12.1 www.opeth.local opeth.local" >> /etc/hosts
-echo "147.210.12.1 www.opeth.secure opeth.secure" >> /etc/hosts
+echo "147.210.12.1 www.opeth.local" > /etc/hosts
+echo "147.210.12.1 www.opeth.secure" >> /etc/hosts
 service dnsmasq restart
