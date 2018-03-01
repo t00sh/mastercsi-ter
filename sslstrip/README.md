@@ -147,8 +147,8 @@ def __replace_https_to_http(self, data):
         return re.sub(b'https://', b'http://', data)
 
 def __replace_content_length(self, data):
-	try:
-		idx = data.index(b"\r\n\r\n")
+    try:
+        idx = data.index(b"\r\n\r\n")
         length = len(data) - idx - 4
         return re.sub(b'Content-Length: (\d+)',
                       b'Content-Length: %d' % length, data, 1)
