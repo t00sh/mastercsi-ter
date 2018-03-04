@@ -14,3 +14,4 @@ CA/*.pem
 CA/*.csr
 CA/*.srl
 qemunet
+_minted-report
