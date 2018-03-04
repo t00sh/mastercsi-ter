@@ -434,4 +434,20 @@ Les deux premiers nombres correspondent à la fréquence de visites du domaine, 
 
 \subsection{HPKP}
 
+HTTP Public Key Pinning est un autre mécanisme de sécurité décrit dans la RFC7469, qui permet à un serveur de transmettre à ses clients et via un entête HTTP les empreintes de ses certificats. Un client supportant ce mécanisme stockera alors cette empreinte pour une certaine durée (précisée par le serveur). Si l'empreinte du certificat a changé, le client refusera alors de se connecter au serveur \cite{hpkp}.
+
+Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connection, mais seulement les futures connections.
+
+Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier ``~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt'' sur un système Linux.
+
+Voici à quoi ressemble une entrée dans ce fichier pour HPKP :
+
+\begin{minted}[bgcolor=lbcolor, breaklines]{text}
+  services.addons.mozilla.org:HPKP        22      17593   1525287814584,1,1,
+  WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=
+  r/mIkG3eEpVdm+u/ko/cwxzOMo1bk4TyHIlByibiA5E=
+\end{minted}
+
+Nous voyons l'empreinte du certificat encodé en base64, le nombre de millisecondes avant expiration, que l'entrée est active et que cette empreinte s'applique également aux sous-domaines.
+
 \subsection{DANE/TLSA}
