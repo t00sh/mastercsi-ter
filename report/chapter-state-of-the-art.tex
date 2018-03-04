@@ -416,6 +416,22 @@ La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une
 
 \subsection{HSTS}
 
+HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoit l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connection sécurisée \cite{hsts}.
+
+Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip initiale. Bien entendu, cette contremesure ne protège pas la première connection initiée par le client. Pour protéger la première connection, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
+
+Lorsque le navigateur a enregistré un nom de domaine protégé par HSTS, celui-ci remplacera tous les liens http:// par leurs équivalent https:// pour le domaine (ou sous-domaines) concerné. De plus, si le certificat est invalide (auto-signé par exemple), le navigateur affichera un message d'erreur et empêchera l'utilisateur de se connecter au site.
+
+Pour firefox par exemple, cette base de donnée est stockée dans le fichier ``~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt'' sur un système Linux.
+
+Voici par à quoi correspond une entrée de ce fichier, ici pour le domaine www.youtube.com :
+
+\begin{minted}[bgcolor=lbcolor, breaklines]{text}
+www.youtube.com:HSTS    24      17594   155170223888,1,0,2
+\end{minted}
+
+Les deux premiers nombres correspondent à la fréquence de visites du domaine, le troisième (155170223888) est le nombre de millisecondes avant expiration de l'entrée, le quatrième (1) est l'état du l'entrée, ici active. Le cinquième (0) spécifie si il faut appliquer HSTS aux sous-domaines (ici, non), et le dernier chiffre (2) indique la source de l'entrée (Unknown, Preload, Organic), ici Organic c'est à dire récupérée grâce à l'entête HTTP.
+
 \subsection{HPKP}
 
 \subsection{DANE/TLSA}
