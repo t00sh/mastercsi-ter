@@ -9,9 +9,9 @@ REPORT_DEP += chapter-state-of-the-art.tex chapter-sslstrip.tex
 all: $(REPORT_PDF)
 
 $(REPORT_PDF): $(REPORT_TEX) $(REPORT_DEP) Makefile
-	pdflatex $<
-	pdflatex $<
-	pdflatex $<
+	pdflatex -shell-escape $<
+	pdflatex -shell-escape $<
+	pdflatex -shell-escape $<
 
 clean:
 	rm -f *~ *.toc *.out *.aux *.log $(REPORT_PDF)
