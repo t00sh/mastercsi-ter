@@ -13,7 +13,7 @@ __status__  = 'Development'
 
 import select, socket, ssl, sys, re
 
-FORWARD_HOST        = '147.210.12.1'
+FORWARD_HOST        = 'www.opeth.local'
 FORWARD_PORT        = 443
 FORWARD_CERT        = '/mnt/host/cert.pem'
 PROXY_HOST          = '0.0.0.0'
