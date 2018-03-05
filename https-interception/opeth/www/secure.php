@@ -18,7 +18,7 @@ if(isset($_POST["submit"])){
         $msg = "Welcome back, " . $_SESSION["user_data"]["username"];
     } else {
         $msg = "Not logged in";
-        header('Location: http://147.210.12.1/index.php');
+        header('Location: http://www.opeth.local/index.php');
     }
 }
 ?>
