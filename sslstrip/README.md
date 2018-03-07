@@ -16,7 +16,7 @@ L'environnement de test consiste en trois machines virtuelles :
 
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
-Voici la [topology](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/topology) des machines mise en place :
+Voici la [topologie](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/topology) des machines mise en place :
 
 ```
 ### twolans
@@ -41,6 +41,8 @@ Toutes les configurations initiales des machines se trouvent dans le fichier __"
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
+Au lancement de la machine, il faut l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/grave/start.sh)
+
 ## Machine "opeth" (www.opeth.local)
 
 Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts [create-ca.sh](https://github.com/t00sh/mastercsi-ter/tree/master/CA/create-ca.sh) et [new-cert.sh](https://github.com/t00sh/mastercsi-ter/tree/master/CA/new-cert.sh) de la façon suivante :
@@ -53,9 +55,9 @@ $ ./new-cert.sh
 
 Le serveur héberge deux pages :
 
-  - une page index.php que l'on accéde en HTTP et présentant un formulaire de login.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
 
-  - une page secure.php que l'on accéde en HTTPS depuis la page index.php.
+  - une page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/secure.php) que l'on accéde en HTTPS depuis la page index.php.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 

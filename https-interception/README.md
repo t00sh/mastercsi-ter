@@ -16,7 +16,7 @@ L'environnement de test consiste en trois machines virtuelles :
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
 
-Voici la topologie des machines mise en place :
+Voici la [topologie](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/topology) des machines mise en place :
 
 ```
 ### twolans
@@ -44,23 +44,29 @@ Toutes les configurations initiales des machines se trouvent dans le fichier __"
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
+Au lancement de la machine, il faut l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/grave/start.sh)
+
 ## Machine "opeth" (147.210.12.1)
 
-Cette machine héberge un serveur HTTPS Nginx sur le port 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts [create-ca.sh](https://github.com/t00sh/mastercsi-ter/tree/master/CA/create-ca.sh) et [new-cert.sh](https://github.com/t00sh/mastercsi-ter/tree/master/CA/new-cert.sh) de la façon suivante :
 
 ```
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+$ cd CA
+$ ./create-ca.sh
+$ ./new-cert.sh
 ```
 
 Le serveur héberge deux pages :
 
-  - une page index.php, présentant un formulaire de login.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/opeth/www/index.php), présentant un formulaire de login.
 
-  - une page secure.php affichant l'identité de la personne.
+  - une page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/opeth/www/secure.php) affichant l'identité de la personne.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier "/mnt/host/attack.sh". Cette VM est configuré pour forwarder les paquets entre opeth et grave.
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/tree/master-b64c24f/https-interception/immortal/attack.sh). 
+
+Cette VM est configuré pour forwarder les paquets entre opeth et grave.
 
 ------------------------------------------------------
 
@@ -90,7 +96,7 @@ Nous voici sur la page secure.php, nos données ont transitées de manière chif
 
 ## Etape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il suffit d'exécuter le fichier __"/mnt/host/attack.sh"__ depuis immortal.
+Comme expliqué précédement, pour lancer l'attaque, il suffit d'exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/immortal/attack.sh)__ depuis immortal.
 Voici son contenu :
 
 ```
@@ -106,6 +112,11 @@ On peut constater que les flux TCP à destination du port 443 (HTTPS) sont redir
 Sur la machine immortal, nous lançons le script de l'attaque :
 
 ![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen4.png)
+
+### Explication du code du proxy
+Le code du proxy est dans le fichier [https-interception](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/immortal/https-interception.py)
+
+<!--- PARLER ICI DES options de la création des sockets ---> 
 
 ## Etape 3 : pendant l'attaque
 
