@@ -78,7 +78,7 @@ $ ./qemunet/qemunet.sh -x -S https-interception
 
 Avant que l'attaque soit lancée, nous pouvons accéder à la page de login de manière sécurisée. La machine immortal n'est pas capable de comprendre la communication entre le client (grave) et le serveur (opeth) :
 
-![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen1.png)
+![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
 
 Ici, on voit que c'est bien le certificat du serveur qui est présenté au navigateur :
 

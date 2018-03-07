@@ -121,7 +121,7 @@ L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page sec
 Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voir
 nos échanges sur cette page sécurisée.
 
-![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen3.png)
+![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
 
 ## Etape 2 : lancement de l'attaque
 
@@ -231,12 +231,12 @@ page secure.php.
 Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par 
 un lien non sécurisé http:// :
 
-![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen5.png)
+![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen1.png)
 
 Nous constatons que nous arrivons sur la page secure.php en HTTP : notre 
 navigation n'est pas sécurisée !
 
-![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen6.png)
+![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen2.png)
 
 La machine immortal a été capable de capturer non seulement les identifiants du 
 formulaire, mais également le cookie de session :

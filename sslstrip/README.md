@@ -88,7 +88,7 @@ L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page sec
 
 Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a pas pût voir nos échanges sur cette page sécurisée.
 
-![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen3.png)
+![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
 
 ## Etape 2 : lancement de l'attaque
 
