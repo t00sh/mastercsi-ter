@@ -82,15 +82,15 @@ $ ./qemunet/qemunet.sh -x -S sslstrip
 
 Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave, que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
 
-![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen1.png)
+![screen1](../medias/sslstrip/screen1.png?raw=true)
 
 L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
 
-![screen2](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen2.png)
+![screen2](../medias/sslstrip/screen2.png?raw=true)
 
 Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a pas pût voir nos échanges sur cette page sécurisée.
 
-![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
+![screen3](../medias/sslstrip/screen3.png?raw=true)
 
 ## Etape 2 : lancement de l'attaque
 
@@ -107,7 +107,7 @@ iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port
 
 La règle iptables permet de rediriger les flux TCP à destination du port 80 (HTTP) vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes.
 
-![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen4.png)
+![screen4](../medias/sslstrip/screen4.png?raw=true)
 
 ### Explication du code du proxy
 
@@ -178,12 +178,12 @@ Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont rem
 
 La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
-![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen5.png)
+![screen5](../medias/sslstrip/screen5.png?raw=true)
 
 Nous constatons que nous arrivons sur la page secure.php en HTTP : notre navigation n'est pas sécurisée !
 
-![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen6.png)
+![screen6](../medias/sslstrip/screen6.png?raw=true)
 
 La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
 
-![screen7](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen7.png)
+![screen7](../medias/sslstrip/screen7.png?raw=true)
