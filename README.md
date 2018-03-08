@@ -15,11 +15,11 @@ Référence :
 
 ### Attaques implémentées
 
-- SSLstrip (voir sslstrip/README.md)
+- [SSLstrip](https://github.com/t00sh/mastercsi-ter/tree/master/sslstrip)
 
-- HTTPS interception (en cours d'implémentation)
+- [HTTPS interception](https://github.com/t00sh/mastercsi-ter/tree/master/https-interception)
 
-- SSLstrip+ (en cours d'implémentation)
+- [SSLstrip+](https://github.com/t00sh/mastercsi-ter/tree/master/sslstrip2)
 
 Afin de démontrer les attaques dans les meilleures conditions, nous utilisons l'outil [qemunet](https://gitlab.inria.fr/qemunet/core) afin de simuler un environnement vulnérable.
 
