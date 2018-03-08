@@ -2,32 +2,41 @@
 
 ## Rapport
 
-    - compléter la partie contremesures.
+    - compléter la partie contremesures. (Simon)
 
-    - rédiger la partie "SSLstrip" (utiliser des graphiques, images, etc). S'inspirer du README de l'attaque.
+    - rédiger la partie "SSLstrip" (Brendan)
 
-    - rédiger la partie HTTPS-interception.
+    - rédiger la partie HTTPS-interception. (Brendan)
 
-    - rédiger la partie SSLstrip+
+    - rédiger la partie SSLstrip+ (Amélie)
 
 ## SSLstrip
 
-    - Finaliser la rédaction de la démo.
+    - Relecture de la démo.
 
 ## HTTPS-interception
 
-    - Désactiver le HTTP sur le serveur
+    - Relecture de la démo.
 
-    - Réaliser la démo (README.md), avec screenshots.
-
-    - Peut être revoir la génération des certificats pour avoir une autorité de certification trustée par le client.
+    - Refaire les screenshots.
 
 ## SSLstrip+
 
-    - Tenter de faire fonctionner HSTS (côté client et côté serveur)
+    - Relecture de la démo.
 
-    - Mettre en place un serveur DNS sur "Opeth"
 
-    - Mettre en place un serveur DNS sur "Immortal"
+## SSLstrip-NTP
 
-    - Réaliser la démo (README.md), avec screenshots.
+    - Rechercher quels paquets sont à installer et sur quelles machines.
+
+    - Implémentation de l'attaque.
+
+    - Réalisation de la démo.
+
+    - Rédaction du rapport.
+
+## Autre
+
+    - Rédaction d'un README.md dans le dossier CA
+
+    - Peut être faire une petite partie / sous-partie dans le raport pour tout ce qui est relatif au dossier CA
