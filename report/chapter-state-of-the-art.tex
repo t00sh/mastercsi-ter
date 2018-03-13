@@ -463,3 +463,7 @@ Nous pouvons voir que cette entrée spécifie un certain nombre de choses tel qu
 Ce mécanisme permet de se protéger des attaques où un certificat frauduleux est présenté au client. En effet, si le client vérifie l'entrée TLSA grâce au protocole DNS, il se rendra compte que le certificat présenté est différent de celui de la zone DNS. C'est pourquoi il est important que la zone soit signée grâce à DNSSEC car cela empêche l'attaquant d'usurper également les réponses DNS.
 
 \subsection{Certificate Transparency}
+
+Le Certificate Transparency est un standard qui permet de surveiller les certificats émis par les autorités de certifications publiques. Il s'agit d'un journal basé sur une structure d'arbre de Merkle où sont publiés les certificats générés et leurs informations associées (CN, Organisation...).
+
+Ce journal publique peut être consulté à tout moment par n'importe qui et permet notamment de détecter la génération de certificat frauduleux par une autorité de certification \cite{certificate-transparency}.
