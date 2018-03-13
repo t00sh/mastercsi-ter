@@ -452,4 +452,14 @@ Nous voyons l'empreinte du certificat encodé en base64, le nombre de millisecon
 
 \subsection{DANE/TLSA}
 
+Le mécanisme DANE/TLSA décrit dans la RFC-6698 permet d'enregistrer dans la zone DNS d'un domaine, les empreintes cryptographiques des certificats utilisés par ce domaine. Avec l'utilisation de DNSSEC (protocole permettant de signer les requêtes DNS), ceci permet de vérifier à travers le protocol DNS que le certificat présenté par le serveur correspond bien à celui enregistré dans la zone. Une entrée TLSA ressemble à ceci :
+
+\begin{minted}[bgcolor=lbcolor, breaklines]{text}
+  _443._tcp.sub.example.com.  IN TLSA 1 1 1 ac49d9ba4570ac49...
+\end{minted}
+
+Nous pouvons voir que cette entrée spécifie un certain nombre de choses tel que le port (443), le protocol (tcp), le domaine (sub.example.com), la fonction de hashage utilisée (ici SHA-256) ainsi que l'empreinte du certificat.
+
+Ce mécanisme permet de se protéger des attaques où un certificat frauduleux est présenté au client. En effet, si le client vérifie l'entrée TLSA grâce au protocole DNS, il se rendra compte que le certificat présenté est différent de celui de la zone DNS. C'est pourquoi il est important que la zone soit signée grâce à DNSSEC car cela empêche l'attaquant d'usurper également les réponses DNS.
+
 \subsection{Certificate Transparency}
