@@ -87,7 +87,7 @@ Le serveur héberge deux pages :
 
 C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh). Cette VM est configuré pour forwarder les paquets entre opeth et grave.
 
-Si elle reçoit une requête DNS sur la table iptables PREROUTING, alors elle renvoie ce paquet sur son propre port DNS pour l'attaque. Vous pouvez consulter le fichier de configuration [dnsmasq.conf](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/dnsmask.conf)
+Si elle reçoit une requête DNS sur la table iptables PREROUTING, alors elle renvoie ce paquet sur son propre port DNS pour l'attaque. Vous pouvez consulter le fichier de configuration [dnsmasq.conf](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/dnsmasq.conf)
 
 ------------------------------------------------------
 
@@ -108,23 +108,20 @@ Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine gra
 que tout se passe normalement et que la requête POST passe bien en HTTPS
 (immortal est donc incapable de voir les identifiants envoyés) :
 
-![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen1.png)
+![screen1](../medias/sslstrip/screen1.png?raw=true)
 
 L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
 
-![screen2](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen2.png)
+![screen2](../medias/sslstrip/screen2.png?raw=true)
 
-Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voir
-nos échanges sur cette page sécurisée.
+Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée.
 
-![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
+![screen3](../medias/sslstrip/screen3.png?raw=true)
 
 ## Etape 2 : lancement de l'attaque
 
 Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier
-__"/mnt/host/attack.sh"__ depuis immortal :
-[attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh).
-Voici son contenu :
+__[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh)__ depuis immortal. Voici son contenu :
 
 ```
 PROXY_PORT=4242
@@ -149,7 +146,7 @@ vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requê
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
-![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen4.png)
+![screen4](../medias/sslstrip/screen4.png?raw=true)
 
 ### Explication du code
 
@@ -213,11 +210,11 @@ def __replace_content_length(self, data):
         return data
 ```
 
-La transformation se fait à l'aide d'une expression régulière qui remplace
-__https://www.opeth.secure__ par __http://wwww.opeth.secure__.
+La transformation se fait à l'aide d'une expression régulière qui remplace __https://www.opeth.secure__ par __http://wwww.opeth.secure__.
+
 La deuxième fonction quand le navigateur du client envoit une requete http vers le faux nom de domain. On doit alors modifier le domaine pour y remettre le vrai nom.
-La troisième fonction recalcule le Content-Length en recherchant le début des
-données (après la séquence "\r\n\r\n").
+
+La troisième fonction recalcule le Content-Length en recherchant le début des données (après la séquence "\r\n\r\n").
 
 ## Etape 3 : pendant l'attaque
 
@@ -227,14 +224,14 @@ page secure.php.
 Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par
 un lien non sécurisé http:// :
 
-![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen1.png)
+![screen5](../medias/sslstrip2/screen1.png?raw=true)
 
 Nous constatons que nous arrivons sur la page secure.php en HTTP : notre
 navigation n'est pas sécurisée !
 
-![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen2.png)
+![screen6](../medias/sslstrip2/screen2.png?raw=true)
 
 La machine immortal a été capable de capturer non seulement les identifiants du
 formulaire, mais également le cookie de session :
 
-!
+![screen7](../medias/sslstrip/screen7.png?raw=true)
