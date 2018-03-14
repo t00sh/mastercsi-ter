@@ -4,7 +4,7 @@ Cette nouvelle version de SSLstrip, pensée par l'espagnol LeonardoNve, permet d
 
 On ne va donc plus pouvoir simplement strip le 's' de https pour inciter le client à envoyer son post en http (et ainsi permettant à l'attaquer de voir tout le trafic en clair). Le navigateur emettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en https sur le serveur en question.
 
-Pour cette attaque, on suppose encore une fois que l'attaquant se situe en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est https://www.opeth.secure, on va le remplacer par http://wwww.opeth.secure. On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain, il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter, et rediriger vers son serveur DNS à lui. 
+Pour cette attaque, on suppose encore une fois que l'attaquant se situe en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est https://www.opeth.secure, on va le remplacer par http://wwww.opeth.secure. On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain, il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter, et rediriger vers son serveur DNS à lui.
 
 Ainsi il va faire croire au navigateur du client que tout est légitime, est que wwww.opeth.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.opeth.secure, il va donc accepter d'envoyer sa requête POST en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
 
@@ -18,7 +18,7 @@ L'environnement de test consiste en trois machines virtuelles :
 
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
-Voici la topologie des machines mise en place, 
+Voici la topologie des machines mise en place,
 [topology](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/topology) :
 
 ```
@@ -46,20 +46,19 @@ __"start.sh"__ de chaque dossier correspondant aux machines.
 
 ## Machine "grave" (147.210.13.2)
 
-Cette machine utilise l'environnement graphique de la distribution Linux Alpine.
-Le navigateur firefox est utilisé pour la démonstration.
-Cette machine dispose également d'un serveur DNS configuré avec dnsmasq, pour l'attaque.
+Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
+
+Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/grave/start.sh)
 
 ## Machine "opeth" (147.210.12.1)
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. 
-Le certificat utilisé pour les connections HTTPS a été généré avec openssl :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl :
 
 D'abord on crée une autorité de certification :
 
 ```
 \# Crée la clef root
-openssl genrsa -out root-ca.key 4096 
+openssl genrsa -out root-ca.key 4096
 
 \# Certificat auto-signé
 openssl req -x509 -new -nodes -key root-ca.key -sha256 -days 512 -out root-ca.pem
@@ -68,7 +67,7 @@ openssl req -x509 -new -nodes -key root-ca.key -sha256 -days 512 -out root-ca.pe
 Puis on peut créer un certificat pour le serveur opeth, signé avec la clef de l'autorité de certificati que l'on vient de créer :
 
 ```
-\# Crée la clef privée 
+\# Crée la clef privée
 openssl genrsa -out cert.key 4096
 
 \# Crée la requête
@@ -78,20 +77,17 @@ openssl req -new -key cert.key -out cert.csr
 openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial -out cert.pem -days 365 -sha256
 ```
 
-On rajoute également à la main dans le navigateur du client (grave) l'autorité de certification que l'on a créé.
-
-
 Le serveur héberge deux pages :
 
-  - une page index.php que l'on accéde en HTTP et présentant un formulaire de login.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)) que l'on accéde en HTTP et présentant un formulaire de login.
 
-  - une page secure.php que l'on accéde en HTTPS depuis la page index.php.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accéde en HTTPS.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier 
-"/mnt/host/attack.sh". 
-Cette VM est configuré pour forwarder les paquets entre opeth et grave. Si elle reçoit une requête DNS sur la table iptables PREROUTING, alors elle renvoie ce paquet sur son propre port DNS pour l'attaque. 
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh). Cette VM est configuré pour forwarder les paquets entre opeth et grave.
+
+Si elle reçoit une requête DNS sur la table iptables PREROUTING, alors elle renvoie ce paquet sur son propre port DNS pour l'attaque. Vous pouvez consulter le fichier de configuration [dnsmasq.conf](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/dnsmask.conf)
 
 ------------------------------------------------------
 
@@ -109,7 +105,7 @@ $ ./qemunet/qemunet.sh -x -S sslstrip
 ## Étape 1 : avant l'attaque
 
 Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave,
-que tout se passe normalement et que la requête POST passe bien en HTTPS 
+que tout se passe normalement et que la requête POST passe bien en HTTPS
 (immortal est donc incapable de voir les identifiants envoyés) :
 
 ![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip/screen1.png)
@@ -125,9 +121,9 @@ nos échanges sur cette page sécurisée.
 
 ## Etape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier 
-__"/mnt/host/attack.sh"__ depuis immortal : 
-[attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/immortal/attack.sh).
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier
+__"/mnt/host/attack.sh"__ depuis immortal :
+[attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh).
 Voici son contenu :
 
 ```
@@ -148,7 +144,7 @@ echo "147.210.12.1 wwww.opeth.secure" >> /etc/hosts
 service dnsmasq restart
 
 ```
-On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées 
+On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées
 vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes. Aussi, les requêtes DNS sont redirigées vers le port DNS de l'attaquant.
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
@@ -162,11 +158,11 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
 - fermer la connexion (le client ou le serveur a fermé la connection)
-- établir une connexion https, dans le cas où le client demande la page, au travers du fake host [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure.php)
-- établir une connexion http, dans le cas où le client demande la page d'accueil 
+- établir une connexion https, dans le cas où le client demande la page, au travers du fake host [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
+- établir une connexion http, dans le cas où le client demande la page d'accueil
 [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/index.php)
 
-Le code est dans le fichier 
+Le code est dans le fichier
 [sslstrip.py](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/sslstrip2.py)
 
 ```python
@@ -217,28 +213,28 @@ def __replace_content_length(self, data):
         return data
 ```
 
-La transformation se fait à l'aide d'une expression régulière qui remplace 
-__https://www.opeth.secure__ par __http://wwww.opeth.secure__. 
+La transformation se fait à l'aide d'une expression régulière qui remplace
+__https://www.opeth.secure__ par __http://wwww.opeth.secure__.
 La deuxième fonction quand le navigateur du client envoit une requete http vers le faux nom de domain. On doit alors modifier le domaine pour y remettre le vrai nom.
-La troisième fonction recalcule le Content-Length en recherchant le début des 
+La troisième fonction recalcule le Content-Length en recherchant le début des
 données (après la séquence "\r\n\r\n").
 
 ## Etape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que le lien sensible https://www.opeth.secure est remplacé par http://wwww.opeth.secure.
 La machine immortal est donc capable d'intercepter les échanges réalisés sur la
-page secure.php. 
-Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par 
+page secure.php.
+Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par
 un lien non sécurisé http:// :
 
 ![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen1.png)
 
-Nous constatons que nous arrivons sur la page secure.php en HTTP : notre 
+Nous constatons que nous arrivons sur la page secure.php en HTTP : notre
 navigation n'est pas sécurisée !
 
 ![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen2.png)
 
-La machine immortal a été capable de capturer non seulement les identifiants du 
+La machine immortal a été capable de capturer non seulement les identifiants du
 formulaire, mais également le cookie de session :
 
 !
