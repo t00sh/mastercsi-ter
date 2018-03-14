@@ -79,7 +79,7 @@ openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial
 
 Le serveur héberge deux pages :
 
-  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)) que l'on accéde en HTTP et présentant un formulaire de login.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
 
   - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accéde en HTTPS.
 
@@ -155,9 +155,9 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
 - fermer la connexion (le client ou le serveur a fermé la connection)
-- établir une connexion https, dans le cas où le client demande la page, au travers du fake host [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
+- établir une connexion https, dans le cas où le client demande la page, au travers du fake host [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
 - établir une connexion http, dans le cas où le client demande la page d'accueil
-[index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/index.php)
+[index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)
 
 Le code est dans le fichier
 [sslstrip.py](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/sslstrip2.py)
