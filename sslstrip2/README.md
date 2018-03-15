@@ -72,11 +72,11 @@ openssl req -new -key cert.key -out cert.csr
 openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial -out cert.pem -days 365 -sha256
 ```
 
-Le serveur héberge deux pages :
+Le serveur héberge deux sites :
 
-  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
+  - le domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
 
-  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accéde en HTTPS.
+  - le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accéde en HTTPS.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
