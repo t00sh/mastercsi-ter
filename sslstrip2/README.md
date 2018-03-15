@@ -45,7 +45,7 @@ Toutes les configurations initiales des machines se trouvent dans le fichier __"
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
-Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/grave/start.sh).
+Au lancement de la machine, il faut ajouter le certificat de l'autorité de certification dans firefox, grâce à l'outil certutil. Se reporter au fichier [start.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/grave/start.sh) pour plus de détails.
 
 ## Machine "opeth" (147.210.12.1)
 
