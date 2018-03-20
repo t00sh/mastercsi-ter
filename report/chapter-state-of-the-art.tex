@@ -68,7 +68,7 @@ SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. L
 
 L'attaque SSLstrip attaque non plus les connections HTTPS chiffrées et authentifiées, mais les connections HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut alors modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (https://) par leurs version non-sécurisée (http://) en prenant également en compte les éventuelles redirections (code HTTP 302).
 
-Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connection HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
+Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connexion HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
 
 Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLstrip}.
 
@@ -139,7 +139,7 @@ Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer 
 \vspace{1em}
 
 
-L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
+L'attaque BREACH (Browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -159,11 +159,11 @@ L'attaque BREACH (browser reconnaissance and exfiltration via adaptive compressi
 \vspace{1em}
 
 
-RC4 est un algorithme de chiffrement symétrique par flots qui était majoritairement utilisé pour protéger le traffic TLS.
+RC4 est un algorithme de chiffrement symétrique par flots qui était majoritairement utilisé pour protéger le trafic TLS.
 
-La première attaque mise en place pour casser l'algorithme RC4 se base sur une multi-session attaque. C'est-à-dire que l'on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On exploite un octet sur le 256 initiaux des flux de clés RC4. Puisque les 36 premiers octets du texte clair sont formés à partir d'un message fini imprévisible, lorsque SHA-1 est l'algorithme de hachage séléctionné dans le protocle TLS, ces 36 premiers octets ne peuvent pas être récupérés. Cela signifie que l'attaque permet de récupérer 220 octets de textes clair cryptés par TLS. Le nombre de connexion nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS puis se reconnecter automatiquement et retransmettre un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par des logiciels malveillants côté client, comme pour l'attaque BEAST.
+La première attaque mise en place pour casser l'algorithme RC4 se base sur une multi-session attaque. C'est-à-dire que l'on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On exploite un octet sur le 256 initiaux des flux de clés RC4. Puisque les 36 premiers octets du texte clair sont formés à partir d'un message fini imprévisible, lorsque SHA-1 est l'algorithme de hachage sélectionné dans le protocole TLS, ces 36 premiers octets ne peuvent pas être récupérés. Cela signifie que l'attaque permet de récupérer 220 octets de textes clair cryptés par TLS. Le nombre de connexion nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS puis se reconnecter automatiquement et retransmettre un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par des logiciels malveillants côté client, comme pour l'attaque BEAST.
 
-La deuxième attaque s'applique à TLS et peut être effectuée grâce à une seule connexion. On exploite certains double octets dans le flux de clés RC4. On cible les octets en clair situés à n'importe quellle position dans le flux de texte clair TLS. Le nombre de cryptage nécessaire pour récupérer de façon fiable un ensemble de 16 octets de textes clair ciblés consécutifs est d'environ $10*2^{30}$, mais avec seulement $6*2^{30}$, ces octets peuvent être récupérer avec une fiabilité de 50\%. Cette attaque peut être plus efficace en pratique.
+La deuxième attaque s'applique à TLS et peut être effectuée grâce à une seule connexion. On exploite certains double octets dans le flux de clés RC4. On cible les octets en clair situés à n'importe quelle position dans le flux de texte clair TLS. Le nombre de cryptage nécessaire pour récupérer de façon fiable un ensemble de 16 octets de textes clair ciblés consécutifs est d'environ $10*2^{30}$, mais avec seulement $6*2^{30}$, ces octets peuvent être récupérer avec une fiabilité de 50\%. Cette attaque peut être plus efficace en pratique.
 
 Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin réseau entre le client et le serveur\cite{rc4}.
 
@@ -178,13 +178,13 @@ Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin
   \hline
   \textbf{CVE(s)} & \textbf{Catégorie} \\
   \hline
-  CVE-2013-0169 & implementation, cryptographie, canaux auxiliaires \\
+  CVE-2013-0169 & implémentation, cryptographie, canaux auxiliaires \\
   \hline
 \end{tabularx}
 
 \vspace{1em}
 
-Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieur échantillons pour une même heure car il y a souvent des perturbations.
+Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieurs échantillons pour une même heure car il y a souvent des perturbations.
 
 Le nombre de session nécessaire est donc :
 
@@ -212,7 +212,7 @@ Le nombre de session nécessaire est donc :
 
 \vspace{1em}
 
-Il s'agit d'une vulnérabilité présente la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connection active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. Dans ce cas, le serveur vulnérable répondra avec un paquet contenant une partie de sa mémoire.
+Il s'agit d'une vulnérabilité présente la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connexion active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. Dans ce cas, le serveur vulnérable répondra avec un paquet contenant une partie de sa mémoire.
 
 Il est alors possible de récupérer à travers cette vulnérabilité un certains nombre d'informations confidentielles : clefs de sessions, clefs privées, cookies de sessions, mots de passe utilisateurs...\cite{heartbleed}.
 
@@ -233,11 +233,11 @@ Il est alors possible de récupérer à travers cette vulnérabilité un certain
 
 \vspace{1em}
 
-Cette vulnérability concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
+Cette vulnérabilité concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels Mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
 
 Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
 
-Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du https \cite{berserk}.
+Un attaquant peut donc se créer sa clé et se placer dans une situation de Man-In-TheMiddle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du HTTPS \cite{berserk}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -283,11 +283,11 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 
 Cette nouvelle version de SSLstrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
 
-Avec cette protection, on ne va donc plus pouvoir simplement strip le 's' de https pour inciter le client à envoyer sa requête en http (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur emettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en https sur le serveur en question.
+Avec cette protection, on ne va donc plus pouvoir simplement strippé le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
 
-Pour cette attaque, l'attaquant doit se situer en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain : il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter et remplacer par l'adresse IP rééelle du serveur.
+Pour cette attaque, l'attaquant doit se situer en man in the middle. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine : il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter et remplacer par l'adresse IP réelle du serveur.
 
-Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
+Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
 
 Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip+}.
 
@@ -330,7 +330,7 @@ Le but de l'attaque est donc de forcer la connexion client/serveur de la victime
 
 \vspace{1em}
 
-La vulnerabilité WeakDH concerne les paramètres du protocole Diffie-Hellman utilisés dans certaines implémentations, en particulier le corps $\mathbb{Z}/p\mathbb{Z}$ choisi. En effet, le nombre premier utilisé par celles-ci (environ 8.4\% du top million Alexa lors de la découverte de WeakDH)), est d'une part relativement petit (1024 bits) ce qui le rends vulnérable à la recherche du logarithme discret en un temps raisonable, et d'autre part, puisque le même nombre premier était utilisé, les efforts pour attaquer un site était le même que pour attaquer l'ensemble des sites utilisant ce nombre premier\cite{weakdh}.
+La vulnérabilité WeakDH concerne les paramètres du protocole Diffie-Hellman utilisés dans certaines implémentations, en particulier le corps $\mathbb{Z}/p\mathbb{Z}$ choisi. En effet, le nombre premier utilisé par celles-ci (environ 8.4\% du top million Alexa lors de la découverte de WeakDH)), est d'une part relativement petit (1024 bits) ce qui le rends vulnérable à la recherche du logarithme discret en un temps raisonnable, et d'autre part, puisque le même nombre premier était utilisé, les efforts pour attaquer un site était le même que pour attaquer l'ensemble des sites utilisant ce nombre premier\cite{weakdh}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -349,7 +349,7 @@ La vulnerabilité WeakDH concerne les paramètres du protocole Diffie-Hellman ut
 
 \vspace{1em}
 
-Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment du handshake. Cet algorithme permet d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en MITM, peut écouter toutes connexions TLS qui utilisent de la crytographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requièrt un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglémentation de années 90
+Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment du handshake. Cet algorithme permet d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en MITM, peut écouter toutes connexions TLS qui utilisent de la cryptographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requiert un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglementation de années 90
 \cite{logjam}.
 
 
@@ -435,9 +435,9 @@ La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une
 
 \label{sec:hsts}
 
-HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoit l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connection sécurisée \cite{hsts}.
+HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoie l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connexion sécurisée \cite{hsts}.
 
-Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip initiale. Bien entendu, cette contremesure ne protège pas la première connection initiée par le client. Pour protéger la première connection, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
+Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip initiale. Bien entendu, cette contremesure ne protège pas la première connexion initiée par le client. Pour protéger la première connexion, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
 
 Lorsque le navigateur a enregistré un nom de domaine protégé par HSTS, celui-ci remplacera tous les liens http:// par leurs équivalent https:// pour le domaine (ou sous-domaines) concerné. De plus, si le certificat est invalide (auto-signé par exemple), le navigateur affichera un message d'erreur et empêchera l'utilisateur de se connecter au site.
 
@@ -455,7 +455,7 @@ Les deux premiers nombres correspondent à la fréquence de visites du domaine, 
 
 HTTP Public Key Pinning est un autre mécanisme de sécurité décrit dans la RFC7469, qui permet à un serveur de transmettre à ses clients et via un entête HTTP les empreintes de ses certificats. Un client supportant ce mécanisme stockera alors cette empreinte pour une certaine durée (précisée par le serveur). Si l'empreinte du certificat a changé, le client refusera alors de se connecter au serveur \cite{hpkp}.
 
-Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connection, mais seulement les futures connections.
+Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connexion, mais seulement les futures connections.
 
 Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier ``~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt'' sur un système Linux.
 
@@ -471,13 +471,13 @@ Nous voyons l'empreinte du certificat encodé en base64, le nombre de millisecon
 
 \subsection{DANE/TLSA}
 
-Le mécanisme DANE/TLSA décrit dans la RFC-6698 permet d'enregistrer dans la zone DNS d'un domaine, les empreintes cryptographiques des certificats utilisés par ce domaine. Avec l'utilisation de DNSSEC (protocole permettant de signer les requêtes DNS), ceci permet de vérifier à travers le protocol DNS que le certificat présenté par le serveur correspond bien à celui enregistré dans la zone. Une entrée TLSA ressemble à ceci :
+Le mécanisme DANE/TLSA décrit dans la RFC-6698 permet d'enregistrer dans la zone DNS d'un domaine, les empreintes cryptographiques des certificats utilisés par ce domaine. Avec l'utilisation de DNSSEC (protocole permettant de signer les requêtes DNS), ceci permet de vérifier à travers le protocole DNS que le certificat présenté par le serveur correspond bien à celui enregistré dans la zone. Une entrée TLSA ressemble à ceci :
 
 \begin{minted}[bgcolor=lbcolor, breaklines]{text}
   _443._tcp.sub.example.com.  IN TLSA 1 1 1 ac49d9ba4570ac49...
 \end{minted}
 
-Nous pouvons voir que cette entrée spécifie un certain nombre de choses tel que le port (443), le protocol (tcp), le domaine (sub.example.com), la fonction de hashage utilisée (ici SHA-256) ainsi que l'empreinte du certificat.
+Nous pouvons voir que cette entrée spécifie un certain nombre de choses tel que le port (443), le protocole (TCP), le domaine (sub.example.com), la fonction de hachage utilisée (ici SHA-256) ainsi que l'empreinte du certificat.
 
 Ce mécanisme permet de se protéger des attaques où un certificat frauduleux est présenté au client. En effet, si le client vérifie l'entrée TLSA grâce au protocole DNS, il se rendra compte que le certificat présenté est différent de celui de la zone DNS. C'est pourquoi il est important que la zone soit signée grâce à DNSSEC car cela empêche l'attaquant d'usurper également les réponses DNS.
 
