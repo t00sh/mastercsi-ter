@@ -29,6 +29,7 @@ Un équipement positionné en homme du milieu sur le réseau a la possibilité d
 
 Pour que ce faux certificat soit accepté, il faut bien sûr que les noms de domaines entre le site visité et le certificat concordent, et que celui-ci soit signé par une autorité de certification connue du client. La manière la plus simple étant d'auto-signer le certificat, en ajoutant sa clef publique dans le navigateur du client. Nous avons également vu par le passé que les autorités de certifications ne sont pas à l'abri d'attaques informatiques, et que de faux certificats légitimes peuvent être émis (on se souviendra par exemple de DigiNotar en 2011) \cite{https-interception}.
 
+Cette attaque est détaillée dans le chapitre \hyperref[sec:https-interception]{Interception HTTPS}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,6 +70,7 @@ L'attaque SSLstrip attaque non plus les connections HTTPS chiffrées et authenti
 
 Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connection HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
 
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLstrip}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -277,6 +279,21 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Attaque SSLstrip2 ou SSLstrip+ (2014)}
+
+Cette nouvelle version de SSLstrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
+
+Avec cette protection, on ne va donc plus pouvoir simplement strip le 's' de https pour inciter le client à envoyer sa requête en http (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur emettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en https sur le serveur en question.
+
+Pour cette attaque, l'attaquant doit se situer en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain : il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter et remplacer par l'adresse IP rééelle du serveur.
+
+Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
+
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip+}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \subsection{FREAK (2015)}
 
@@ -415,6 +432,8 @@ La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une
 \section{Contremesures et protections}
 
 \subsection{HSTS}
+
+\label{sec:hsts}
 
 HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoit l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connection sécurisée \cite{hsts}.
 

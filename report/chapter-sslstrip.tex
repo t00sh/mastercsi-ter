@@ -1,5 +1,7 @@
 \chapter{Attaque SSLstrip}
 
+\label{sec:sslstrip}
+
 \begin{figure}[H]
   \caption{Attaque SSLstrip (diagramme Dia)}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/attack.png}}
@@ -34,7 +36,7 @@ Pour pouvoir se placer en MITM, il y a plusieurs façons de procéder. Une des f
 
 *** Faut-il expliquer plus en détail l'ARP ? ***
 
-Une fois placée en homme du milieu, l'attaquant peut donc voir le traffic envoyé par la victime vers le serveur. Bien sûr, si ce traffic est chiffré, par exemple avec le protocol SSL/TLS en https, alors l'attaquant ne pourra rien en tirer, à moins de trouver une faille dans le chiffrement utilisé. Ici, on ne va pas essayer de casser TLS, mais plus de profiter du fait que toutes les requêtes envoyées par le client ne sont pas chiffrées (c'est de moins en moins vrai de nos jours). 
+Une fois placée en homme du milieu, l'attaquant peut donc voir le traffic envoyé par la victime vers le serveur. Bien sûr, si ce traffic est chiffré, par exemple avec le protocol SSL/TLS en https, alors l'attaquant ne pourra rien en tirer, à moins de trouver une faille dans le chiffrement utilisé. Ici, on ne va pas essayer de casser TLS, mais plus de profiter du fait que toutes les requêtes envoyées par le client ne sont pas chiffrées (c'est de moins en moins vrai de nos jours).
 
 Ainsi, si la requête du client est une simple requête http, l'attaquant va pouvoir lire ce qu'il envoie, et mieux encore, il va également voir la réponse du serveur.
 
