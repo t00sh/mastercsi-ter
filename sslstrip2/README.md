@@ -6,7 +6,7 @@ On ne va donc plus pouvoir simplement strip le 's' de https pour inciter le clie
 
 Pour cette attaque, on suppose encore une fois que l'attaquant se situe en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php), on va le remplacer par [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php). On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain, il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter, et rediriger vers son serveur DNS à lui.
 
-Ainsi il va faire croire au navigateur du client que tout est légitime, est que wwww.opeth.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.opeth.secure, il va donc accepter d'envoyer sa requête POST en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
+Ainsi il va faire croire au navigateur du client que tout est légitime, et que wwww.opeth.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.opeth.secure, il va donc accepter d'envoyer sa requête POST en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
 
 # Configuration de l'environnement de test
 
