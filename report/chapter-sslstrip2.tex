@@ -16,24 +16,56 @@ Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va m
 
 Voici un exemple :
 
-Si le lien est \verb+https://www.domain.secure+, on peut le remplacer par \verb+http://wwww.domain.secure+.
+Si le lien est \path{https://www.domain.secure} , on peut le remplacer par \path{http://wwww.domain.secure}.
 
 Il faut noté que l'on enlève le \verb+s+ de \verb+https+ et que l'on remplace \verb+www+ par \verb+wwww+ ce qui change bien le nom de domaine.
 
-Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \verb+wwww.domain.secure+ correspond au serveur distant. La connexion sera donc en HTTP, donc en clair.
-
-\section{Mise en place de l'attaque}
-Pour mettre en place l'attaque, il va donc falloir se placer en homme du milieu, créer un DNS au niveau de l'attaquant afin de rediriger les requêtes HTTPS vers le faux domaine et bien sûr mettre en place la redirection du trafic HTTP comme lors de l'attaque SSLStrip.
-
-\subsection{Se placer en homme du milieu}
-%% Comment faire pour que ça ne soit pas une redite d'avant ? %%
-
-\subsection{Mise en place du DNS}
-
+Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \path{wwww.domain.secure} correspond au serveur distant. La connexion sera donc en HTTP, donc en clair.
 
 \section{Notre attaque}
 
+Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer l'environnement. Rappelons que l'attaquant est déjà positionné en homme du milieu, et que nous avons choisi de mettre sa machine dans le même réseau que la machine victime. Comme pour l'attaque précédente, nous utilisons l'outil \verb+qemunet+ développer par l'Inria qui nous permet de créer un environnement minimaliste et léger. Il nous faut donc vous expliquer sa mise en place.
+
 \subsection{Mise en place de l'environnement}
+
+Dans un premier temps, nous devons créer une topologie, c'est à dire un fichier d'écrivant l'architecture de l'environnement, qui correspond à notre besoin. En effet, nous avons besoin de trois machines:
+
+\begin{itemize}
+\item une machine cliente et victime
+\item une machine attaquante
+\item une machine serveur
+\end{itemize}
+
+% mettre une capture de la topologie
+
+Afin d'utiliser \verb+qemunet+ facilement, nous avons décidé de structurer l'environnement de l'attaque grâce à la gestion de dossier supportée par l'outil. C'est pourquoi, tout l'environnement de l'attaque se trouve dans le dossier \verb+sslstrip2+ de notre projet. Ce dossier étant lui-même réparti en sous-dossier. Chaque sous-dossier représente chaque machine :
+
+\begin{itemize}
+\item grave : dossier de la machine cliente et victime
+\item immortal : dossier de la machine attaquante
+\item opeth : dossier de la machine serveur
+\end{itemize}
+
+De plus, afin d'avoir une configuration qui est chargée à chaque lancement du système, nous utilisons des scripts bash \verb+start.sh+ qui sont chargés par \verb+qemunet+ au démarrage de chaque machine.
+
+Maintenant, il nous faut décrire ces fichiers de lancement.
+
+\subsubsection{Configuration de la machine cliente}
+Cette machine se nomme grave et utilse un environnement graphique de la distribution Linux Alpine. Un navigtateur Firefox est présent pour la démonstration ultérieure.
+
+Pour que la machine puisse accéder au réseau internet, nous devons lui spécifier une addresse IP ainsi que son masque de sous-réseau, sa route par défaut.
+
+Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement.
+
+De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il nous est nécessaire d'ajouter le certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance.
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/grave/start.sh}
+
+\subsubsection{Configuration de la machine serveur}
+
+\subsubsection{Configuration de la machine attaquante}
+
+\subsubsection{Mise en place du DNS}
 
 \subsection{Explication du code}
 
