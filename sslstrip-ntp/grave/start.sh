@@ -10,4 +10,4 @@ echo "nameserver 147.210.12.1" > /etc/resolv.conf
 su - toto -c 'certutil -A -n "ca@ca.local" -t "C,C,C" -i /mnt/host/cert.pem -d /home/toto/.mozilla/firefox/*.default'
 
 # Start NTP client
-sntpc -d -i 5
+sntpc -d -i 5 www.opeth.local

