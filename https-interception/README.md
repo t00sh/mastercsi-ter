@@ -64,7 +64,7 @@ Le serveur héberge deux pages :
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/tree/master-b64c24f/https-interception/immortal/attack.sh). 
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier [/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/tree/master-b64c24f/https-interception/immortal/attack.sh).
 
 Cette VM est configuré pour forwarder les paquets entre opeth et grave.
 
@@ -84,15 +84,15 @@ $ ./qemunet/qemunet.sh -x -S https-interception
 
 Avant que l'attaque soit lancée, nous pouvons accéder à la page de login de manière sécurisée. La machine immortal n'est pas capable de comprendre la communication entre le client (grave) et le serveur (opeth) :
 
-![screen1](https://repo.t0x0sh.org/images/mastercsi-ter/sslstrip2/screen3.png)
+![screen1](../medias/https-interception/screen1.png?raw=true)
 
 Ici, on voit que c'est bien le certificat du serveur qui est présenté au navigateur :
 
-![screen2](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen2.png)
+![screen2](../medias/https-interception/screen2.png?raw=true)
 
 Nous voici sur la page secure.php, nos données ont transitées de manière chiffrées entre le client et le serveur :
 
-![screen3](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen3.png)
+![screen3](../medias/https-interception/screen3.png?raw=true)
 
 ## Etape 2 : lancement de l'attaque
 
@@ -111,31 +111,31 @@ On peut constater que les flux TCP à destination du port 443 (HTTPS) sont redir
 
 Sur la machine immortal, nous lançons le script de l'attaque :
 
-![screen4](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen4.png)
+![screen4](../medias/https-interception/screen4.png?raw=true)
 
 ### Explication du code du proxy
 Le code du proxy est dans le fichier [https-interception](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/immortal/https-interception.py)
 
-<!--- PARLER ICI DES options de la création des sockets ---> 
+<!--- PARLER ICI DES options de la création des sockets --->
 
 ## Etape 3 : pendant l'attaque
 
 Lorsque l'attaque est en cours, le certificat a changé, et firefox nous donne une alerte :
 
-![screen5](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen5.png)
+![screen5](../medias/https-interception/screen5.png?raw=true)
 
 Ici on voit que le certificat présenté est celui du proxy (immortal), et non plus celui du serveur :
 
-![screen6](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen6.png)
+![screen6](../medias/https-interception/screen6.png?raw=true)
 
 Si on accepte le certificat, et que nous essayons de nous enregistrer :
 
-![screen7](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen7.png)
+![screen7](../medias/https-interception/screen7.png?raw=true)
 
 Nous arrivons bien sur la page secure.php, et notre connection est bien effectuée en HTTPS.
 
-![screen8](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen8.png)
+![screen8](../medias/https-interception/screen8.png?raw=true)
 
 Par contre, la machine immortal a jouée le rôle d'un proxy et a été capable de récupérer la communication en claire. Ici on voit que le nom d'utilisateur, le mot de passe ainsi que le cookie de session ont pût être capturés :
 
-![screen9](https://repo.t0x0sh.org/images/mastercsi-ter/https-interception/screen9.png)
+![screen9](../medias/https-interception/screen9.png?raw=true)
