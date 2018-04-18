@@ -2,7 +2,7 @@
 # -*- coding: utf-8
 
 """
-This script is a Poc of the SSLstrip2 attack presented by LeonardoNve.
+This script is a Poc of the SSLstrip-NTP attack presented by Jose Selvi.
 """
 
 __author__  = 'Amélie Risi, Brendan Guevel and Simon Duret'
