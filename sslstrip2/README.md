@@ -91,7 +91,7 @@ Si elle reçoit une requête DNS sur la chaîne iptables PREROUTING, alors elle 
 Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt [qemunet](https://gitlab.inria.fr/qemunet/core)) :
 
 ```
-$ ./qemunet/qemunet.sh -x -S sslstrip
+$ ./qemunet/qemunet.sh -x -S sslstrip2
 ```
 
 À partir de là, les trois machines sont lancées.
@@ -100,15 +100,15 @@ $ ./qemunet/qemunet.sh -x -S sslstrip
 
 Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
 
-![screen1](../medias/sslstrip/screen1.png?raw=true)
+![screen1](../medias/sslstrip2/screen1.png?raw=true)
 
 L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
 
-![screen2](../medias/sslstrip/screen2.png?raw=true)
+![screen2](../medias/sslstrip2/screen2.png?raw=true)
 
-Nous arrivons alors sur la page secure.php, en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée.
+Nous arrivons alors sur le domaine www.opeth.secure en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée.
 
-![screen3](../medias/sslstrip/screen3.png?raw=true)
+![screen3](../medias/sslstrip2/screen3.png?raw=true)
 
 ## Etape 2 : lancement de l'attaque
 
@@ -220,12 +220,12 @@ La machine immortal est donc capable d'intercepter les échanges réalisés sur 
 
 Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
-![screen5](../medias/sslstrip2/screen1.png?raw=true)
+![screen5](../medias/sslstrip2/screen5.png?raw=true)
 
 Nous constatons que nous arrivons sur la page secure.php en HTTP : notre navigation n'est pas sécurisée !
 
-![screen6](../medias/sslstrip2/screen2.png?raw=true)
+![screen6](../medias/sslstrip2/screen6.png?raw=true)
 
 La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
 
-![screen7](../medias/sslstrip/screen7.png?raw=true)
+![screen7](../medias/sslstrip2/screen7.png?raw=true)
