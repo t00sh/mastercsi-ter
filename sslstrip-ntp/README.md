@@ -132,7 +132,7 @@ hsts_expire=$(($hsts_expire / 60 + 1))
 /mnt/host/sslstrip-ntp.py $PROXY_PORT
 ```
 
-On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes. Aussi, les requêtes NTP sont redirigées vers le serveur Delorean.
+On peut constater que les flux TCP à destination du port 80 (HTTP) sont redirigées vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes. Aussi, les requêtes NTP sont redirigées vers le serveur Delorean, chargé d'expirer les entrées HSTS.
 
 Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
@@ -140,7 +140,9 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 ## Etape 3 : pendant l'attaque
 
-Lorsque l'attaque est lancée, on peut voir que le lien sensible [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php) est remplacé par [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php). La machine immortal est donc capable d'intercepter les échanges réalisés sur le domaine www.opeth.secure.
+Lorsque l'attaque est lancée, on peut voir que le lien sensible [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php) est remplacé par [http://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php). La machine immortal est donc capable d'intercepter les échanges réalisés sur le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php).
+
+Dés que le client effectuera une requête NTP, celle-ci sera redirigée vers le serveur Delorean, qui répondra avec une date permettant d'expirer le HSTS. Cette protection ne sera alors plus effective pour le domaine censé être sécurisé.
 
 Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
@@ -150,6 +152,6 @@ Nous constatons que nous arrivons sur le domaine www.opeth.secure en HTTP : notr
 
 ![screen6](../medias/sslstrip-ntp/screen2.png?raw=true)
 
-La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
+La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session alors que le domaine était protégé par HSTS :
 
 ![screen7](../medias/sslstrip-ntp/screen7.png?raw=true)
