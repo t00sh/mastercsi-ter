@@ -146,11 +146,11 @@ Dés que le client effectuera une requête NTP, celle-ci sera redirigée vers le
 
 Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
 
-![screen5](../medias/sslstrip-ntp/screen1.png?raw=true)
+![screen5](../medias/sslstrip-ntp/screen5.png?raw=true)
 
 Nous constatons que nous arrivons sur le domaine www.opeth.secure en HTTP : notre navigation n'est pas sécurisée !
 
-![screen6](../medias/sslstrip-ntp/screen2.png?raw=true)
+![screen6](../medias/sslstrip-ntp/screen6.png?raw=true)
 
 La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session alors que le domaine était protégé par HSTS :
 
