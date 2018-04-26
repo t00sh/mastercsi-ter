@@ -14,7 +14,6 @@ openssl genrsa -out cert.key 4096
 # Create request
 openssl req -new -key cert.key -out cert.csr
 
-
 # Sign certificate with CA
 openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAcreateserial -out cert.pem -days 365 -sha256
 

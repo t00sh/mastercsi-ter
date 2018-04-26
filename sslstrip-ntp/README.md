@@ -4,7 +4,7 @@ Cette amélioration de l'attaque SSLstrip originale a été présentée pour la 
 
 L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "striper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à striper en HTTPS pendant un certain laps de temps, défini par le serveur.
 
-Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur. Il s'agit d'un protocole stateless non-sécurisé basé sur UDP. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date éronnée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appellé [Delorean](https://github.com/myusuf3/delorean), qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
+Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur. Il s'agit d'un protocole stateless non-sécurisé basé sur UDP. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date éronnée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé [Delorean](https://github.com/myusuf3/delorean), qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
 
 Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, nous pouvons utiliser l'attaque SSLstrip originale afin de striper les URL des pages web, même pour les domaines censés être protégés par HSTS.
 
