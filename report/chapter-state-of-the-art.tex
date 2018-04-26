@@ -319,6 +319,8 @@ Cette amélioration de l'attaque SSLstrip originale a été présentée pour la 
 
 L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLstrip originale pour stripper les liens https des pages web visitées par la victime \cite{sslstrip-ntp}.
 
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip-ntp]{SSLstrip NTP}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -484,7 +486,7 @@ HTTP Public Key Pinning est un autre mécanisme de sécurité décrit dans la RF
 
 Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connexion, mais seulement les futures connections.
 
-Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier ``~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt'' sur un système Linux.
+Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier \path{~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt} sur un système Linux.
 
 Voici à quoi ressemble une entrée dans ce fichier pour HPKP :
 
