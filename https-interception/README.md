@@ -120,22 +120,20 @@ Le code du proxy est dans le fichier [https-interception](https://github.com/t00
 
 ## Etape 3 : pendant l'attaque
 
-Lorsque l'attaque est en cours, le certificat a changé, et firefox nous donne une alerte :
+Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du Proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été dans présent dans le navigateur, celui-ci aurait émis une alerte.
 
-![screen5](../medias/https-interception/screen5.png?raw=true)
-
-Ici on voit que le certificat présenté est celui du proxy (immortal), et non plus celui du serveur :
+Ci-dessous on voit que le certificat présenté est celui du proxy (immortal), et non plus celui du serveur. On voit bien que les empreintes SHA256 sont différentes.
 
 ![screen6](../medias/https-interception/screen6.png?raw=true)
 
-Si on accepte le certificat, et que nous essayons de nous enregistrer :
+Si le certificat est accepté par le client et que nous essayons de nous enregistrer :
 
-![screen7](../medias/https-interception/screen7.png?raw=true)
+![screen7](../medias/https-interception/screen1.png?raw=true)
 
-Nous arrivons bien sur la page secure.php, et notre connection est bien effectuée en HTTPS.
+Nous arrivons bien sur la page secure.php, et notre connection est bien effectuée en HTTPS. Le client n'a constaté aucuns changement au niveau de sa navigation.
 
-![screen8](../medias/https-interception/screen8.png?raw=true)
+![screen8](../medias/https-interception/screen3.png?raw=true)
 
-Par contre, la machine immortal a jouée le rôle d'un proxy et a été capable de récupérer la communication en claire. Ici on voit que le nom d'utilisateur, le mot de passe ainsi que le cookie de session ont pût être capturés :
+Par contre, la machine immortal a jouée le rôle d'un proxy et a été capable de récupérer la communication en clair. Ici on voit que le nom d'utilisateur, le mot de passe ainsi que le cookie de session ont pût être capturés :
 
 ![screen9](../medias/https-interception/screen9.png?raw=true)
