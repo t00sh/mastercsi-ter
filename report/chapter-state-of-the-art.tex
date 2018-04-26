@@ -184,7 +184,7 @@ Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin
 
 \vspace{1em}
 
-Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieurs échantillons pour une même heure car il y a souvent des perturbations.
+Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieurs échantillons pour une même heure car il y a souvent des perturbations \cite{lucky13}.
 
 Le nombre de session nécessaire est donc :
 
@@ -193,7 +193,6 @@ Le nombre de session nécessaire est donc :
 \item 219 si le texte clair est codé en base64.
 \item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
 \end{itemize}
-\cite{lucky13}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -407,7 +406,7 @@ Sloth(Security Losses from Obsolete and Truncated Transcript Hashes) s'intéress
 
 \vspace{1em}
 
-Sweet32 est une attaque qui vise des algorithmes de chiffrements utilisant des blocs de chiffrement inférieurs à 64 bits. Il faut utiliser encore une fois une attaque par collision. L'attaquant doit collecter aux maximum 32GB de données chiffrées qu'il doit analyser. Il peut donc trouver la clé privée et déchiffrer les message\cite{sweet32}.
+Sweet32 est une attaque qui vise les algorithmes symétriques utilisant des blocs inférieurs ou égaux à 64 bits utilisant le mode CBC. Il faut utiliser encore une fois une attaque par collision basée sur le paradoxe des anniversaires. En collectant environ 32Go de données chiffrées, l'attaquant a alors une grande probabilité de trouver deux blocs chiffrés identiques. En ayant une connaissance d'une partie du texte en clair il a la possibilité de déchiffrer certains blocs. Cette attaque a particulièrement affaibli les algorithmes 3-DES et blowfish, tout deux opérant sur des blocs de 64bits \cite{sweet32}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
