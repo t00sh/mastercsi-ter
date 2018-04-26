@@ -470,7 +470,7 @@ Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip ini
 
 Lorsque le navigateur a enregistré un nom de domaine protégé par HSTS, celui-ci remplacera tous les liens http:// par leurs équivalent https:// pour le domaine (ou sous-domaines) concerné. De plus, si le certificat est invalide (auto-signé par exemple), le navigateur affichera un message d'erreur et empêchera l'utilisateur de se connecter au site.
 
-Pour firefox par exemple, cette base de donnée est stockée dans le fichier ``~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt'' sur un système Linux.
+Pour firefox par exemple, cette base de donnée est stockée dans le fichier \path{SiteSecurityServiceState.txt} présent dans le profile Mozilla firefox.
 
 Voici par à quoi correspond une entrée de ce fichier, ici pour le domaine www.youtube.com :
 
@@ -486,7 +486,7 @@ HTTP Public Key Pinning est un autre mécanisme de sécurité décrit dans la RF
 
 Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connexion, mais seulement les futures connections.
 
-Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier \path{~/.mozilla/firefox/XXXX/SiteSecurityServiceState.txt} sur un système Linux.
+Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier \path{SiteSecurityServiceState.txt} présent dans le profile de Mozilla firefox.
 
 Voici à quoi ressemble une entrée dans ce fichier pour HPKP :
 
