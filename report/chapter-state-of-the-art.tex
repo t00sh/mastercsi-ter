@@ -280,6 +280,16 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 
 \subsection{Attaque SSLstrip2 ou SSLstrip+ (2014)}
 
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  - & protocole, humain \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
 Cette nouvelle version de SSLstrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
 
 Avec cette protection, on ne va donc plus pouvoir simplement strippé le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
@@ -293,6 +303,24 @@ Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{SSLstrip-NTP (2014}
+
+\begin{tabularx}{0.96\textwidth}{|c|X|}
+  \hline
+  \textbf{CVE(s)} & \textbf{Catégorie} \\
+  \hline
+  - & protocole, humain \\
+  \hline
+\end{tabularx}
+
+\vspace{1em}
+
+Cette amélioration de l'attaque SSLstrip originale a été présentée pour la première fois par Jose Selvi à la Blackhat Europe de 2014. Celle-ci permet de contourner la sécurité offerte par HSTS (HTTP Strict Transport Security), dans le cas où l'attaquant est capable de modifier le trafic NTP entre le client et le serveur NTP.
+
+L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLstrip originale pour stripper les liens https des pages web visitées par la victime.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{FREAK (2015)}
 
