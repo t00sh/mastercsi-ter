@@ -21,6 +21,8 @@ Référence :
 
 - [SSLstrip+](https://github.com/t00sh/mastercsi-ter/tree/master/sslstrip2)
 
+- [SSLstrip NTP](https://github.com/t00sh/mastercsi-ter/tree/master/sslstrip-ntp)
+
 Afin de démontrer les attaques dans les meilleures conditions, nous utilisons l'outil [qemunet](https://gitlab.inria.fr/qemunet/core) afin de simuler un environnement vulnérable.
 
 ### Auteurs
