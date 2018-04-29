@@ -55,11 +55,11 @@ Les actions à mettre en place pour réaliser l'attaque sont les suivantes :
 
 Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
 
-Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier start.sh
+Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier \path{start.sh}.
 
 \subsubsection{Machine opeth (www.opeth.local)}
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts create-ca.sh et new-cert.sh de la façon suivante :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts \path{create-ca.sh} et \path{new-cert.sh} de la façon suivante :
 
 \begin{minted}{bash}
 cd CA
@@ -75,7 +75,7 @@ Le serveur héberge deux pages :
 
 \subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier /mnt/host/attack.sh.
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier \path{/mnt/host/attack.sh}.
 
 Cette VM est configurée pour forwarder les paquets entre opeth et grave.
 
@@ -114,7 +114,7 @@ Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a p
 
 \subsubsection{Etape 2 : lancement de l'attaque}
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier /mnt/host/attack.sh depuis immortal. Voici son contenu :
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier \path{/mnt/host/attack.sh} depuis immortal. Voici son contenu :
 
 \begin{minted}{bash}
 PROXY_PORT=4242
@@ -134,7 +134,7 @@ La règle iptables permet de rediriger les flux TCP à destination du port 80 (H
 
 \paragraph{Explication du code du proxy \\}
 
-Le code du proxy est dans le fichier sslstrip.py.
+Le code du proxy est dans le fichier \path{sslstrip.py}.
 
 \subparagraph{Réception des requêtes \\}
 
@@ -174,7 +174,7 @@ A la fin, on transforme tous les liens https trouvé en http et on recalcule la 
 
 \subparagraph{Transformation des liens \\}
 
-La transformation se fait à l'aide d'une expression régulière qui remplace https:// par http:// dans les données HTTP.
+La transformation se fait à l'aide d'une expression régulière qui remplace \path{https://} par \path{http://} dans les données HTTP.
 
 \begin{minted}{python}
 def __replace_https_to_http(self, data):
@@ -183,7 +183,7 @@ def __replace_https_to_http(self, data):
 
 \subparagraph{Recalcule de l'entête Content-Length \\}
 
-Il faut ensuite recalculer l'entête Content-Length, en se basant sur le début des données HTTP situées après la séquence "\r\n\r\n" :
+Il faut ensuite recalculer l'entête Content-Length, en se basant sur le début des données HTTP situées après la séquence "{\textbackslash}r{\textbackslash}n{\textbackslash}r{\textbackslash}n" :
 
 \begin{minted}{python}
 def __replace_content_length(self, data):
@@ -198,9 +198,9 @@ def __replace_content_length(self, data):
 
 \subsubsection{Etape 3 : pendant l'attaque}
 
-Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://.
+Lorsque l'attaque est lancée, on peut voir que tous les liens \path{https://} sont remplacés par \path{http://}.
 
-La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
+La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien \path{https://} a bien été remplacé par un lien non sécurisé \path{http://} :
 
 \begin{figure}[H]
   \caption{Le 's' de "https" a disparu}
