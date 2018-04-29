@@ -7,21 +7,7 @@
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/attack.png}}
 \end{figure}
 
-Le but de l'attaque est de rediriger tout trafic HTTPS vers du HTTP sans que la victime s'en aperçoive. Il faut transformer tous les liens HTTPS en HTTP et garder en mémoire tous les changement effectués.
-
-Pour cela, il est nécessaire de se positionner en homme du milieu, avec par exemple une attaque de type ARP poisonning si l'on se trouve sur le même réseau local que la victime. L'attaque doit se passer soit lors des redirections 302, soit quand l'utilisateur clique sur un lien HTTPS.
-
-Les actions à mettre en place sont les suivantes :
-
-\begin{enumerate}
-\item Regarder le trafic HTTP
-\item Changer les liens HTTPS par des HTTPS et garder en mémoire les actions
-\item Lorsque qu'on voit une requête HTTP pour une URL que l'on a supprimé, il faut envoyer au serveur du HTTPS
-\item Conserver une carte des liens relatifs, CSS, JavaScript
-\item Pour essayer de conserver le même aspect visuel, on doit faire de même pour les favicon en renvoyant la favicon de notre choix.
-\item A éliminer des en-têtes de requêtes, les encodages, les cookies et les pages en cache.
-\item Lors des requêtes POST envoyées par SSL, avec login et password, il faut faire expirer les cookies pour que l'utilisateur renvoie une requête sans cookies
-\end{enumerate}
+\section{Description de l'attaque}
 
 L'attaque SSLstrip a été présentée pour la première fois en 2009 par l'américain Moxie Marlinspike à la conférence en sécurité Blackhat. C'est une attaque très simple qui va permettre à un attaquant de pouvoir récupérer des informations confidentielles telles qu'un mot de passe ou un cookie de session. Cependant, l'attaque n'est plus vraiment d'actualité, nous reviendrons là dessus à la fin.
 
@@ -49,6 +35,192 @@ L'idée de l'attaque, va donc être de forcer le client à se connecter en HTTP,
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen5.png}}
 \end{figure}
 
-*** recopier plus ou moins la description de l'attaque du README ? ***
+Les actions à mettre en place pour réaliser l'attaque sont les suivantes :
+
+\begin{enumerate}
+\item Regarder le trafic HTTP
+\item Changer les liens HTTPS par des HTTPS et garder en mémoire cette conversion
+\item Lorsque le client fait HTTP pour une URL qui devrait être en https, il faut envoyer au serveur la même requête en HTTPS
+\item Conserver une carte des liens relatifs, CSS, JavaScript
+\item Pour essayer de conserver le même aspect visuel, on doit faire de même pour les favicon en renvoyant la favicon de notre choix
+\item A éliminer des en-têtes de requêtes, les encodages, les cookies et les pages en cache.
+\item Lors des requêtes POST envoyées par SSL, avec login et password, il faut faire expirer les cookies pour que l'utilisateur renvoie une requête sans cookies
+\end{enumerate}
+
+\section{Notre attaque}
+
+\subsection{Mise en place de l'environnement}
+
+\subsubsection{Machine grave (147.210.13.2)}
+
+Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
+
+Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier start.sh
+
+\subsubsection{Machine opeth (www.opeth.local)}
+
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts create-ca.sh et new-cert.sh de la façon suivante :
+
+\begin{minted}{bash}
+cd CA
+./create-ca.sh
+./new-cert.sh
+\end{minted}
+
+Le serveur héberge deux pages :
+
+  - une page index.php que l'on accéde en HTTP et présentant un formulaire de login.
+
+  - une page secure.php que l'on accéde en HTTPS depuis la page index.php.
+
+\subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
+
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier /mnt/host/attack.sh.
+
+Cette VM est configurée pour forwarder les paquets entre opeth et grave.
+
+\subsection{Démonstration}
+
+Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt qemunet) :
+
+\begin{minted}{bash}
+./qemunet/qemunet.sh -x -S sslstrip
+\end{minted}
+
+À partir de là, les trois machines sont lancées.
+
+\subsubsection{Étape 1 : avant l'attaque}
+
+Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave, que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
+
+\begin{figure}[H]
+  \caption{Attaque SSLstrip (avant l'attaque)}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen1.png}}
+\end{figure}
+
+L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
+
+\begin{figure}[H]
+  \caption{Code source de la page (avant l'attaque)}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen2.png}}
+\end{figure}
+
+Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a pas pût voir nos échanges sur cette page sécurisée.
+
+\begin{figure}[H]
+  \caption{Code source de la page (avant l'attaque)}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen3.png}}
+\end{figure}
+
+\subsubsection{Etape 2 : lancement de l'attaque}
+
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier /mnt/host/attack.sh depuis immortal. Voici son contenu :
+
+\begin{minted}{bash}
+PROXY_PORT=4242
+
+iptables -t nat -F
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port $PROXY_PORT
+
+/mnt/host/sslstrip.py $PROXY_PORT
+\end{minted}
+
+La règle iptables permet de rediriger les flux TCP à destination du port 80 (HTTP) vers le port d'écoute du proxy qui est chargé d'analyser et traiter les requêtes.
+
+\begin{figure}[H]
+  \caption{Lancement de l'attaque}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen4.png}}
+\end{figure}
+
+\paragraph{Explication du code du proxy \\}
+
+Le code du proxy est dans le fichier sslstrip.py.
+
+\subparagraph{Réception des requêtes \\}
+
+Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
+
+\begin{itemize}
+\item fermer la connexion (le client ou le serveur a fermé sa socket)
+\item établir une connexion https, dans le cas où le client demande la page secure.php
+\item établir une connexion http, dans le cas où le client demande la page d'accueil index.php
+\end{itemize}
+
+Voici la fonction implémentant la reception d'une requête HTTP :
+
+\begin{minted}{python}
+def __recv(self, csock):
+        fw_sock = self.__csockets[csock]
+        data = csock.recv(BUFFER_SIZE)
+        if len(data) == 0:
+            self.__close_conn(csock)
+            self.__close_conn(fw_sock)
+        else:
+            print(data)
+
+            if fw_sock is None:
+                m = re.search(b'(GET|POST) (\S+) HTTP/\d.\d', data)
+                if m is not None and m.group(2) in HTTPS_URL:
+                    self.__new_https_conn(csock)
+                else:
+                    self.__new_http_conn(csock)
+                fw_sock = self.__csockets[csock]
+            data = self.__replace_https_to_http(data)
+            data = self.__replace_content_length(data)
+            fw_sock.send(data)
+\end{minted}
+
+A la fin, on transforme tous les liens https trouvé en http et on recalcule la taille de la requête (entête Content-Length).
+
+\subparagraph{Transformation des liens \\}
+
+La transformation se fait à l'aide d'une expression régulière qui remplace https:// par http:// dans les données HTTP.
+
+\begin{minted}{python}
+def __replace_https_to_http(self, data):
+        return re.sub(b'https://', b'http://', data)
+\end{minted}
+
+\subparagraph{Recalcule de l'entête Content-Length \\}
+
+Il faut ensuite recalculer l'entête Content-Length, en se basant sur le début des données HTTP situées après la séquence "\r\n\r\n" :
+
+\begin{minted}{python}
+def __replace_content_length(self, data):
+    try:
+        idx = data.index(b"\r\n\r\n")
+        length = len(data) - idx - 4
+        return re.sub(b'Content-Length: (\d+)',
+                      b'Content-Length: %d' % length, data, 1)
+    except:
+        return data
+\end{minted}
+
+\subsubsection{Etape 3 : pendant l'attaque}
+
+Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://.
+
+La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien https:// a bien été remplacé par un lien non sécurisé http:// :
+
+\begin{figure}[H]
+  \caption{Le 's' de "https" a disparu}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen5.png}}
+\end{figure}
+
+Nous constatons que nous arrivons sur la page secure.php en HTTP : notre navigation n'est pas sécurisée !
+
+\begin{figure}[H]
+  \caption{Le client visite une page sécurisée en http}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen6.png}}
+\end{figure}
+
+La machine immortal a été capable de capturer non seulement les identifiants du formulaire, mais également le cookie de session :
+
+\begin{figure}[H]
+  \caption{L'attaquant récupère toutes les informations sensibles}
+  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen7.png}}
+\end{figure}
+
+\section{L'attaque SSLstrip aujourd'hui}
 
 Cependant, l'attaque n'est plus vraiment d'actualité car les sites internet modernes (ou plutôt, ceux qui pensent à la sécurité de leurs utilisateurs), utilisent HTTPS sur toutes les pages de leur site web, ce qui empêche l'attaquant d'intercepter ne serait-ce qu'une requête HTTP, et de la modifier. De plus, une autre protection, nommée HSTS, permet au serveur d'indiquer à un client de toujours se connecter en HTTPS sur certaines pages. Ainsi, si un attaquant parvient à intercepter une requête HTTP, et à remplacer les liens HTTPS vers des liens HTTP dans le code HTML, le navigateur du client émettra une exception, car il aura gardé en mémoire qu'il doit se connecter en HTTPS sur telle page spécifique. Néanmoins il existe des moyens de contourner cet ajout, nous en parlerons dans la prochaine attaque.
