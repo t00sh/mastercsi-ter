@@ -11,7 +11,7 @@
 
 La méthode que nous allons voir pour intercepter un traffic https n'est pas vraiment une attaque. Pour être menée à bien, la machine placée en homme du milieu doit avoir installé sa propre authorité de certification, et surtout l'avoir rentrée sur la machine du client, en amont.
 
-C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il y a des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes http des employés passent par un proxy, pour suivre leur activité. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes https. 
+C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il y a des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes http des employés passent par un proxy, pour suivre leur activité. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes https.
 
 C'est en fait au contraire assez simple à réaliser dans la mesure où il est facile de rajouter une authorité de certification à la main dans les navigateurs web de tous les employés.
 
@@ -29,7 +29,7 @@ Au lancement de la machine, il faut configurer l'autorité de certification dans
 
 \subsubsection{Machine opeth (www.opeth.local)}
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts create-ca.sh et new-cert.sh de la façon suivante :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts \path{create-ca.sh} et \path{new-cert.sh} de la façon suivante :
 
 \begin{minted}{bash}
 cd CA
@@ -45,7 +45,7 @@ Le serveur héberge deux pages :
 
 \subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
 
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier /mnt/host/attack.sh.
+C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier \path{/mnt/host/attack.sh}.
 
 Cette VM est configurée pour forwarder les paquets entre opeth et grave.
 
@@ -85,7 +85,7 @@ Nous voici sur la page secure.php, nos données ont transitées de manière chif
 
 \subsubsection{Etape 2 : lancement de l'attaque}
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier /mnt/host/attack.sh depuis immortal. Voici son contenu :
+Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier \path{/mnt/host/attack.sh} depuis immortal. Voici son contenu :
 
 \begin{minted}{bash}
 PROXY_PORT=4242
@@ -106,9 +106,7 @@ Sur la machine immortal, nous lançons le script de l'attaque :
 
 \paragraph{Explication du code du proxy \\}
 
-Le code du proxy est dans le fichier https-interception.py
-
-Ce dernier est sensiblement le même que celui utilisé pour l'attaque sslstrip.
+Le code du proxy est dans le fichier \path{https-interception.py}. Ce dernier est sensiblement le même que celui utilisé pour l'attaque sslstrip.
 
 \subparagraph{Contexte ssl du proxy \\}
 
@@ -153,4 +151,3 @@ Par contre, la machine immortal a jouée le rôle d'un proxy et a été capable 
   \caption{L'attaquant a intercepté les informations sensibles}
   \fbox{\includegraphics[width=\textwidth]{../medias/https-interception/screen9.png}}
 \end{figure}
-
