@@ -190,16 +190,31 @@ Les chercheurs ont annoncé que le taux de succés de cette attaque pour déchif
 
 \vspace{1em}
 
-Lucky 13 fait encore partie du cadre d'attaque MITM. La faille permet à un attaquant de récupérer du texte clair à partir d'une connexion TLS lorsque que le cryptage en mode CBC est utilisé. Comme l'attaque précédente, on effectue des attaques à plusieurs sessions, donc on a besoin d'envoyer un message clair cible à plusieurs reprise dans la même position dans le flux de texte lors de plusieurs connexions TLS. On détecte de petites différences dans l'heure à laquelle les messages d'erreur TLS apparaissent sur le réseau en réponse à des textes chiffrés générés par l'attaquant. L'attaquant doit récupérer plusieurs échantillons pour une même heure car il y a souvent des perturbations \cite{lucky13}.
+Lucky 13 est une attaque cryptographique, exploitant des canaux auxiliaires de certaines implémentations de TLS (OpenSSL et GnuTLS), notamment lorsque le mode CBC (Cipher Block Chaining) est utilisé.
 
-Le nombre de session nécessaire est donc :
+Cette attaque a été initialement découverte par des chercheurs de l'université de Londre et a été qualifiée de théorique pour le moment.
+
+Pour expliquer le fonctionnement de cette attaque, il faut comprendre comment sont vérifiées les données chiffrées une fois qu'elles ont été déchiffrées avec le mode CBC. Les données en clair contiendront :
 
 \begin{itemize}
-\item 223 si l'attaquant se trouve sur le même LAN que la machine attaquée et que HMAC-SHA1 est utilisé comme algorithme MAC (Message Authentication Code) de TLS.
-\item 219 si le texte clair est codé en base64.
-\item 213 si un octet du texte clair dans l'une des deux dernières positions d'un bloc est déjà connu.
+\item{Les octets de données en clair ;}
+\item{48 octets pour le MAC (Message Authentication Code) dans le cas où SHA-384 est utilisé ;}
+\item{Des octets de padding.}
 \end{itemize}
 
+Une fois ces données déchiffrées, il est nécessaire d'effectuer l'ensemble des opérations suivantes sur les données déchiffrées en temps constant pour éviter toute exploitation de canaux auxiliaires :
+
+\begin{itemize}
+\item{Vérifier que le padding est correct (longueur, valeur des octets du padding...) ;}
+\item{Calculer le MAC des données en clair et du header TLS ;}
+\item{Extraire le MAC reçu (avec des temps d'accés mémoire constants), et le vérifier avec le MAC calculé.}
+\end{itemize}
+
+Le problème mis en avant par l'attaque Lucky-13 concerne la dernière étape, c'est à dire l'extraction du MAC reçu dans le paquet TLS. Le temps de cette étape dépend en effet du padding, et les temps d'accés mémoire pourront être différents si le padding est correct ou incorrect. Il s'agit d'un canal auxiliaire de type ``cache timing''.
+
+L'attaquant a alors la possibilité d'obtenir un oracle de padding qui détermine si un paquet a un padding correct ou non en fonction du temps de réponse, ce qui peut conduire à une attaque de type CBC-Padding-Oracle lorsque c'est le mode CBC qui est utilisé (et donc permettre le déchiffrement complet du message).
+
+Lucky-13 a permis de mettre en avant que la construction Mac-Then-Encrypt utilisée dans TLS était dangereuse, et qu'une construction Encrypt-Then-Mac a l'avantage d'être beaucoup plus robuste à ce type d'attaque, étant donné qu'un paquet incorrect est rejeté beaucoup plus tôt \cite{lucky13}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
