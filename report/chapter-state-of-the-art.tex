@@ -253,11 +253,13 @@ Il est alors possible de récupérer à travers cette vulnérabilité un certain
 
 \vspace{1em}
 
-Cette vulnérabilité concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels Mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 lors de la vérification de signatures RSA.
+Cette vulnérabilité concerne la bibliothèque Mozilla Network Security Services (NSS) utilisée notamment dans les logiciels Mozilla. L'attaque repose sur la falsification de signature numérique. La faille est présente à cause de l'analyse incorrecte de messages codés en ASN.1 (Abstract Syntax Notation One) lors de la vérification de signatures RSA.
 
-Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). C'est une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1. Cette attaque exploite le fait que la longueur d'un champ dans le codage BER peut être utilisée pour utiliser de nombreux octets de données. Dans les implémentations vulnérables, ces octets sont ensuite ignorés lors de l'analyse.
+Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). Il s'agit d'un format permettant de sérialiser des structures de données et qui est très utilisé pour représenter les objets cryptographiques (clefs, signatures...). C'est notamment ce format qui est utilisé dans les certificats X.509, largement utilisés sur Internet.
 
-Un attaquant peut donc se créer sa clé et se placer dans une situation de man-in-the-middle. Dans ce cas, il intercepte les communications qui seront en clair pour lui car il aura chiffré celle-ci avec sa clé. Pour l'utilisateur, la connexion reste sécurisée et en plus, il verra toujours du HTTPS \cite{berserk}.
+L'attaque Berserk utilise un bug présent dans la fonction de parsing des signatures au format ASN.1, de la bibliothèque NSS. Il est en effet possible grâce à ce bug, de générer des signatures RSA correctes lorsque l'exposant public est petit (généralement 3). Il s'agit en fait d'une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1 (Public Key Cryptography Standard 1).
+
+Il est alors possible grâce à cette attaque de générer de faux certificats X.509 possédant une signature RSA correcte, et donc de mettre en place une attaque man-in-the-middle entre un site HTTPS vulnérable et ses utilisateurs \cite{berserk}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
