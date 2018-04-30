@@ -487,7 +487,7 @@ La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une
 
 \label{sec:hsts}
 
-HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoit l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connexion sécurisée \cite{hsts}.
+HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoie l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connexion sécurisée \cite{hsts}.
 
 Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip initiale. Bien entendu, cette contremesure ne protège pas la première connexion initiée par le client. Pour protéger la première connexion, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
 
