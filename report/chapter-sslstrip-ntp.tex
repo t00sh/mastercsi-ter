@@ -29,13 +29,13 @@ Pour configurer chaque machine, nous utilisons le script \path{start.sh} présen
 
 \subsubsection{Machine grave (147.210.13.2)}
 
-Il s'agit de la machine cliente et victime. Celle-ci machine utilise l'environnement graphique de la distribution Linux Alpine et le navigateur firefox est utilisé pour la démonstration.
+Il s'agit de la machine cliente et victime. Celle-ci utilise l'environnement graphique de la distribution Linux Alpine et le navigateur firefox est utilisé pour la démonstration.
 
 Au lancement de la machine, le certificat de notre autorité de certification est ajouté à firefox grâce à l'outil certutil. De plus, un client NTP (sntpc) est lancé au démarrage de la machine et configuré pour effectuer ses requêtes vers opeth de manière régulière (toutes les secondes pour les besoins de la démonstration).
 
 \subsubsection{Machine opeth (147.210.12.1)}
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl grâces aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification par ce script :
+Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification par ce script :
 
 \begin{minted}{bash}
 #!/bin/sh
@@ -120,7 +120,7 @@ L'encadré rouge ci-dessous montre bien que le POST est effectué en HTTPS, sur 
 Nous arrivons alors sur le domaine \path{www.opeth.secure} en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée comme le montre la figure ci-dessous.
 
 \begin{figure}[H]
-  \caption{Code source de la page (avant l'attaque)}
+  \caption{La connexion se fait bien en https}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen3.png}}
 \end{figure}
 

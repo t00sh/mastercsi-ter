@@ -17,21 +17,21 @@ Pour pouvoir se placer en MITM, il y a plusieurs façons de procéder. Une des f
 
 Une fois placé en homme du milieu, l'attaquant peut donc voir et intercepter le trafic envoyé par la victime vers le serveur. Bien sûr, si ce trafic est chiffré, par exemple avec le protocole SSL/TLS, alors l'attaquant ne pourra rien en tirer, à moins de trouver une faille dans le chiffrement utilisé. Ici, on ne va pas essayer de casser TLS, mais plus de profiter du fait que toutes les requêtes envoyées par le client ne sont pas chiffrées (ce qui est de moins en moins le cas de nos jours).
 
-Ainsi, si la requête du client est une simple requête HTTP, l'attaquant va pouvoir lire ce qu'il envoie, et mieux encore, il va également voir la réponse du serveur.
+Ainsi, si la requête du client est une simple requête HTTP, l'attaquant va pouvoir lire en clair ce qu'il envoit, et mieux encore, il va également voir la réponse du serveur.
 
-On sait donc maintenant que notre attaquant peut, si la requête n'est pas chiffrée, lire l'échange effectué entre le client et le serveur, et même le modifier un peu si la requête reste valide et compréhensible par le serveur. Mais, qu'est-ce qu'on va bien pouvoir modifier pour obtenir des informations intéressantes ?
+On sait donc maintenant que notre attaquant peut, si la requête n'est pas chiffrée, lire l'échange effectué entre le client et le serveur, et même le modifier un peu si la requête reste valide et compréhensible par le serveur. Mais, que va-t-on bien pouvoir modifier pour obtenir des informations intéressantes ?
 
-Pour répondre à cette question, il faut savoir que toutes les pages sensibles d'un site internet (qui demandent une connexion avec identifiant/mot de passe), ne sont accessibles que par une requête sécurisée en HTTPS (ou alors le site est vraiment peu précautionneux). Lorsqu'un page HTML contient des liens vers des pages sécurisées, ces liens sont donc en HTTPS, pour indiquer au client qu'un chiffrement va être nécessaire à la connexion d'une page en particulier.
+Pour répondre à cette question, il faut savoir que toutes les pages sensibles d'un site internet (qui demandent une connexion avec identifiant/mot de passe), ne sont accessibles que par une requête sécurisée en HTTPS (ou alors le site est vraiment peu précautionneux). Lorsqu'une page HTML contient des liens vers des pages sécurisées, ces liens sont donc en HTTPS, pour indiquer au client qu'un chiffrement va être nécessaire à la connexion d'une page en particulier.
 
 \begin{figure}[H]
-  \caption{Exemple d'une page HTML avec un lien sécurité HTTPS}
+  \caption{Exemple d'une page HTML avec un lien sécurisé en HTTPS}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen2.png}}
 \end{figure}
 
 L'idée de l'attaque, va donc être de forcer le client à se connecter en HTTP, et non en HTTPS, sur la page sensible. Pour cela, rien de plus simple : lorsque le serveur va envoyer une page HTML contenant des liens HTTPS, l'attaquant va simplement intercepter la page HTML, retirer le 's' de chacun de ces liens, et envoyer la page au client. Lorsque ce dernier voudra se connecter sur ces liens, il le fera donc en HTTP et non en HTTPS comme il l'aurait fallu. L'attaquant va donc pouvoir lire tout le trafic de cette requête HTTP, contenant par exemple un mot de passe si la page sécurisée était un formulaire de connexion.
 
 \begin{figure}[H]
-  \caption{La même page HTML, où l'attaquant a strippé un 's'}
+  \caption{La même page HTML, où l'attaquant a retiré le 's'}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen5.png}}
 \end{figure}
 
@@ -98,7 +98,7 @@ Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine gra
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen1.png}}
 \end{figure}
 
-L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
+L'encadré rouge suivant montre bien que le POST est effectué en HTTPS, sur la page secure.php.
 
 \begin{figure}[H]
   \caption{Code source de la page (avant l'attaque)}
