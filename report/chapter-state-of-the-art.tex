@@ -152,20 +152,26 @@ L'attaque BREACH (Browser reconnaissance and exfiltration via adaptive compressi
   \hline
   \textbf{CVE(s)} & \textbf{Catégorie} \\
   \hline
-  CVE-2013-2566 & cryptographie \\
+  CVE-2013-2566, CVE-2015-2808 & cryptographie \\
   \hline
 \end{tabularx}
 
 \vspace{1em}
 
 
-RC4 est un algorithme de chiffrement symétrique par flots qui était majoritairement utilisé pour protéger le trafic TLS.
+RC4 est un algorithme de chiffrement symétrique par flots développé par Ron Rivest et qui était majoritairement utilisé pour protéger le trafic TLS mais aussi des algorithmes tel que WEP.
 
-La première attaque mise en place pour casser l'algorithme RC4 se base sur une attaque multi-session. C'est-à-dire que l'on a besoin d'envoyer un message clair cible à plusieurs reprises positionné au même endroit dans le flux TLS. L'exploitation se fait grâce à un biais d'un des octets du keystream en se focalisant sur les 100 premiers octets de celui-ci. Les 36 premiers octets de l'échange TLS chiffré étant un message de type ``Finished Message'' imprévisible, il est impossible d'attaquer ces octets du keystream : il sera alors possible de déchiffrer environ 64 octets du message chiffré. Le nombre de connexions nécessaires pour l'attaque peut être variable. L'attaquant peut mettre fin à la session TLS et certaines applications s'exécutant sur TLS se reconnectent automatiquement et retransmettent un cookie ou un mot de passe. Dans un environnement web, les sessions peuvent aussi être générées par du code malveillant côté client à travers du JavaScript, comme pour l'attaque BEAST.
+RC4 utilise un état interne de 256 octets (qui est une permutation des octets de 0 à 255) ainsi que deux indices $i$ et $j$. Une clef de 40 à 2048 bits est utilisée pour initialiser la permutation (key schedule), et en sortie, l'algorithme produit un flot pseudo-aléatoire d'octets (keystream).
 
-La deuxième attaque s'applique à TLS et peut être effectuée grâce à une seule connexion. On exploite certains double octets dans le flux de clés RC4. On cible les octets en clair situés à n'importe quelle position dans le flux de texte clair TLS. Le nombre de messages chiffrés nécessaire pour récupérer de façon fiable un ensemble de 16 octets de textes clair ciblés consécutifs est d'environ $10*2^{30}$, mais avec seulement $6*2^{30}$, ces octets peuvent être récupérés avec une fiabilité de 50\%. Cette attaque peut être plus efficace en pratique.
+En 1995, Andrew Roos a mis en évidence certaines corrélations entre les octets du keystream et ceux de la permutation interne : il était alors possible grâce à des équations linéaires de retrouver certains octets de la permutation avec la connaissance d'octets du keystream.
 
-Dans cette attaque, l'attaquant peut se trouver dans n'importe où sur le chemin réseau entre le client et le serveur\cite{rc4}.
+Dans les années suivantes, de nombreux chercheurs ont découvert des biais statistiques important de le flot pseudo-aléatoire, notamment en 2013 par AlFardan, Bernstein, Paterson, Poettering et Schuldt \cite{rc4}. C'est en 2015 que l'algorithme a été officiellement cassé dans TLS, par des chercheurs de l'université de KU Leuven en Belgique où ils ont réussi à retrouver un cookie de session chiffré avec RC4 en moins de 75 heures.
+
+Le nom donné a cette attaque a été RC4-NOMORE (RC4 Numerous Occurrence MOnitoring \& Recovery Exploit) et fonctionne comme suit : tout d'abords, l'attaquant placé en homme du milieu va injecter du code JavaScript dans le trafic HTTP de la victime. Le code JavaScript va alors envoyer avec le protocole TLS le cookie sur le réseau un grand nombre de fois (plusieurs milliers de requêtes par secondes), permettant ainsi à l'homme du milieu de récupérer un nombre important de cookies chiffrés.
+
+Grâce au biais statistique de RC4, l'attaquant va être en capcité de calculer une liste de cookie probables à l'aide des données chiffrées reçues à l'étape précédente. En soumettant chacun de ces cookies au site visé, l'attaquant va pouvoir réussir à déterminer lequel était le bon.
+
+Les chercheurs ont annoncé que le taux de succés de cette attaque pour déchiffrer un cookie de 16 octets était d'environ 95\% et demandait environ 75 heures, même si cela a pris seulement 52 heures pour leur démonstration \cite{rc4nomore}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
