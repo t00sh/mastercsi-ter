@@ -2,11 +2,11 @@
 
 Cette amélioration de l'attaque SSLstrip originale a été présentée pour la première fois par Jose Selvi à la [Blackhat Europe de 2014](https://www.blackhat.com/docs/eu-14/materials/eu-14-Selvi-Bypassing-HTTP-Strict-Transport-Security-wp.pdf). Celle-ci permet de contourner la sécurité offerte par HSTS (HTTP Strict Transport Security), dans le cas où l'attaquant est capable de modifier le trafic NTP entre le client et le serveur NTP.
 
-L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "striper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à striper en HTTPS pendant un certain laps de temps, défini par le serveur.
+L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "stripper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à stripper en HTTPS pendant un certain laps de temps, défini par le serveur.
 
-Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur. Il s'agit d'un protocole stateless non-sécurisé basé sur UDP. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date éronnée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé [Delorean](https://github.com/myusuf3/delorean), qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
+Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur. Il s'agit d'un protocole stateless non-sécurisé basé sur UDP. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date erronée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé [Delorean](https://github.com/myusuf3/delorean), qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
 
-Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, nous pouvons utiliser l'attaque SSLstrip originale afin de striper les URL des pages web, même pour les domaines censés être protégés par HSTS.
+Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, nous pouvons utiliser l'attaque SSLstrip originale afin de stripper les URL des pages web, même pour les domaines censés être protégés par HSTS.
 
 # Configuration de l'environnement de test
 
@@ -73,9 +73,9 @@ openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial
 
 Le serveur héberge deux sites :
 
-  - le domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/local/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
+  - le domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/local/index.php) que l'on accède en HTTP et présentant un formulaire de login.
 
-  - le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php) que l'on accéde en HTTPS et protégé par HSTS.
+  - le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php) que l'on accède en HTTPS et protégé par HSTS.
 
 De plus, opeth joue le rôle de serveur NTP légitime, grâce au logiciel ntpd lancé au démarrage de la VM.
 
@@ -111,9 +111,9 @@ Nous arrivons alors sur le domaine www.opeth.secure en HTTPS : immortal n'a pas 
 
 ![screen3](../medias/sslstrip-ntp/screen3.png?raw=true)
 
-## Etape 2 : lancement de l'attaque
+## Étape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/immortal/attack.sh)__ depuis immortal. Voici son contenu :
+Comme expliqué précédemment, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/immortal/attack.sh)__ depuis immortal. Voici son contenu :
 
 ```
 #!/bin/sh
@@ -138,7 +138,7 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 ![screen4](../medias/sslstrip-ntp/screen4.png?raw=true)
 
-## Etape 3 : pendant l'attaque
+## Étape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que le lien sensible [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php) est remplacé par [http://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php). La machine immortal est donc capable d'intercepter les échanges réalisés sur le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip-ntp/opeth/www/secure/index.php).
 

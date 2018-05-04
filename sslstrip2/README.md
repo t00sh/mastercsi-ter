@@ -1,12 +1,12 @@
 # Attaque SSLstrip2 (ou SSLstrip+)
 
-Cette nouvelle version de SSLstrip, pensée par l'espagnol LeonardoNve, permet de passer au travers d'une sécurité ajoutée à TLS : le HSTS. Lorsqu'un client se connecte pour la première fois à un serveur en https, ce dernier va renvoyer un header indiquant à l'utilisateur (le navigateur) de toujours se connecter en https sur ce serveur (ou sur certaines pages spécifiques)
+Cette nouvelle version de SSLstrip, pensée par l'espagnol LeonardoNve, permet de passer au travers d'une sécurité ajoutée à TLS : le HSTS. Lorsqu'un client se connecte pour la première fois à un serveur en HTTPS, ce dernier va renvoyer un header indiquant à l'utilisateur (le navigateur) de toujours se connecter en HTTPS sur ce serveur (ou sur certaines pages spécifiques)
 
-On ne va donc plus pouvoir simplement strip le 's' de https pour inciter le client à envoyer son post en http (et ainsi permettant à l'attaquer de voir tout le trafic en clair). Le navigateur emettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en https sur le serveur en question.
+On ne va donc plus pouvoir simplement strippe le 's' de HTTPS pour inciter le client à envoyer son post en HTTP (et ainsi permettant à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
 
-Pour cette attaque, on suppose encore une fois que l'attaquant se situe en man in the middle. Lorsque le client va se connecter au serveur sur une page en http, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du https. Si le lien est [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php), on va le remplacer par [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php). On peut enlever le 's' ici, car le navigateur ne connait pas ce nom de domain, il ne l'a encore jamais visité. Il va donc envoyer une requete DNS que l'attaquant va intercepter, et rediriger vers son serveur DNS à lui.
+Pour cette attaque, on suppose encore une fois que l'attaquant se situe en man in the middle. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php), on va le remplacer par [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php). On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine, il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter, et rediriger vers son serveur DNS à lui.
 
-Ainsi il va faire croire au navigateur du client que tout est légitime, et que wwww.opeth.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en https sur wwww.opeth.secure, il va donc accepter d'envoyer sa requête POST en http, laissant encore une fois tout son traffic au clair aux yeux de l'attaquant !
+Ainsi il va faire croire au navigateur du client que tout est légitime, et que wwww.opeth.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur wwww.opeth.secure, il va donc accepter d'envoyer sa requête POST en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
 
 # Configuration de l'environnement de test
 
@@ -74,9 +74,9 @@ openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAreateserial
 
 Le serveur héberge deux sites :
 
-  - le domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
+  - le domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php) que l'on accède en HTTP et présentant un formulaire de login.
 
-  - le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accéde en HTTPS.
+  - le domaine [www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) que l'on accède en HTTPS.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
@@ -110,9 +110,9 @@ Nous arrivons alors sur le domaine www.opeth.secure en HTTPS : immortal n'a pas 
 
 ![screen3](../medias/sslstrip2/screen3.png?raw=true)
 
-## Etape 2 : lancement de l'attaque
+## Étape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh)__ depuis immortal. Voici son contenu :
+Comme expliqué précédemment, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/attack.sh)__ depuis immortal. Voici son contenu :
 
 ```
 PROXY_PORT=4242
@@ -144,9 +144,9 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
-- fermer la connexion (le client ou le serveur a fermé la connection)
-- établir une connexion https, dans le cas où le client va sur le domaine [wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
-- établir une connexion http, dans le cas où le client demande la page du domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)
+- fermer la connexion (le client ou le serveur a fermé la connexion)
+- établir une connexion HTTPS, dans le cas où le client va sur le domaine [wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php)
+- établir une connexion HTTP, dans le cas où le client demande la page du domaine [www.opeth.local](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/local/index.php)
 
 Le code est dans le fichier [sslstrip.py](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/immortal/sslstrip2.py). La fonction traitant les différentes requêtes est celle-ci :
 
@@ -190,7 +190,7 @@ def __replace_https_to_http(self, data):
 
 #### Modification de l'entête Host
 
-Lorsque la victime est redirigée vers un lien [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php), l'entête Host de ses requêtes sera éronné. Cette fonction modifie cette entête pour que le serveur puisse recevoir un Host correct.
+Lorsque la victime est redirigée vers un lien [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php), l'entête Host de ses requêtes sera erronée. Cette fonction modifie cette entête pour que le serveur puisse recevoir un Host correct.
 
 ```python
 def __replace_host(self, data):
@@ -213,7 +213,7 @@ def __replace_content_length(self, data):
         return data
 ```
 
-## Etape 3 : pendant l'attaque
+## Étape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que le lien sensible [https://www.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php) est remplacé par [http://wwww.opeth.secure](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip2/opeth/www/secure/index.php).
 La machine immortal est donc capable d'intercepter les échanges réalisés sur le domaine www.opeth.secure.

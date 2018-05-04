@@ -1,7 +1,7 @@
 ### Attaque HTTPS interception
 
 
-L'attaque HTTPS interception consiste à intercepter le traffic entre un client et un serveur, en présentant un certificat différent au client. L'attaquant positionné en homme du milieu joue le rôle de proxy entre le client et le serveur.
+L'attaque HTTPS interception consiste à intercepter le trafic entre un client et un serveur, en présentant un certificat différent au client. L'attaquant positionné en homme du milieu joue le rôle de proxy entre le client et le serveur.
 
 ----------------------------------------------
 
@@ -94,9 +94,9 @@ Nous voici sur la page secure.php, nos données ont transitées de manière chif
 
 ![screen3](../medias/https-interception/screen3.png?raw=true)
 
-## Etape 2 : lancement de l'attaque
+## Étape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il suffit d'exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/immortal/attack.sh)__ depuis immortal.
+Comme expliqué précédemment, pour lancer l'attaque, il suffit d'exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/https-interception/immortal/attack.sh)__ depuis immortal.
 Voici son contenu :
 
 ```
@@ -118,7 +118,7 @@ Le code du proxy est dans le fichier [https-interception](https://github.com/t00
 
 <!--- PARLER ICI DES options de la création des sockets --->
 
-## Etape 3 : pendant l'attaque
+## Étape 3 : pendant l'attaque
 
 Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du Proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été dans présent dans le navigateur, celui-ci aurait émis une alerte.
 
@@ -130,7 +130,7 @@ Si le certificat est accepté par le client et que nous essayons de nous enregis
 
 ![screen7](../medias/https-interception/screen1.png?raw=true)
 
-Nous arrivons bien sur la page secure.php, et notre connection est bien effectuée en HTTPS. Le client n'a constaté aucuns changement au niveau de sa navigation.
+Nous arrivons bien sur la page secure.php, et notre connexion est bien effectuée en HTTPS. Le client n'a constaté aucuns changement au niveau de sa navigation.
 
 ![screen8](../medias/https-interception/screen3.png?raw=true)
 

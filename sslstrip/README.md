@@ -55,9 +55,9 @@ $ ./new-cert.sh
 
 Le serveur héberge deux pages :
 
-  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/index.php) que l'on accéde en HTTP et présentant un formulaire de login.
+  - une page [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/index.php) que l'on accède en HTTP et présentant un formulaire de login.
 
-  - une page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/secure.php) que l'on accéde en HTTPS depuis la page index.php.
+  - une page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/secure.php) que l'on accède en HTTPS depuis la page index.php.
 
 ## Machine "immortal" (147.210.12.2 - 147.210.13.1)
 
@@ -92,9 +92,9 @@ Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a p
 
 ![screen3](../medias/sslstrip/screen3.png?raw=true)
 
-## Etape 2 : lancement de l'attaque
+## Étape 2 : lancement de l'attaque
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/immortal/attack.sh)__ depuis immortal. Voici son contenu :
+Comme expliqué précédemment, pour lancer l'attaque, il faut exécuter le fichier __[/mnt/host/attack.sh](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/immortal/attack.sh)__ depuis immortal. Voici son contenu :
 
 ```
 PROXY_PORT=4242
@@ -118,10 +118,10 @@ Le code du proxy est dans le fichier [sslstrip.py](https://github.com/t00sh/mast
 Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
 - fermer la connexion (le client ou le serveur a fermé sa socket)
-- établir une connexion https, dans le cas où le client demande la page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/secure.php)
-- établir une connexion http, dans le cas où le client demande la page d'accueil [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/index.php)
+- établir une connexion HTTPS, dans le cas où le client demande la page [secure.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/secure.php)
+- établir une connexion HTTP, dans le cas où le client demande la page d'accueil [index.php](https://github.com/t00sh/mastercsi-ter/blob/master/sslstrip/opeth/www/index.php)
 
-Voici la fonction implémentant la reception d'une requête HTTP :
+Voici la fonction implémentant la réception d'une requête HTTP :
 
 ```python
 def __recv(self, csock):
@@ -172,7 +172,7 @@ def __replace_content_length(self, data):
         return data
 ```
 
-## Etape 3 : pendant l'attaque
+## Étape 3 : pendant l'attaque
 
 Lorsque l'attaque est lancée, on peut voir que tous les liens https:// sont remplacés par http://.
 
