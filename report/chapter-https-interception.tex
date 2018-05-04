@@ -108,7 +108,7 @@ Sur la machine immortal, nous lançons le script de l'attaque :
 
 Le code du proxy est dans le fichier \path{https-interception.py}. Ce dernier est sensiblement le même que celui utilisé pour l'attaque sslstrip.
 
-\subparagraph{Contexte SSl du proxy \\}
+\subparagraph{Contexte SSL du proxy \\}
 
 Le proxy doit ajouter son certificat au contexte pour pouvoir le présenter au client :
 
@@ -122,7 +122,7 @@ def __listen(self):
 
 \subsubsection{Étape 3 : pendant l'attaque}
 
-Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du Proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été dans présent dans le navigateur, celui-ci aurait émis une alerte.
+Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du Proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été présent dans le navigateur, celui-ci aurait émis une alerte.
 
 Ci-dessous on voit que le certificat présenté est celui du proxy (immortal), et non plus celui du serveur. On voit bien que les empreintes SHA256 sont différentes.
 

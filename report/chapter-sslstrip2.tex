@@ -9,28 +9,28 @@
 
 Comme vu précédemment, une contre-mesure a été mise en place afin de déclarer aux clients d'un serveur qu'ils doivent utiliser une connexion sécurisée en HTTPS pour leur futures connexions avec celui-ci. Vous pouvez vous reporter à la section \hyperref[sec:hsts]{Contremesures} pour plus de précision.
 
-Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheureusement, on ne peut pas la réutiliser directement car le navigateur a gardé en que toutes connexions sur cette page doit se faire en HTTPS.
+Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheureusement, on ne peut pas la réutiliser directement car le navigateur a gardé en mémoire que toutes connexions sur cette page doivent se faire en HTTPS.
 
 \section{Description de l'attaque}
-Cette extension de SSLStrip a été pensée par LeonardoNve. Elle permet donc de passer au travers d'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client afin de faire le traiter comme suit.
+Cette extension de SSLStrip a été pensée par LeonardoNve. Elle permet donc de passer au travers l'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client et le serveur afin de le faire réagir comme suit.
 
-Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier sur cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'enverra pas d'exception.
+Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'enverra pas d'exception liée à HSTS.
 
 Voici un exemple :
 
-Si le lien est \path{https://www.domain.secure} , on peut le remplacer par \path{http://wwww.domain.secure}.
+Si le lien est \path{https://www.domain.secure}, on peut le remplacer par \path{http://wwww.domain.secure}.
 
-Il faut noté que l'on enlève le \verb+s+ de \verb+https+ et que l'on remplace \verb+www+ par \verb+wwww+ ce qui change bien le nom de domaine.
+Il faut noter que l'on enlève le \verb+s+ de \verb+https+ et que l'on remplace \verb+www+ par \verb+wwww+ ce qui change bien le nom de domaine.
 
-Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \path{wwww.domain.secure} correspond au serveur distant. La connexion sera donc en HTTP, donc en clair.
+Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \path{wwww.domain.secure} correspond au serveur distant. La connexion sera donc en HTTP et donc en clair.
 
 \section{Notre attaque}
 
-Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer l'environnement. Rappelons que l'attaquant est déjà positionné en homme du milieu, et que nous avons choisi de mettre sa machine dans le même réseau que la machine victime. Comme pour l'attaque précédente, nous utilisons l'outil \verb+qemunet+ développer par l'Inria qui nous permet de créer un environnement minimaliste et léger. Il nous faut donc vous expliquer sa mise en place.
+Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer l'environnement. Rappelons que l'attaquant est déjà positionné en homme du milieu, et que nous avons choisi de mettre sa machine dans le même réseau que la machine victime. Comme pour l'attaque précédente, nous utilisons l'outil \verb+qemunet+ développé par l'Inria qui nous permet de créer un environnement minimaliste et léger. Il nous faut donc vous expliquer sa mise en place.
 
 \subsection{Mise en place de l'environnement}
 
-Dans un premier temps, nous devons créer une topologie, c'est à dire un fichier décrivant l'architecture de l'environnement, qui correspond à notre besoin. En effet, nous avons besoin de trois machines:
+Dans un premier temps, nous devons créer une topologie, c'est à dire un fichier décrivant l'architecture de l'environnement, qui correspond à notre besoin. En effet, nous avons besoin de trois machines :
 
 \begin{itemize}
 \item une machine cliente et victime
@@ -42,7 +42,7 @@ Voici le fichier de topologie qui décrit l'environnement mis en place pour l'at
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/topology}
 
-Afin d'utiliser \verb+qemunet+ facilement, nous avons décidé de structurer l'environnement de l'attaque grâce à la gestion de dossier supportée par l'outil. C'est pourquoi, tout l'environnement de l'attaque se trouve dans le dossier \verb+sslstrip2+ de notre projet. Ce dossier étant lui-même réparti en sous-dossier. Chaque sous-dossier représente chaque machine :
+Afin d'utiliser \verb+qemunet+ facilement, nous avons décidé de structurer l'environnement de l'attaque grâce à la gestion de dossiers supportée par l'outil. C'est pourquoi, tout l'environnement de l'attaque se trouve dans le dossier \verb+sslstrip2+ de notre projet. Ce dossier étant lui-même réparti en sous-dossiers. Chaque sous-dossier représente chaque machine :
 
 \begin{itemize}
 \item grave : dossier de la machine cliente et victime
@@ -57,7 +57,7 @@ Maintenant, il nous faut décrire ces fichiers de lancement.
 \subsubsection{Configuration de la machine cliente - grave - 147.210.13.2}
 Cette machine se nomme grave et utilise un environnement graphique de la distribution Linux Alpine. Un navigateur Firefox est présent pour la démonstration ultérieure.
 
-Pour que la machine puisse accéder au réseau internet, nous devons lui spécifier une adresse IP ainsi que son masque de sous-réseau, sa route par défaut.
+Pour que la machine puisse accéder au réseau, nous devons lui spécifier une adresse IP, son masque de sous-réseau ainsi que sa route par défaut.
 
 Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement.
 
@@ -69,11 +69,11 @@ De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certi
 
 Opeth représente notre serveur qui utilise le système d'exploitation debian.
 
-Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créer un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification. C'est pourquoi, dans un premier temps, nous avons créer un script qui crée cette autorité de certification via un script :
+Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créé un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification. C'est pourquoi, dans un premier temps, nous avons implémenté un script qui créer cette autorité de certification :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/create-ca.sh}
 
-Ensuite, nous pouvons enfin crée le certificat pour les connexions HTTPS :
+Ensuite, nous pouvons enfin créer le certificat pour les connexions HTTPS :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/new-cert.sh}
 
@@ -120,7 +120,7 @@ Cette machine présente deux adresses IP, une dans le réseau de la machine vict
 
 Ainsi que la même configuration du serveur DNS que pour opeth.
 
-Comme préciser dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
+Comme précisé dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
 
 Comme cette machine est positionnée en homme du milieu, c'est celle-ci qui contient la preuve de concept de l'attaque. Elle se trouve dans le fichier \path{/mnt/host/attack.sh}.
 
@@ -130,13 +130,13 @@ Nous commençons par rediriger les requêtes HTTP (port 80) sur le port de notre
 
 \subsection{Démonstration}
 
-Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnement de l'attaque via une démonstration. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré préalablement le dépôt \textbf{qemunet}) :
+Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnement de l'attaque via une démonstration. Pour lancer l'environnement de test, il faut utiliser la commande suivante (on aura récupéré préalablement le dépôt \textbf{qemunet}) :
 
 \begin{minted}{bash}
   ./qemunet/qemunet.sh -x -S sslstrip2
 \end{minted}
 
-Maintenant, nous avons les trois machines de lancer. Les login et mot de passe sont :
+Maintenant, nous avons les trois machines de lancées. Les login et mot de passe sont :
 
 \begin{itemize}
 \item grave : toto - toto
@@ -148,7 +148,7 @@ Maintenant, nous avons les trois machines de lancer. Les login et mot de passe s
 
 Avant de vous montrer ce qu'il se passe lors de l'attaque, nous devons vous montrer l'état initial.
 
-Lorsque l'attaque n'est pas lancée, nous pouvons voir sur la machine grave que la communication se passe sans problème et que la requête POST passe bien en HTTPS; immortal est donc incapable de voir les identifiants envoyés :
+Lorsque l'attaque n'est pas lancée, nous pouvons voir sur la machine grave que la communication se passe sans problèmes et que la requête POST passe bien en HTTPS; immortal est donc incapable de voir les identifiants envoyés :
 
 \begin{figure}[H]
   \caption{Attaque SSLstrip2 (avant l'attaque)}
