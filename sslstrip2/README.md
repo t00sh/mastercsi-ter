@@ -198,7 +198,7 @@ def __replace_host(self, data):
                   b'Host: ' + bytes(FORWARD_HOST_HSTS), data)
 ```
 
-#### Recalcule de l'entête Content-Length
+#### Recalcul de l'entête Content-Length
 
 La taille de la requête étant modifiée par le proxy, celui-ci doit recalculer l'entête Content-Length en se basant sur la chaîne "\r\n\r\n" signalant la fin des entêtes dans le protocole HTTP.
 
