@@ -136,12 +136,12 @@ Après ces présentations de mise en place, nous pouvons vous montrer le fonctio
   ./qemunet/qemunet.sh -x -S sslstrip2
 \end{minted}
 
-Maintenant, nous avons les trois machines de lancer. Les loin et mot de passe sont :
+Maintenant, nous avons les trois machines de lancer. Les login et mot de passe sont :
 
 \begin{itemize}
 \item grave : toto - toto
-\item immortal : robot - rien
-\item opeth : robot - rien
+\item immortal : root - rien
+\item opeth : root - rien
 \end{itemize}
 
 \subsubsection{Étape 1 : Avant l'attaque}
@@ -247,7 +247,7 @@ def __replace_host(self, data):
 
 \subparagraph{Recalcul de l'entête Content-Length}
 
-La taille de la requête étant modifiée par le proxy, celui-ci doit recalculer l'entête Content-Length en se basant sur la chaîne "\r\n\r\n" signalant la fin des entêtes dans le protocole HTTP.
+La taille de la requête étant modifiée par le proxy, celui-ci doit recalculer l'entête Content-Length en se basant sur la chaîne "{\textbackslash}r{\textbackslash}n{\textbackslash}r{\textbackslash}n" signalant la fin des entêtes dans le protocole HTTP.
 
 \begin{minted}{python}
 def __replace_content_length(self, data):
