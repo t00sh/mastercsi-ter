@@ -11,11 +11,11 @@
 
 Cette nouvelle amélioration de l'attaque SSLstrip a été présentée lors de la BlackHat Europe par Jose Selvi. Celle-ci utilise le protocole NTP afin de contourner la sécurité offerte par HSTS.
 
-L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "striper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à striper en HTTPS pendant un certain laps de temps (défini par le serveur), rendant l'attaque complétement inefficace.
+L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "stripper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à stripper en HTTPS pendant un certain laps de temps (défini par le serveur), rendant l'attaque complètement inefficace.
 
-Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur NTP. Il s'agit d'un protocole stateless basé sur UDP et absolument pas sécurisé. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date éronnée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé Delorean, qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
+Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur NTP. Il s'agit d'un protocole stateless basé sur UDP et absolument pas sécurisé. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date erronée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé Delorean, qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
 
-Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, il est possible d'utiliser l'attaque SSLstrip originale afin de striper les URL des pages web, même pour les domaines censés être protégés par HSTS.
+Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, il est possible d'utiliser l'attaque SSLstrip originale afin de stripper les URL des pages web, même pour les domaines censés être protégés par HSTS.
 
 \section{Notre attaque}
 
@@ -59,7 +59,7 @@ echo "[+] Your certificate: cert.pem"
 echo "[+] Your private key: cert.key"
 \end{minted}
 
-Sur le serveur Nginx, nous avons configuré un domaine en http (\path{www.opeth.local}), ainsi qu'un domaine en https (\path{www.opeth.secure}), sécurisé grâce à HSTS. La configuration de ce dernier se fait en rajoutant la ligne suivante dans le fichier de configuration de Nginx :
+Sur le serveur Nginx, nous avons configuré un domaine en HTTP (\path{www.opeth.local}), ainsi qu'un domaine en HTTPS (\path{www.opeth.secure}), sécurisé grâce à HSTS. La configuration de ce dernier se fait en rajoutant la ligne suivante dans le fichier de configuration de Nginx :
 
 \begin{minted}{text}
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
@@ -120,11 +120,11 @@ L'encadré rouge ci-dessous montre bien que le POST est effectué en HTTPS, sur 
 Nous arrivons alors sur le domaine \path{www.opeth.secure} en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée comme le montre la figure ci-dessous.
 
 \begin{figure}[H]
-  \caption{La connexion se fait bien en https}
+  \caption{La connexion se fait bien en HTTPS}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen3.png}}
 \end{figure}
 
-\subsubsection{Etape 2 : pendant l'attaque}
+\subsubsection{Étape 2 : pendant l'attaque}
 
 Lorsque l'attaque est en cours et quand le client réalisera une requête NTP, celle-ci va être redirigée vers Delorean qui répondra avec une date permettant de faire expirer son entrée HSTS. Ensuite, quand la machine grave visitera la page non-sécurisée \path{www.opeth.local}, tous les liens HTTPS vers \path{www.opeth.secure} seront strippés.
 

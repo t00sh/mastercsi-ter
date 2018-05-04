@@ -40,7 +40,7 @@ Les actions à mettre en place pour réaliser l'attaque sont les suivantes :
 \begin{enumerate}
 \item Regarder le trafic HTTP
 \item Changer les liens HTTPS par des HTTPS et garder en mémoire cette conversion
-\item Lorsque le client fait HTTP pour une URL qui devrait être en https, il faut envoyer au serveur la même requête en HTTPS
+\item Lorsque le client fait HTTP pour une URL qui devrait être en HTTPS, il faut envoyer au serveur la même requête en HTTPS
 \item Conserver une carte des liens relatifs, CSS, JavaScript
 \item Pour essayer de conserver le même aspect visuel, on doit faire de même pour les favicon en renvoyant la favicon de notre choix
 \item A éliminer des en-têtes de requêtes, les encodages, les cookies et les pages en cache.
@@ -69,9 +69,9 @@ cd CA
 
 Le serveur héberge deux pages :
 
-  - une page index.php que l'on accéde en HTTP et présentant un formulaire de login.
+  - une page index.php que l'on accède en HTTP et présentant un formulaire de login.
 
-  - une page secure.php que l'on accéde en HTTPS depuis la page index.php.
+  - une page secure.php que l'on accède en HTTPS depuis la page index.php.
 
 \subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
 
@@ -112,9 +112,9 @@ Nous arrivons alors sur la page secure.php, en HTTPS : la machine immortal n'a p
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen3.png}}
 \end{figure}
 
-\subsubsection{Etape 2 : lancement de l'attaque}
+\subsubsection{Étape 2 : lancement de l'attaque}
 
-Comme expliqué précédement, pour lancer l'attaque, il faut exécuter le fichier \path{/mnt/host/attack.sh} depuis immortal. Voici son contenu :
+Comme expliqué précédemment, pour lancer l'attaque, il faut exécuter le fichier \path{/mnt/host/attack.sh} depuis immortal. Voici son contenu :
 
 \begin{minted}{bash}
 PROXY_PORT=4242
@@ -142,11 +142,11 @@ Lors de la réception de requêtes, il s'agit de savoir si l'on doit :
 
 \begin{itemize}
 \item fermer la connexion (le client ou le serveur a fermé sa socket)
-\item établir une connexion https, dans le cas où le client demande la page secure.php
-\item établir une connexion http, dans le cas où le client demande la page d'accueil index.php
+\item établir une connexion HTTPS, dans le cas où le client demande la page secure.php
+\item établir une connexion HTTP, dans le cas où le client demande la page d'accueil index.php
 \end{itemize}
 
-Voici la fonction implémentant la reception d'une requête HTTP :
+Voici la fonction implémentant la réception d'une requête HTTP :
 
 \begin{minted}{python}
 def __recv(self, csock):
@@ -196,7 +196,7 @@ def __replace_content_length(self, data):
         return data
 \end{minted}
 
-\subsubsection{Etape 3 : pendant l'attaque}
+\subsubsection{Étape 3 : pendant l'attaque}
 
 Lorsque l'attaque est lancée, on peut voir que tous les liens \path{https://} sont remplacés par \path{http://}.
 

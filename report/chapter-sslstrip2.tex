@@ -7,14 +7,14 @@
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/attack.png}}
 \end{figure}
 
-Comme vu précédemment, une contremesure a été mise en place afin de déclarer aux clients d'un serveur qu'ils doivent utiliser une connexion sécurisée en HTTPS pour leur futures connexions avec celui-ci. Vous pouvez vous reporter à la section \hyperref[sec:hsts]{Contremesures} pour plus de précision.
+Comme vu précédemment, une contre-mesure a été mise en place afin de déclarer aux clients d'un serveur qu'ils doivent utiliser une connexion sécurisée en HTTPS pour leur futures connexions avec celui-ci. Vous pouvez vous reporter à la section \hyperref[sec:hsts]{Contremesures} pour plus de précision.
 
-Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheurement, on ne peut pas la réutiliser directement car le navigateur a gardé en que toutes connexions sur cette page doit se faire en HTTPS.
+Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheureusement, on ne peut pas la réutiliser directement car le navigateur a gardé en que toutes connexions sur cette page doit se faire en HTTPS.
 
 \section{Description de l'attaque}
-Cette extension de SSLStrip a été pensée par LeonardoNve. Elle permet donc de passer au travers d'une des nouvelles contremesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client afin de faire le traiter comme suit.
+Cette extension de SSLStrip a été pensée par LeonardoNve. Elle permet donc de passer au travers d'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client afin de faire le traiter comme suit.
 
-Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier sur cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'envera pas d'exception.
+Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier sur cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'enverra pas d'exception.
 
 Voici un exemple :
 
@@ -55,9 +55,9 @@ De plus, afin d'avoir une configuration qui est chargée à chaque lancement du 
 Maintenant, il nous faut décrire ces fichiers de lancement.
 
 \subsubsection{Configuration de la machine cliente - grave - 147.210.13.2}
-Cette machine se nomme grave et utilse un environnement graphique de la distribution Linux Alpine. Un navigtateur Firefox est présent pour la démonstration ultérieure.
+Cette machine se nomme grave et utilise un environnement graphique de la distribution Linux Alpine. Un navigateur Firefox est présent pour la démonstration ultérieure.
 
-Pour que la machine puisse accéder au réseau internet, nous devons lui spécifier une addresse IP ainsi que son masque de sous-réseau, sa route par défaut.
+Pour que la machine puisse accéder au réseau internet, nous devons lui spécifier une adresse IP ainsi que son masque de sous-réseau, sa route par défaut.
 
 Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement.
 
@@ -77,7 +77,7 @@ Ensuite, nous pouvons enfin crée le certificat pour les connexions HTTPS :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/new-cert.sh}
 
-De plus, comme sur les autres machines, nous avons un script de démarrage qui sur cette machine nous permet de lancer les services nécéssaire pour l'attaque. Voici le script :
+De plus, comme sur les autres machines, nous avons un script de démarrage qui sur cette machine nous permet de lancer les services nécessaire pour l'attaque. Voici le script :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/start.sh}
 
@@ -85,13 +85,13 @@ Comme on peut le voir, nous avons besoin d'utiliser du PHP pour un petit script 
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/php7.0-fpm.conf}
 
-Ensuite, on peut s'intéresser à la configuration de notre serveur nginx. On doit lui spécifier :
+Ensuite, on peut s'intéresser à la configuration de notre serveur NGINX. On doit lui spécifier :
 
 \begin{itemize}
 \item que l'on va utiliser du HTTP et du HTTPS
 \item les certificats à utiliser
 \item le chemin vers les pages non-sécurisées et vers celles sécurisées
-\item que l'on utilise du php sur certaines pages
+\item que l'on utilise du PHP sur certaines pages
 \item que l'on utilise le header HSTS
 \end{itemize}
 
@@ -120,7 +120,7 @@ Cette machine présente deux adresses IP, une dans le réseau de la machine vict
 
 Ainsi que la même configuration du serveur DNS que pour opeth.
 
-Comme préciser dans la description de l'attaque, nous avons besoin d'un nom de domaine suplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
+Comme préciser dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
 
 Comme cette machine est positionnée en homme du milieu, c'est celle-ci qui contient la preuve de concept de l'attaque. Elle se trouve dans le fichier \path{/mnt/host/attack.sh}.
 
@@ -130,25 +130,25 @@ Nous commençons par rediriger les requêtes HTTP (port 80) sur le port de notre
 
 \subsection{Démonstration}
 
-Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnnement de l'attaque via une démonstration. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré préalablement le dépôt \textbf{qemunet}) :
+Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnement de l'attaque via une démonstration. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré préalablement le dépôt \textbf{qemunet}) :
 
 \begin{minted}{bash}
   ./qemunet/qemunet.sh -x -S sslstrip2
 \end{minted}
 
-Maintenant, nous avons les trois machines de lancer. Les login et mot de passe sont :
+Maintenant, nous avons les trois machines de lancer. Les loin et mot de passe sont :
 
 \begin{itemize}
 \item grave : toto - toto
-\item immortal : root - rien
-\item opeth : root - rien
+\item immortal : robot - rien
+\item opeth : robot - rien
 \end{itemize}
 
 \subsubsection{Étape 1 : Avant l'attaque}
 
 Avant de vous montrer ce qu'il se passe lors de l'attaque, nous devons vous montrer l'état initial.
 
-Lorque l'attaque n'est pas lancée, nous pouvons voir sur la machine grave que la communication se passe sans problème et que la requête POST passe bien en HTTPS; immortal est donc incapable de voir les identifiants envoyés :
+Lorsque l'attaque n'est pas lancée, nous pouvons voir sur la machine grave que la communication se passe sans problème et que la requête POST passe bien en HTTPS; immortal est donc incapable de voir les identifiants envoyés :
 
 \begin{figure}[H]
   \caption{Attaque SSLstrip2 (avant l'attaque)}
@@ -169,7 +169,7 @@ Nous arrivons alors sur le domaine \path{www.opeth.secure} en HTTPS : immortal n
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/screen3.png}}
 \end{figure}
 
-\subsubsection{Etape 2 : lancement de l'attaque}
+\subsubsection{Étape 2 : lancement de l'attaque}
 
 Comme expliqué précédemment, pour lancer l'attaque, il faut exécuter le fichier \path{/mnt/host/attack.sh} depuis immortal dont on a déjà expliqué son comportement.
 
@@ -236,7 +236,7 @@ def __replace_https_to_http(self, data):
 
 \subparagraph{Modification de l'entête Host}
 
-Lorsque la victime est redirigée vers un lien \path{http://wwww.opeth.secure}, l'entête Host de ses requêtes sera éronné. Cette fonction modifie cette entête pour que le serveur puisse recevoir un Host correct.
+Lorsque la victime est redirigée vers un lien \path{http://wwww.opeth.secure}, l'entête Host de ses requêtes sera erronée. Cette fonction modifie cette entête pour que le serveur puisse recevoir un Host correct.
 
 \begin{minted}{python}
 def __replace_host(self, data):
