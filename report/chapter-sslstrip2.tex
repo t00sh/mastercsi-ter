@@ -12,7 +12,7 @@ Comme vu précédemment, une contre-mesure a été mise en place afin de déclar
 Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheureusement, on ne peut pas la réutiliser directement car le navigateur a gardé en mémoire que toutes connexions sur cette page doivent se faire en HTTPS.
 
 \section{Description de l'attaque}
-Cette extension de SSLStrip a été pensée par LeonardoNve. Elle permet donc de passer au travers l'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client et le serveur afin de le faire réagir comme suit.
+Cette extension de SSLStrip a été pensée par LeonardoNve en 2014. Elle permet donc de passer au travers l'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client et le serveur afin de le faire réagir comme suit.
 
 Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'enverra pas d'exception liée à HSTS.
 

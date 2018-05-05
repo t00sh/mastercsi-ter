@@ -1,17 +1,17 @@
-\chapter{SSLstrip NTP}
+\chapter{SSLStrip NTP}
 
 \label{sec:sslstrip-ntp}
 
 \begin{figure}[H]
-  \caption{Attaque SSLstrip NTP (diagramme Dia)}
+  \caption{Attaque SSLStrip NTP (diagramme Dia)}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/attack.png}}
 \end{figure}
 
 \section{Description de l'attaque}
 
-Cette nouvelle amélioration de l'attaque SSLstrip a été présentée lors de la BlackHat Europe par Jose Selvi. Celle-ci utilise le protocole NTP afin de contourner la sécurité offerte par HSTS.
+Cette nouvelle amélioration de l'attaque SSLStrip a été présentée lors de la BlackHat Europe par Jose Selvi. Celle-ci utilise le protocole NTP afin de contourner la sécurité offerte par HSTS.
 
-L'attaque SSLstrip originale n'est en effet plus possible lorsque l'on essaye de "stripper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à stripper en HTTPS pendant un certain laps de temps (défini par le serveur), rendant l'attaque complètement inefficace.
+L'attaque SSLStrip originale n'est en effet plus possible lorsque l'on essaye de "stripper" les URL d'une page web d'un domaine qui a été protégé ultérieurement par HTTP Strict Transport Security. Le mécanisme HSTS va obliger le client à se connecter à l'URL que l'on cherche à stripper en HTTPS pendant un certain laps de temps (défini par le serveur), rendant l'attaque complètement inefficace.
 
 Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur NTP. Il s'agit d'un protocole stateless basé sur UDP et absolument pas sécurisé. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date erronée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé Delorean, qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
 
@@ -146,4 +146,3 @@ La machine immortal a été capable de capturer non seulement les identifiants d
 \begin{figure}[H]
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen7.png}}
 \end{figure}
-

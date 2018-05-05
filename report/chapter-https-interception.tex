@@ -9,9 +9,9 @@
 
 \section{Description de l'attaque}
 
-La méthode que nous allons voir pour intercepter un trafic HTTPS n'est pas vraiment une attaque. Pour être menée à bien, la machine placée en homme du milieu doit avoir installé sa propre autorité de certification, et surtout l'avoir rentrée sur la machine du client, en amont.
+La méthode que nous allons voir pour intercepter un trafic HTTPS n'est pas vraiment une attaque. Pour être menée à bien, la machine, placée en homme du milieu, doit avoir installée sa propre autorité de certification, et surtout l'avoir rentrée sur la machine du client, en amont.
 
-C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il y a des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leur activité. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS.
+C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il existe des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leurs activités. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS.
 
 C'est en fait au contraire assez simple à réaliser dans la mesure où il est facile de rajouter une autorité de certification à la main dans les navigateurs web de tous les employés.
 
@@ -39,9 +39,12 @@ cd CA
 
 Le serveur héberge deux pages :
 
-  - une page index.php que l'on accède en HTTP et présentant un formulaire de login.
+\begin{itemize}
 
-  - une page secure.php que l'on accède en HTTPS depuis la page index.php.
+\item une page index.php que l'on accède en HTTP et présentant un formulaire de login.
+
+\item une page secure.php que l'on accède en HTTPS depuis la page index.php.
+\end{itemize}
 
 \subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
 
@@ -106,7 +109,7 @@ Sur la machine immortal, nous lançons le script de l'attaque :
 
 \paragraph{Explication du code du proxy \\}
 
-Le code du proxy est dans le fichier \path{https-interception.py}. Ce dernier est sensiblement le même que celui utilisé pour l'attaque sslstrip.
+Le code du proxy est dans le fichier \path{https-interception.py}. Ce dernier est sensiblement le même que celui utilisé pour l'attaque SSLStrip.
 
 \subparagraph{Contexte SSL du proxy \\}
 
@@ -138,7 +141,7 @@ Si le certificat est accepté par le client et que nous essayons de nous enregis
   \fbox{\includegraphics[width=\textwidth]{../medias/https-interception/screen1.png}}
 \end{figure}
 
-Nous arrivons bien sur la page secure.php, et notre connexion est bien effectuée en HTTPS. Le client n'a constaté aucuns changement au niveau de sa navigation.
+Nous arrivons bien sur la page secure.php, et notre connexion est bien effectuée en HTTPS. Le client n'a constaté aucun changement au niveau de sa navigation.
 
 \begin{figure}[H]
   \caption{Tout a l'air normal pour le client}

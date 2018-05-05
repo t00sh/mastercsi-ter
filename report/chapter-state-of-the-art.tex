@@ -169,9 +169,9 @@ Dans les années suivantes, de nombreux chercheurs ont découvert des biais stat
 
 Le nom donné a cette attaque a été RC4-NOMORE (RC4 Numerous Occurrence MOnitoring \& Recovery Exploit) et fonctionne comme suit : tout d'abords, l'attaquant placé en homme du milieu va injecter du code JavaScript dans le trafic HTTP de la victime. Le code JavaScript va alors envoyer avec le protocole TLS le cookie sur le réseau un grand nombre de fois (plusieurs milliers de requêtes par secondes), permettant ainsi à l'homme du milieu de récupérer un nombre important de cookies chiffrés.
 
-Grâce au biais statistique de RC4, l'attaquant va être en capcité de calculer une liste de cookie probables à l'aide des données chiffrées reçues à l'étape précédente. En soumettant chacun de ces cookies au site visé, l'attaquant va pouvoir réussir à déterminer lequel était le bon.
+Grâce au biais statistique de RC4, l'attaquant va être en capacité de calculer une liste de cookie probables à l'aide des données chiffrées reçues à l'étape précédente. En soumettant chacun de ces cookies au site visé, l'attaquant va pouvoir réussir à déterminer lequel était le bon.
 
-Les chercheurs ont annoncé que le taux de succés de cette attaque pour déchiffrer un cookie de 16 octets était d'environ 95\% et demandait environ 75 heures, même si cela a pris seulement 52 heures pour leur démonstration \cite{rc4nomore}.
+Les chercheurs ont annoncé que le taux de succès de cette attaque pour déchiffrer un cookie de 16 octets était d'environ 95\% et demandait environ 75 heures, même si cela a pris seulement 52 heures pour leur démonstration \cite{rc4nomore}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,7 +192,7 @@ Les chercheurs ont annoncé que le taux de succés de cette attaque pour déchif
 
 Lucky 13 est une attaque cryptographique, exploitant des canaux auxiliaires de certaines implémentations de TLS (OpenSSL et GnuTLS), notamment lorsque le mode CBC (Cipher Block Chaining) est utilisé.
 
-Cette attaque a été initialement découverte par des chercheurs de l'université de Londre et a été qualifiée de théorique pour le moment.
+Cette attaque a été initialement découverte par des chercheurs de l'université de Londres et a été qualifiée de théorique pour le moment.
 
 Pour expliquer le fonctionnement de cette attaque, il faut comprendre comment sont vérifiées les données chiffrées une fois qu'elles ont été déchiffrées avec le mode CBC. Les données en clair contiendront :
 
@@ -207,10 +207,10 @@ Une fois ces données déchiffrées, il est nécessaire d'effectuer l'ensemble d
 \begin{itemize}
 \item{Vérifier que le padding est correct (longueur, valeur des octets du padding...) ;}
 \item{Calculer le MAC des données en clair et du header TLS ;}
-\item{Extraire le MAC reçu (avec des temps d'accés mémoire constants), et le vérifier avec le MAC calculé.}
+\item{Extraire le MAC reçu (avec des temps d'accès mémoire constants), et le vérifier avec le MAC calculé.}
 \end{itemize}
 
-Le problème mis en avant par l'attaque Lucky-13 concerne la dernière étape, c'est à dire l'extraction du MAC reçu dans le paquet TLS. Le temps de cette étape dépend en effet du padding, et les temps d'accés mémoire pourront être différents si le padding est correct ou incorrect. Il s'agit d'un canal auxiliaire de type ``cache timing''.
+Le problème mis en avant par l'attaque Lucky-13 concerne la dernière étape, c'est à dire l'extraction du MAC reçu dans le paquet TLS. Le temps de cette étape dépend en effet du padding, et les temps d'accès mémoire pourront être différents si le padding est correct ou incorrect. Il s'agit d'un canal auxiliaire de type ``cache timing''.
 
 L'attaquant a alors la possibilité d'obtenir un oracle de padding qui détermine si un paquet a un padding correct ou non en fonction du temps de réponse, ce qui peut conduire à une attaque de type CBC-Padding-Oracle lorsque c'est le mode CBC qui est utilisé (et donc permettre le déchiffrement complet du message).
 
@@ -342,7 +342,7 @@ Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip
 
 Cette amélioration de l'attaque SSLstrip originale a été présentée pour la première fois par Jose Selvi à la Blackhat Europe de 2014. Celle-ci permet de contourner la sécurité offerte par HSTS (HTTP Strict Transport Security), dans le cas où l'attaquant est capable de modifier le trafic NTP entre le client et le serveur NTP.
 
-L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLstrip originale pour stripper les liens https des pages web visitées par la victime \cite{sslstrip-ntp}.
+L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLstrip originale pour stripper les liens HTTPS des pages web visitées par la victime \cite{sslstrip-ntp}.
 
 Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip-ntp]{SSLstrip NTP}.
 
@@ -509,7 +509,7 @@ Les deux premiers nombres correspondent à la fréquence de visites du domaine, 
 
 HTTP Public Key Pinning est un autre mécanisme de sécurité décrit dans la RFC7469, qui permet à un serveur de transmettre à ses clients les empreintes de ses certificats, via un entête HTTP. Un client supportant ce mécanisme stockera alors cette empreinte pour une certaine durée (précisée par le serveur). Si l'empreinte du certificat a changé, le client refusera alors de se connecter au serveur \cite{hpkp}.
 
-Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connexion, mais seulement les futures conxexions.
+Ceci permet en particulier de se protéger de l'interception HTTPS réalisée avec un certificat frauduleux. Comme HSTS, ce mécanisme ne protège pas la première connexion, mais seulement les futures connexions.
 
 Pour firefox par exemple, cette correspondance domaine/empreinte est stockée également dans le fichier \path{SiteSecurityServiceState.txt}, présent dans le profile de Mozilla firefox.
 
