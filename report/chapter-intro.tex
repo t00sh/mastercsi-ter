@@ -5,7 +5,7 @@ Ce projet de TER a eu pour objectifs de s'interresser aux attaques HTTPS, un pro
 
 Le HTTPS permet à un visiteur de vérifier l'authenticité du site web qu'il visite grâce à un certificat d'authentification émis par une autorité tierce, réputée et de confiance. Théoriquement, il garantit la confidentialité et l'intégrité des données envoyées par l'utilisateur et reçues par le serveur. Dans un premier temps, les sites internet ont appliqué ce protocole seulement à des parties de leurs sites, par exemple pour le POST d'un formulaire. De nos jours, la majorité des sites proposant un accès restreint utilisent le HTTPS sur tout le site.
 
-SSL et TLS sont deux protocoles cryptographiques utilisés dans la majorité des connexions sécurisées. Que ça soit l'accès à un serveur web via https, ou encore un envoi vers un serveur mail avec STARTTLS. SSL n'est cependant plus utilisé de nos jours, principalement à cause de l'attaque \hyperref[sec:poodle]{POODLE} qui a montré des vulnérabilités critiques dans son implémentation en 2014. Depuis, le protocol TLS remplace ce dernier.
+SSL et TLS sont deux protocoles cryptographiques utilisés dans la majorité des connexions sécurisées. Que ça soit l'accès à un serveur web via https, ou encore un envoi vers un serveur mail avec STARTTLS. SSL n'est cependant plus utilisé de nos jours, principalement à cause de l'attaque \hyperref[sec:poodle]{POODLE} qui a montré des vulnérabilités critiques dans son implémentation en 2014. Depuis, le protocole TLS remplace ce dernier.
 
 TLS utilise un schéma standard pour sécuriser une connexion :
 
@@ -17,7 +17,7 @@ TLS utilise un schéma standard pour sécuriser une connexion :
     \item Grâce à cette clef de session, le client et le serveur peuvent maintenant communiquer de manière chiffrée et authentifiée en utilisant un chiffrement symétrique.
 \end{itemize}
 
-Malgré l'apparente sécurité du protocol TLS, il existe une multitude de points d'entrés qu'un attaquant peut utiliser pour récupérer une clef de session, ou usurper une connexion. Le but n'est généralement pas de chercher à casser RSA ou un autre chiffrement cryptographique. On va plutôt s'attaquer à certains détails de la communication, et failles dans la manière dont est gérée ces protocoles en pratique par les clients et les serveurs. Par exemple, l'attaque POODLE utilise une faille dans la gestion de ces protocoles pour forcer les serveurs à sécuriser la connexion via SSL, au lieu de TLS, affaiblissant grandement la communication.
+Malgré l'apparente sécurité du protocole TLS, il existe une multitude de points d'entrés qu'un attaquant peut utiliser pour récupérer une clef de session, ou usurper une connexion. Le but n'est généralement pas de chercher à casser RSA ou un autre chiffrement cryptographique. On va plutôt s'attaquer à certains détails de la communication, et failles dans la manière dont est gérée ces protocoles en pratique par les clients et les serveurs. Par exemple, l'attaque POODLE utilise une faille dans la gestion de ces protocoles pour forcer les serveurs à sécuriser la connexion via SSL, au lieu de TLS, affaiblissant grandement la communication.
 
 Au lieu de chercher à casser le chiffrement en son coeur, on va ainsi gratter tous les détails autour de l'implémentation qui peuvent permettre à un attaquant d'arriver à ses fins.
 
