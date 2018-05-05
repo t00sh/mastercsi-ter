@@ -8,4 +8,12 @@ Les variantes de SSLStrip supposent par exemple que l'utilisateur se connecte au
 
 S'il peut paraître inutile au premier abord de se connecter en HTTPS sur des pages qui ne nécessitent pas de connexion sécurisée, il apparaît au vu de l'attaque SSLStrip que c'est en en fait nécessaire pour se prémunir de cette dernière.
 
+Une première réponse à ce type d'attaque a été l'implémentation de HSTS, permettant de protéger un domaine déjà visité auparavant. Bien entendu, ce type de protection peut être contourné, comme on l'a vu lors de la présentation des attaques SSLStrip+ et SSLStrip-NTP. Pour empêcher ceci, les solutions sont l'utilisation du HTTPS partout où cela est possible, et l'utilisation du ``HSTS preload'' afin de protéger la première connexion.
+
 L'attaque HTTPS interception, quant à elle, suppose que l'attaquant ait son propre certificat installé dans le navigateur web du client. Cela nous rappelle donc, que même si le protocole HTTPS est sécurisé pour des conditions normales, une attaque reste possible si un attaquant a accès à l'ordinateur du client en amont.
+
+Cette attaque pose également la question de la sécurité des autorités de certification. En effet, toute la sécurité du protocole HTTPS repose sur la confiance accordée aux différentes CA : il suffit qu'une seule soit vulnérable parmi les centaines présentes sur les navigateurs pour que l'ensemble de la chaîne de confiance soit rompue.
+
+Différentes solutions existent pour résoudre ce problème, mais peu d'entre elles sont déployées à grande échelle. Nous avons vu par exemple l'utilisation de DANE/TLSA utilisant les registres de noms DNS comme tiers de confiance. Ou encore le Certificat Transparency afin de détecter le plus tôt possible l'émission de certificat frauduleux par une autorité de certification publique.
+
+Nous voyons que malgrès l'utilisation massive du protocole HTTPS, sa sécurité peut être compromise si l'on ne prends pas gare. Un effort doit donc être fait pour renforcer les configurations des sites web, et l'utilisation des différentes contremesures doit être appliquée autant que possible.
