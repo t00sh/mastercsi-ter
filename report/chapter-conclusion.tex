@@ -1,2 +1,11 @@
 \chapter*{Conclusion}
+
 \addcontentsline{toc}{chapter}{Conclusion}
+
+Dans ce rapport de TER, nous présentons un état de l'art, ainsi que 4 preuves de concepts implémentant des attaques sur https. Ces dernières ne fonctionnent que dans des conditions bien précises.
+
+Les variantes de SSLstrip supposent par exemple que l'utilisateur se connecte au moins une fois en http sur un site, sinon l'attaquant n'aura jamais la possibilité de modifier le code html.
+
+S'il peut paraître inutile au premier abord de se connecter en https sur des pages qui ne nécessitent pas de connexion sécurisée, il apparait au vu de l'attaque SSLstrip que c'est en en fait nécessaire pour se prémunir de cette dernière.
+
+L'attaque https interception, quant à elle, suppose que l'attaquant ait son propre certificat installé dans le navigateur web du client. Cela nous rappelle donc, que même si le protocole https est sécurisé pour des conditions normales, une attaque reste possible si un attaquant a accès à l'ordinateur du client en amont.
