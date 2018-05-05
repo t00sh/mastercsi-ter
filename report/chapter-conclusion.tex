@@ -6,7 +6,7 @@ Dans ce rapport de TER, nous présentons un état de l'art, ainsi que 4 preuves 
 
 Les variantes de SSLStrip supposent par exemple que l'utilisateur se connecte au moins une fois en HTTP sur un site, sinon l'attaquant n'aura jamais la possibilité de modifier le code HTML.
 
-S'il peut paraître inutile au premier abord de se connecter en HTTPS sur des pages qui ne nécessitent pas de connexion sécurisée, il apparaît au vu de l'attaque SSLStrip que c'est en en fait nécessaire pour se prémunir de cette dernière.
+S'il peut paraître inutile au premier abord de se connecter en HTTPS sur des pages qui ne nécessitent pas de connexion sécurisée, il apparaît au vu de l'attaque SSLStrip que c'est en fait nécessaire pour se prémunir de cette dernière.
 
 Une première réponse à ce type d'attaque a été l'implémentation de HSTS, permettant de protéger un domaine déjà visité auparavant. Bien entendu, ce type de protection peut être contourné, comme on l'a vu lors de la présentation des attaques SSLStrip+ et SSLStrip-NTP. Pour empêcher ceci, les solutions sont l'utilisation du HTTPS partout où cela est possible, et l'utilisation du ``HSTS preload'' afin de protéger la première connexion.
 
