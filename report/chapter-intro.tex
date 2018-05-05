@@ -5,17 +5,20 @@ Ce projet consiste à s'interresser aux attaques HTTPS, un protocole majoritaire
 
 Le HTTPS permet à un visiteur de vérifier l'authenticité du site web qu'il visite grâce à un certificat d'authentification émis par une autorité tierce, réputée et de confiance. Théoriquement, il garantit la confidentialité et l'intégrité des données envoyées par l'utilisateur et reçues par le serveur. Dans un premier temps, les sites internet ont appliqué ce protocole seulement à des parties de leurs sites, il était appliqué après le POST d'un formulaire par example. De nos jours, la majorité des sites proposants un accès restreint utilisent le HTTPS sur tout le site.
 
-%%% Parler de SSL et TLS %%%
+SSL et TLS sont deux protocols cryptographiques utilisés dans la majorité des connexions sécurisées. Que ça soit l'accès à un serveur web via https, ou encore un envoi vers un serveur mail avec STARTTLS. SSL n'est cependant plus utilisé de nos jours, principalement à cause de l'attaque \hyperref[sec:poodle]{POODLE} qui a montré des vulnérabilités critiques dans son implémentation en 2014. Depuis, le protocol TLS remplace ce dernier.
 
+TLS utilise un schéma standard pour sécuriser une connexion :
 
-%%% Présentation du projet %%%
-% But : %
+\begin{itemize}
+    \item Le client envoie une requête au serveur stipulant qu'il veut se connecter avec TLS
+    \item Un premier échange est fait pour décider de certains paramètres à utiliser pour la communication (chiffrement, fonction de hash).
+    \item Le serveur fournit un certificat au client pour lui prouver son identité
+    \item Une fois l'identité confirmée par le client, les deux parties peuvent maintenant générer un secret commun, par exemple avec le chiffrement Diffie-Hellman. Ce secret partagé formera la clef de session.
+    \item Grâce à cette clef de session, le client et le serveur peuvent maintenant communiquer de manière chiffrée en utilisant à chiffrement symétrique
+\end{itemize}
 
-%% 1 - état de l'art pour présenter les attaques qui ont put être faites %%
+Malgré l'apparente sécurité du protocol TLS, il existe une multitude de points d'entrés qu'un attaquant peut utiliser pour récupérer une clef de session, ou usurper une connexion. Le but n'est généralement pas de chercher à casser RSA ou un autre chiffrement cryptographique. On va plutôt s'attaquer à certains détails de la communication, et failles dans la manière dont est gérée ces protocols en pratiques par les clients et les serveurs. Par exemple, l'attaque POODLE utilise une faille dans la gestion de ces protocols pour forcer les serveurs à sécuriser la connexion via SSL, au lieu de TLS.
 
-%% 2 - Réalisation Preuve de concept %%
-% utilisation qemunet environnement %
-% SSLStrip une première attaque réalisé dans 3 versions %
-% HTTPS-Interception %
+Au lieu de chercher à casser le chiffrement en son coeur, on va ainsi gratter tous les détails autour de l'implémentation qui peuvent permettre à un attaquant d'arriver à ses fins.
 
-% CECI représente notre plan comme ça %
+Dans ce rapport, nous proposons d'abord en première partie un état de l'art sur les principales attaques sur SSL et TLS, vues au cours des 15 dernières années. Puis nous aborderons l'essentiel de notre travail : une implémentation de plusieurs de ces attaques au travers de preuves de concepts (PoC). Ces PoC sont épurées dans le sens où les détails de l'attaque sont laissés de côté pour montrer le fonctionnement brut. Elles sont présentées sur des machines virtuelles, et sont accessibles pour n'importe qui voudrait les tester via un depôt sur la plate-forme github.
