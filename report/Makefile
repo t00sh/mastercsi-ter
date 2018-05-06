@@ -2,8 +2,9 @@
 
 REPORT_PDF = report.pdf
 REPORT_TEX = report.tex
-REPORT_DEP = refs.tex
-REPORT_DEP += chapter-state-of-the-art.tex chapter-sslstrip.tex
+REPORT_DEP = appendix.tex chapter-conclusion.tex chapter-https-interception.tex
+REPORT_DEP += chapter-intro.tex chapter-sslstrip2.tex chapter-sslstrip-ntp.tex
+REPORT_DEP += chapter-sslstrip.tex chapter-state-of-the-art.tex refs.tex
 
 
 all: $(REPORT_PDF)
