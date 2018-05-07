@@ -3,15 +3,25 @@ __pycache__
 *.pyc
 *.tgz
 
-# ignore qemunet sessions files
+# Qemunet sessions files
 immortal.sh
 opeth.sh
 grave.sh
 session
 *.qcow2
+qemunet
+
+# CA generated files
 CA/*.key
 CA/*.pem
 CA/*.csr
 CA/*.srl
-qemunet
+
+# LaTeX files
+*.snm
+*.nav
+*.out
+*.aux
+*.log
+*.toc
 _minted-report
