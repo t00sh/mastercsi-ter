@@ -2,8 +2,6 @@
 
 ## Commentaires de Aurélien, ce qu'il reste à faire :
 
-* faire références dans le rapport aux codes en annexe
-
 * la présentation de l'environnement pour sslstrip2 me semble plus détaillé que pour sslstrip... faire plutôt l'inverse ?
 
 * page 31-32 : sslstrip2 "avant l'attaque", il faudrait plutôt montrer l'effet de HSTS et s'appuyer sur la section précédente pour le reste...
