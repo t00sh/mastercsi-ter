@@ -102,3 +102,13 @@ La machine immortal a été capable de capturer non seulement les identifiants d
 \end{figure}
 
 Le script complet de l'attaque peut être consulté à l'annexe \ref{appendix:sslstrip-ntp}.
+
+\section{Limitations de notre attaque}
+
+Dans cette attaque, nous supposons que le client effectue des requêtes NTP. Ceci n'est en fait pas toujours le cas, et il arrive que des clients n'utilisent pas NTP pour mettre leurs horloge à jour.
+
+De plus, ici notre attaque fonctionne relativement rapidement car notre client a été configuré pour effectuer ses requêtes toutes les secondes. En pratique, l'attente d'une requête NTP peut être beaucoup plus longue et est souvent de l'ordre de plusieurs heures.
+
+Une autre supposition que nous avons fait mais qui n'est peut être pas possible en réalité est que nous sommes sur le chemin entre le client et le serveur NTP. Suivant à quel endroit l'attaquant a réussi à se placer en homme du milieu, l'attaque pourrait ne pas être possible.
+
+Ce script possède également les même limitations que celui sur \hyperref[sec:sslstrip](SSLStrip).

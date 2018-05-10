@@ -200,6 +200,8 @@ La machine immortal a été capable de capturer non seulement les identifiants d
 
 Le script complet de l'attaque peut être consulté à l'annexe \ref{appendix:sslstrip}.
 
-\section{L'attaque SSLstrip aujourd'hui}
+\section{Limitations de notre attaque}
 
 Cependant, l'attaque n'est plus vraiment d'actualité car les sites internet modernes (ou plutôt, ceux qui pensent à la sécurité de leurs utilisateurs), utilisent HTTPS sur toutes les pages de leur site web, ce qui empêche l'attaquant d'intercepter ne serait-ce qu'une requête HTTP, et de la modifier. De plus, une autre protection, nommée HSTS, permet au serveur d'indiquer à un client de toujours se connecter en HTTPS sur certaines pages. Ainsi, si un attaquant parvient à intercepter une requête HTTP, et à remplacer les liens HTTPS vers des liens HTTP dans le code HTML, le navigateur du client émettra une exception, car il aura gardé en mémoire qu'il doit se connecter en HTTPS sur telle page spécifique. Néanmoins il existe des moyens de contourner cet ajout, nous en parlerons dans la prochaine attaque.
+
+Notre implémentation est volontairement minimaliste, et nous ne traitons pas certains détails. Par exemple, les redirections (code HTTP 3XX) n'ont pas été rééllement pris en compte par notre script, mais peuvent être également attaquées. Aussi, notre outil s'occupe simplement de rediriger les requêtes vers un domaine fixé à l'avance. Un vrai programme mémoriserait les différentes requêtes en redirigeant vers le bon domaine à chaque fois.

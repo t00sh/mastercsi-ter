@@ -206,3 +206,11 @@ La machine immortal a été capable de capturer non seulement les identifiants d
 \end{figure}
 
 Le script complet de l'attaque peut être consulté à l'annexe \ref{appendix:sslstrip2}.
+
+\section{Limitations de notre attaque}
+
+Dans cette attaque, nous ajoutons au domaine attaqué un 'w' en passant de \path{www.opeth.secure} à \path{wwww.opeth.secure}. Un utilisateur un petit peu averti, verra sans doute la supercherie. Suivant le domaine attaqué, un choix plus judicieux pourrait sans doute passer plus inaperçu.
+
+Nous avons également fait la supposition que l'attaquant a la possibilité d'usurper les requêtes DNS du client. Suivant où est placé l'attaquant sur le réseau, ceci ne sera peut être pas possible et l'attaque ne pourra donc pas être réalisée.
+
+Ce script possède également les même limitations que celui sur \hyperref[sec:sslstrip](SSLStrip).
