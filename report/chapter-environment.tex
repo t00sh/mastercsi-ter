@@ -52,21 +52,19 @@ Pour que la machine puisse accéder au réseau, nous devons lui spécifier une a
 
 Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement, car nous utilisons différentes solutions suivant les attaques.
 
-De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il nous est nécessaire d'ajouter le certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance. Cela est réalisé grâce à l'outil certutils de nss-tools.
+De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il nous est nécessaire d'ajouter le certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance. Cela est réalisé grâce à l'outil certutils de nss-tools de la façon suivante :
 
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/grave/start.sh}
+\begin{minted}{bash}
+  su - toto -c 'certutil -A -n "ca@ca.local" -t "C,C,C" -i /mnt/host/cert.pem -d /home/toto/.mozilla/firefox/*.default'
+\end{minted}
 
 \subsection{Configuration de la machine serveur - opeth - 147.210.12.1}
 
 Opeth représente notre serveur et utilise le système d'exploitation debian.
 
-Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créé un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification (voir ci-dessous).
+Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créé un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification (voir section \hyperref[sec:certificats]{Gestion des certificats}).
 
-Afin de réaliser nos démonstrations, nous avons créé deux pages web minimales utilisant du PHP. Il s'agit simplement d'un formulaire de login, dont le POST se fait sur une seconde page et qui affiche un message. Il a donc fallut configurer php-fpm, pour lui dire d'utiliser une socket UNIX :
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/php7.0-fpm.conf}
-
-La page de notre forumulaire PHP minimaliste est la suivante :
+Afin de réaliser nos démonstrations, nous avons créé deux pages web minimales utilisant du PHP. Il s'agit simplement d'un formulaire de login, dont le POST se fait sur une seconde page et qui affiche un message. La page du formulaire PHP est la suivante :
 
 \inputminted[bgcolor=lbcolor, breaklines]{html}{../sslstrip2/opeth/www/local/index.php}
 
@@ -97,6 +95,8 @@ Cette machine présente deux adresses IP, une dans le réseau de la machine vict
 Comme cette machine est positionnée en homme du milieu, c'est celle-ci qui contient la preuve de concept de l'attaque. Elle se trouve dans le fichier \path{/mnt/host/attack.sh}.
 
 \section{Gestion des certificats}
+
+\label{sec:certificats}
 
 Afin de créer notre autorité de certification et générer des certificats pour nos pages HTTPS, nous avons mis dans le dossier \path{CA/} présent à la racine du projet, deux scripts permettant de faciliter ces deux opérations. Ces scripts utilisent l'outil openssl.
 

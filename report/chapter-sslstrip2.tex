@@ -47,13 +47,10 @@ On obtient donc le script de lancement suivant qui charge toutes les configurati
 
 \subsubsection{Configuration de la machine attaquante - immortal}
 
-Nous avons donc le script de démarrage de la machine suivant :
 
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/immortal/start.sh}
+Cette machine utilise également DNSMASQ afin d'usurper les requêtes DNS de grave.
 
-Ainsi que la même configuration du serveur DNS que pour opeth.
-
-Comme précisé dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
+Comme précisé dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'une règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
 
 Voici le contenu du fichier \path{/mnt/host/attack.sh} pour cette attaque :
 
