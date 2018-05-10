@@ -11,12 +11,13 @@
 
 La méthode que nous allons voir pour intercepter un trafic HTTPS n'est pas vraiment une attaque. Pour être menée à bien, la machine, placée en homme du milieu, doit avoir installée sa propre autorité de certification, et surtout l'avoir rentrée sur la machine du client, en amont.
 
-C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il existe des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leurs activités. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS.
+C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il existe des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leurs activités. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS, du moins c'est ce qu'on pourrait penser.
 
-C'est en fait au contraire assez simple à réaliser dans la mesure où il est facile de rajouter une autorité de certification à la main dans les navigateurs web de tous les employés.
+Car c'est en fait au contraire assez simple à réaliser dans la mesure où il est facile de rajouter une autorité de certification à la main dans les navigateurs web de tous les employés.
 
 L'idée de la méthode est d'agir comme un simple proxy HTTPS. Lors de la connexion initiale du client vers le site web, la machine placée en homme du milieu va récupérer la requête, et établir elle même une connexion avec le serveur distant. Le proxy n'a plus qu'à établir une connexion avec le client, ce qui ne pose pas de problème car l'autorité de certification est acceptée par le navigateur du client.
 
+L'ANSSI a d'ailleurs publié une ressource à destination des entreprises sur comment intercepter le traffic https de ses employés : \url{https://www.ssi.gouv.fr/uploads/IMG/pdf/NP_TLS_NoteTech.pdf}
 \section{Notre attaque}
 
 \subsection{Mise en place de l'environnement}
