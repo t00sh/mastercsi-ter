@@ -22,7 +22,8 @@ $(PRESENTATION_PDF): $(PRESENTATION_TEX) Makefile
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 clean:
-	rm -f *~ *.toc *.out *.aux *.log $(REPORT_PDF) $(PRESENTATION_PDF)
+	rm -f *~ *.nav *.snm *.toc *.out *.aux *.log
+	rm -f $(REPORT_PDF) $(PRESENTATION_PDF)
 
 
 help:
