@@ -30,91 +30,24 @@ Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer
 
 \subsection{Mise en place de l'environnement}
 
-Dans un premier temps, nous devons créer une topologie, c'est à dire un fichier décrivant l'architecture de l'environnement, qui correspond à notre besoin. En effet, nous avons besoin de trois machines :
+\subsubsection{Configuration de la machine serveur - opeth}
 
-\begin{itemize}
-\item une machine cliente et victime
-\item une machine attaquante
-\item une machine serveur
-\end{itemize}
-
-Voici le fichier de topologie qui décrit l'environnement mis en place pour l'attaque.
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/topology}
-
-Afin d'utiliser \verb+qemunet+ facilement, nous avons décidé de structurer l'environnement de l'attaque grâce à la gestion de dossiers supportée par l'outil. C'est pourquoi, tout l'environnement de l'attaque se trouve dans le dossier \verb+sslstrip2+ de notre projet. Ce dossier étant lui-même réparti en sous-dossiers. Chaque sous-dossier représente chaque machine :
-
-\begin{itemize}
-\item grave : dossier de la machine cliente et victime
-\item immortal : dossier de la machine attaquante
-\item opeth : dossier de la machine serveur
-\end{itemize}
-
-De plus, afin d'avoir une configuration qui est chargée à chaque lancement du système, nous utilisons des scripts bash \verb+start.sh+ qui sont chargés par \verb+qemunet+ au démarrage de chaque machine.
-
-Maintenant, il nous faut décrire ces fichiers de lancement.
-
-\subsubsection{Configuration de la machine cliente - grave - 147.210.13.2}
-Cette machine se nomme grave et utilise un environnement graphique de la distribution Linux Alpine. Un navigateur Firefox est présent pour la démonstration ultérieure.
-
-Pour que la machine puisse accéder au réseau, nous devons lui spécifier une adresse IP, son masque de sous-réseau ainsi que sa route par défaut.
-
-Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement.
-
-De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il nous est nécessaire d'ajouter le certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance.
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/grave/start.sh}
-
-\subsubsection{Configuration de la machine serveur - opeth - 147.210.12.1}
-
-Opeth représente notre serveur qui utilise le système d'exploitation debian.
-
-Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créé un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification. C'est pourquoi, dans un premier temps, nous avons implémenté un script qui créer cette autorité de certification :
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/create-ca.sh}
-
-Ensuite, nous pouvons enfin créer le certificat pour les connexions HTTPS :
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/new-cert.sh}
-
-De plus, comme sur les autres machines, nous avons un script de démarrage qui sur cette machine nous permet de lancer les services nécessaire pour l'attaque. Voici le script :
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/start.sh}
-
-Comme on peut le voir, nous avons besoin d'utiliser du PHP pour un petit script de connexion à une page.
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/php7.0-fpm.conf}
-
-Ensuite, on peut s'intéresser à la configuration de notre serveur NGINX. On doit lui spécifier :
-
-\begin{itemize}
-\item que l'on va utiliser du HTTP et du HTTPS
-\item les certificats à utiliser
-\item le chemin vers les pages non-sécurisées et vers celles sécurisées
-\item que l'on utilise du PHP sur certaines pages
-\item que l'on utilise le header HSTS
-\end{itemize}
-
-On a donc le fichier suivant \path{sslstrip2/opeth/nginx.conf} :
-
-\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/nginx.conf}
-
-Enfin, on a besoin de définir un serveur DNS avec l'outil DNSMASQ. Le fichier \path{sslstrip2/opeth/dnsmasq.conf} spécifie notre nom de domaine et les actions relatives à la résolution du nom de domaine.
+Pour cette attaque, nous avons besoin d'un serveur DNS, installé sur la machine \textbf{opeth}. Pour cela, nous utilisons l'outil DNSMASQ. Le fichier \path{sslstrip2/opeth/dnsmasq.conf} spécifie notre nom de domaine et les actions relatives à la résolution du nom de domaine.
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/dnsmasq.conf}
 
-On obtient donc le script de lancement suivant qui charge toutes les configurations et associe l'adresse IP de opeth au nom de domaine suivants :
+On obtient donc le script de lancement suivant qui charge toutes les configurations et associe l'adresse IP de opeth aux noms de domaines suivants :
 
 \begin{itemize}
-\item \path{www.opeth.local} lorsque l'on accède en HTTP à la page
-\item \path{www.opeth.secure} lorsque l'on accède en HTTPS
+\item \path{www.opeth.local} lorsque l'on accède en HTTP à la page ;
+\item \path{www.opeth.secure} lorsque l'on accède en HTTPS.
 \end{itemize}
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/start.sh}
 
 \subsubsection{Configuration de la machine attaquante - immortal}
 
-Cette machine présente deux adresses IP, une dans le réseau de la machine victime et l'autre dans celle du serveur afin d'être en position d'homme du milieu. Dans le cadre de l'attaque, nous l'avons configurée afin qu'elle relaie les paquets entre grave et opeth. Nous avons aussi configuré un serveur DNS sur cette machine afin de pouvoir rediriger les requêtes sur le bon serveur en fonction de si l'attaque est en cours ou non. Nous avons donc le script de démarrage de la machine suivant :
+Nous avons donc le script de démarrage de la machine suivant :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/immortal/start.sh}
 
@@ -122,7 +55,7 @@ Ainsi que la même configuration du serveur DNS que pour opeth.
 
 Comme précisé dans la description de l'attaque, nous avons besoin d'un nom de domaine supplémentaire afin de rediriger les requêtes DNS dessus. Ce nom de domaine est \path{wwww.opeth.secure}. On n'a donc besoin d'un règle dans la table PREROUTING de iptables afin de rediriger les paquets sur son propre serveur lorsque l'attaque à lieu.
 
-Comme cette machine est positionnée en homme du milieu, c'est celle-ci qui contient la preuve de concept de l'attaque. Elle se trouve dans le fichier \path{/mnt/host/attack.sh}.
+Voici le contenu du fichier \path{/mnt/host/attack.sh} pour cette attaque :
 
 \inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/immortal/attack.sh}
 

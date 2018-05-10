@@ -1,0 +1,125 @@
+\chapter{Environnement}
+
+\section{Qemunet}
+
+Pour les démonstrations de nos attaques, nous utilisons l'outil qemunet, développé principalement par Aurélien Esnard à l'INRIA. Il s'agit d'un script bash utilisant qemu et vde pour permettre la création de machines virtuelles connectées en réseau facilement. Cet outil est très simple d'utilisation \cite{qemunet}. Tout d'abord, pour récupérer le dépôt git de l'outil, nous pouvons utiliser la commande suivante :
+
+\begin{minted}{bash}
+  git clone https://gitlab.inria.fr/esnard/qemunet.git
+\end{minted}
+
+Un certain nombre d'options sont disponibles, que l'on peut afficher avec \path{--help}. Qemunet peut prendre en charge des archives, ou des dossiers pour lancer un environnement virtuel. Nous avons choisi la dernière solution afin de pouvoir versionner sous GIT les configurations des différentes attaques.
+
+Ainsi, chaque attaque est stockée dans un dossier qui lui est propre : \path{sslstrip}, \path{sslstrip2}, \path{sslstrip-ntp} et \path{https-interception}. Pour lancer la démonstration d'une attaque, nous pouvons exécuter simplement la commande depuis la racine de notre dépôt GIT :
+
+\begin{minted}{bash}
+./qemunet/qemunet.sh -x -S <attack-folder>
+\end{minted}
+
+Cette commande va permettre de lancer l'ensemble des machines virtuelles, prêtes à être utilisées pour l'attaque. À noter que lors de la première utilisation, \textbf{qemunet} va télécharger les images des différents systèmes utilisés (Debian et Alpine), cela peut donc prendre un peu de temps.
+
+\section{Topologie et configuration}
+
+Qemunet utilise un fichier textuel pour configurer la topologie du réseau. Pour chacune des attaques présentées dans ce rapport, nous avons utilisé une topologie composée de trois machines nommées \path{grave}, \path{immortal} et \path{opeth}. La topologie est décrite dans le fichier \path{topology}, présent dans le dossier de chaque attaque :
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/topology}
+
+Chaque machine virtuelle a un rôle bien défini, que voici :
+
+\begin{itemize}
+\item \textbf{grave}, la machine cliente et victime ;
+\item \textbf{immortal}, la machine attaquante ;
+\item \textbf{opeth}, la machine serveur.
+\end{itemize}
+
+Dans chaque dossier présentant une attaque, nous avons à chaque fois des sous-dossier représentant les différentes machines virtuelles de notre topologie :
+
+\begin{itemize}
+\item \textbf{grave} : dossier de la machine cliente et victime ;
+\item \textbf{immortal} : dossier de la machine attaquante ;
+\item \textbf{opeth} : dossier de la machine serveur.
+\end{itemize}
+
+De plus, afin d'avoir une configuration qui est chargée à chaque lancement de notre environnement, nous utilisons des scripts bash \verb+start.sh+ qui sont exécutés par \verb+qemunet+ au démarrage de chaque machine.
+
+Maintenant, il nous faut décrire la configuration des différentes machines.
+
+\subsection{Configuration de la machine cliente - grave - 147.210.13.2}
+
+Cette machine se nomme grave et utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur Firefox est présent pour l'ensemble des démonstrations.
+
+Pour que la machine puisse accéder au réseau, nous devons lui spécifier une adresse IP, son masque de sous-réseau ainsi que sa route par défaut.
+
+Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement, car nous utilisons différentes solutions suivant les attaques.
+
+De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il nous est nécessaire d'ajouter le certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance. Cela est réalisé grâce à l'outil certutils de nss-tools.
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/grave/start.sh}
+
+\subsection{Configuration de la machine serveur - opeth - 147.210.12.1}
+
+Opeth représente notre serveur et utilise le système d'exploitation debian.
+
+Cette machine héberge un serveur HTTP(S) grâce à NGINX sur le port 80 et 443. Pour cela, nous avons créé un certificat utilisé pour les connexions HTTPS. Il a été généré avec \verb+openssl+ grâce aux scripts présents dans le dossier \path{CA}, et signé par notre autorité de certification (voir ci-dessous).
+
+Afin de réaliser nos démonstrations, nous avons créé deux pages web minimales utilisant du PHP. Il s'agit simplement d'un formulaire de login, dont le POST se fait sur une seconde page et qui affiche un message. Il a donc fallut configurer php-fpm, pour lui dire d'utiliser une socket UNIX :
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/php7.0-fpm.conf}
+
+La page de notre forumulaire PHP minimaliste est la suivante :
+
+\inputminted[bgcolor=lbcolor, breaklines]{html}{../sslstrip2/opeth/www/local/index.php}
+
+La page où est effectuée la requête POST est la suivante :
+
+\inputminted[bgcolor=lbcolor, breaklines]{php}{../sslstrip2/opeth/www/secure/index.php}
+
+Ensuite, on peut s'intéresser à la configuration de notre serveur NGINX. On doit lui spécifier :
+
+\begin{itemize}
+\item que l'on va utiliser du HTTP et du HTTPS ;
+\item les certificats à utiliser ;
+\item le chemin vers les pages non-sécurisées et vers celles sécurisées ;
+\item que l'on utilise du PHP sur certaines pages ;
+\item que l'on utilise le header HSTS.
+\end{itemize}
+
+Voici donc à quoi ressemble le fichier de configuration de NGINX présent sur \path{opeth} :
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../sslstrip2/opeth/nginx.conf}
+
+La configuration diffère légèrement sur certaines attaques. On voit par exemple ici l'utilisation de HSTS, qui n'est pas utilisée dans la démonstration concernant \hyperref[sec:sslstrip]{SSLStrip}. Aussi, ici deux domaines sont configurés : \path{www.opeth.local} et \path{www.opeth.secure}. Pour les attaques \hyperref[sec:sslstrip]{SSLStrip} et \hyperref[sec:https-interception]{HTTPS-Interception}, seul le domaine \path{www.opeth.local} a été utilisé.
+
+\subsection{Configuration de la machine attaquante - immortal}
+
+Cette machine présente deux adresses IP, une dans le réseau de la machine victime et l'autre dans celle du serveur afin d'être en position d'homme du milieu. Dans le cadre de l'attaque, nous l'avons configurée afin qu'elle relaie les paquets entre grave et opeth. Nous avons également une règle iptables permettant de rediriger les requêtes HTTP ou HTTPS suivant l'attaque vers le port de notre proxy réalisant l'attaque.
+
+Comme cette machine est positionnée en homme du milieu, c'est celle-ci qui contient la preuve de concept de l'attaque. Elle se trouve dans le fichier \path{/mnt/host/attack.sh}.
+
+\section{Gestion des certificats}
+
+Afin de créer notre autorité de certification et générer des certificats pour nos pages HTTPS, nous avons mis dans le dossier \path{CA/} présent à la racine du projet, deux scripts permettant de faciliter ces deux opérations. Ces scripts utilisent l'outil openssl.
+
+Nous pouvons donc utiliser le script \path{CA/create-ca.sh} afin de commencer par créer une autorité de certification, dont voici le contenu :
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/create-ca.sh}
+
+Une fois cela réalisé, nous pouvons enfin créer le certificat pour le serveur web, signé par l'autorité de certification générée à l'étape précédente. Voici le script permettant ceci :
+
+\inputminted[bgcolor=lbcolor, breaklines]{shell}{../CA/new-cert.sh}
+
+Ainsi, nous devons réaliser une seule fois la commande :
+
+\begin{minted}{bash}
+  ./create-ca.sh
+\end{minted}
+
+Ceci va créer deux fichier : \path{root-ca.pem} et \path{root-ca.key}. Le premier fichier est à installer sur la machine \textbf{grave}. Le deuxième est à garder secret.
+
+Ensuite, pour chaque serveur que nous avons à configurer, nous pouvons lancer la commande suivante :
+
+\begin{minted}{bash}
+  ./new-cert.sh
+\end{minted}
+
+Le script va générer deux fichiers : \path{cert.pem} et \path{cert.key}. Le premier est le certificat publique du serveur, et le deuxième est la clef privée de celui-ci. Ces deux fichiers sont à installer sur le serveur NGINX de la machine \textbf{opeth}.

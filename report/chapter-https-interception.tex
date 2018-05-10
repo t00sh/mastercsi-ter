@@ -22,36 +22,14 @@ L'ANSSI a d'ailleurs publié une ressource à destination des entreprises sur co
 
 \subsection{Mise en place de l'environnement}
 
-\subsubsection{Machine grave (147.210.13.2)}
-
-Cette machine utilise l'environnement graphique de la distribution Linux Alpine. Le navigateur firefox est utilisé pour la démonstration.
-
-Au lancement de la machine, il faut configurer l'autorité de certification dans firefox. Se reporter au fichier start.sh
-
-\subsubsection{Machine opeth (www.opeth.local)}
-
-Cette machine héberge un serveur HTTP(s) Nginx sur le port 80 et 443. Le certificat utilisé pour les connexions HTTPS a été généré avec les scripts \path{create-ca.sh} et \path{new-cert.sh} de la façon suivante :
-
-\begin{minted}{bash}
-cd CA
-./create-ca.sh
-./new-cert.sh
-\end{minted}
-
-Le serveur héberge deux pages :
+Le serveur \textbf{opeth} héberge deux pages sur le domaine \path{www.opeth.local} :
 
 \begin{itemize}
-
-\item une page index.php que l'on accède en HTTP et présentant un formulaire de login.
-
-\item une page secure.php que l'on accède en HTTPS depuis la page index.php.
+\item une page \path{index.php} que l'on accède en HTTPS et présentant un formulaire de login ;
+\item une page \path{secure.php} que l'on accède en HTTPS depuis la page \path{index.php}.
 \end{itemize}
 
-\subsubsection{Machine immortal (147.210.12.2 - 147.210.13.1)}
-
-C'est sur cette machine que se trouve le PoC de l'attaque, dans le fichier \path{/mnt/host/attack.sh}.
-
-Cette VM est configurée pour forwarder les paquets entre opeth et grave.
+Pour la résolution DNS, nous utilisons simplement le fichier \path{/etc/hosts} de chaque machine. Nous avons également mis en place HSTS sur cette attaque, étant donné que nous traitons uniquement des flux HTTPS.
 
 \subsection{Démonstration}
 
