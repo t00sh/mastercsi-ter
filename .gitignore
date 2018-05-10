@@ -25,3 +25,4 @@ CA/*.srl
 *.log
 *.toc
 _minted-report
+report/*.pdf
