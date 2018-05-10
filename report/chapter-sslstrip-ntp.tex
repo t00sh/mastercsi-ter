@@ -40,7 +40,7 @@ Il a fallut utiliser un client NTP sur cette machine pour cette attaque. Nous ut
 
 C'est sur cette machine que se trouve le Proof-Of-Concept de l'attaque. Nous avons également utilisé le script Delorean \cite{delorean} comme décrit dans le papier de l'attaque afin d'usurper les requêtes NTP de la machine grave. L'attaque se lance grâce au script \path{/mnt/host/attack.sh} :
 
-\inputminted[bgcolor=lbcolor, breaklines]{php}{../sslstrip-ntp/immortal/attack.sh}
+\inputminted[bgcolor=lbcolor, breaklines]{bash}{../sslstrip-ntp/immortal/attack.sh}
 
 Nous commençons par rediriger les requêtes HTTP sur le port de notre proxy, puis les requêtes NTP vers le port de Delorean. Nous calculons ensuite le temps d'expiration des entrées HSTS à l'aide de l'outil curl. Finalement, nous lançons le serveur Delorean ainsi que notre proxy implémentant l'attaque SSLstrip.
 
