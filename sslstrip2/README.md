@@ -98,17 +98,17 @@ $ ./qemunet/qemunet.sh -x -S sslstrip2
 
 ## Étape 1 : avant l'attaque
 
-Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
+Avant de vous montrer ce qu'il se passe lors de l'attaque, nous devons vous montrer l'état initial et le fonctionnement de HSTS.
+
+Lorsque l'attaque n'est pas lancée, et que c'est la première fois que nous visitons le domaine www.opeth.secure, nous voyons que nous pouvons utiliser le protocole HTTP :
 
 ![screen1](../medias/sslstrip2/screen1.png?raw=true)
 
-L'encadré rouge montre bien que le POST est effectué en HTTPS, sur la page secure.php.
+Par contre, une fois que le site a été visité en HTTPS une fois et grâce à HSTS, il est alors impossible d'accéder de nouveau au domaine www.opeth.secure en HTTP. Firefox effectuera automatiquement la requête en HTTPS :
 
 ![screen2](../medias/sslstrip2/screen2.png?raw=true)
 
-Nous arrivons alors sur le domaine www.opeth.secure en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée.
-
-![screen3](../medias/sslstrip2/screen3.png?raw=true)
+Nous voyons donc que même sur une URL en `http://www.opeth.secure`, si l'entrée HSTS existe nous serons tout de même connecté automatiquement en HTTPS.
 
 ## Étape 2 : lancement de l'attaque
 

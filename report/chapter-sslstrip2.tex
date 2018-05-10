@@ -66,38 +66,27 @@ Après ces présentations de mise en place, nous pouvons vous montrer le fonctio
   ./qemunet/qemunet.sh -x -S sslstrip2
 \end{minted}
 
-Maintenant, nous avons les trois machines de lancées. Les login et mot de passe sont :
-
-\begin{itemize}
-\item grave : toto - toto
-\item immortal : root - rien
-\item opeth : root - rien
-\end{itemize}
+Maintenant, nous avons les trois machines de lancées.
 
 \subsubsection{Étape 1 : Avant l'attaque}
 
-Avant de vous montrer ce qu'il se passe lors de l'attaque, nous devons vous montrer l'état initial.
+Avant de vous montrer ce qu'il se passe lors de l'attaque, nous devons vous montrer l'état initial et le fonctionnement de HSTS.
 
-Lorsque l'attaque n'est pas lancée, nous pouvons voir sur la machine grave que la communication se passe sans problèmes et que la requête POST passe bien en HTTPS; immortal est donc incapable de voir les identifiants envoyés :
+Lorsque l'attaque n'est pas lancée, et que c'est la première fois que nous visitons le domaine \path{www.opeth.secure}, nous voyons que nous pouvons utiliser le protocole HTTP :
 
 \begin{figure}[H]
-  \caption{Attaque SSLstrip2 (avant l'attaque)}
+  \caption{Visite du domaine en HTTP, lors de la première connexion}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/screen1.png}}
 \end{figure}
 
-L'encadré rouge ci-dessous montre bien que le POST est effectué en HTTPS, sur le domaine \path{www.opeth.secure}. Lorsque nous affichons le code source de la page, nous obtenons :
+Par contre, une fois que le site a été visité en HTTPS une fois et grâce à HSTS, il est alors impossible d'accéder de nouveau au domaine \path{www.opeth.secure} en HTTP. Firefox effectuera automatiquement la requête en HTTPS :
 
 \begin{figure}[H]
-  \caption{Code source de la page (avant l'attaque)}
+  \caption{Visite du domaine en HTTP, lorsqu'il a été sécurisé avec HSTS}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/screen2.png}}
 \end{figure}
 
-Nous arrivons alors sur le domaine \path{www.opeth.secure} en HTTPS : immortal n'a pas pût voir nos échanges sur cette page sécurisée comme le montre la figure ci-dessous.
-
-\begin{figure}[H]
-  \caption{La connexion se fait bien en https}
-  \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/screen3.png}}
-\end{figure}
+Nous voyons donc que même sur une URL en \path{http://www.opeth.secure}, si l'entrée HSTS existe nous serons tout de même connecté automatiquement en HTTPS.
 
 \subsubsection{Étape 2 : lancement de l'attaque}
 

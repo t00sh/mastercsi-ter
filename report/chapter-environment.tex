@@ -32,7 +32,7 @@ Chaque machine virtuelle a un rôle bien défini, que voici :
 \item \textbf{opeth}, la machine serveur.
 \end{itemize}
 
-Dans chaque dossier présentant une attaque, nous avons à chaque fois des sous-dossier représentant les différentes machines virtuelles de notre topologie :
+Dans chaque dossier présentant une attaque, nous avons à chaque fois des sous-dossier représentant les différentes machines virtuelles de notre topologie : \textbf{grave}, \textbf{immortal} et \textbf{opeth}.
 
 \begin{itemize}
 \item \textbf{grave} : dossier de la machine cliente et victime ;
@@ -41,6 +41,14 @@ Dans chaque dossier présentant une attaque, nous avons à chaque fois des sous-
 \end{itemize}
 
 De plus, afin d'avoir une configuration qui est chargée à chaque lancement de notre environnement, nous utilisons des scripts bash \verb+start.sh+ qui sont exécutés par \verb+qemunet+ au démarrage de chaque machine.
+
+Pour terminer sur les aspects généraux, voici les couples de login/password utilisés sur les différentes machines :
+
+\begin{itemize}
+\item \textbf{grave} : toto - toto
+\item \textbf{immortal} : root - rien
+\item \textbf{opeth} : root - rien
+\end{itemize}
 
 Maintenant, il nous faut décrire la configuration des différentes machines.
 
