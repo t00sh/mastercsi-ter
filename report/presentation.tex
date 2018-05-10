@@ -11,9 +11,9 @@
 %%% Metadata %%%
 \title[Attaques sur HTTPS]{Attaque Man-In-The-Middle de HTTPS}
 \subtitle{SSLStrip, HTTPS-Interception...}
-\author[B. Guevel - A. Risi - S. Duret]{Brendan Guevel\\Amélie Risi\\Simon Duret}
+\author[S. Duret - A. Risi - B. Guevel]{Simon Duret\\Amélie Risi\\Brendan Guevel}
 \institute[]{Université de Bordeaux}
-\date{\today}
+\date{14 Mai 2018}
 
 \begin{document}
 
@@ -21,5 +21,95 @@
 \begin{frame}
   \titlepage
 \end{frame}
+
+\begin{frame}{Introduction}
+    {\Large \centerline{HTTP est \textbf{le} protocole central du net}}
+
+    Assure la transmission des données entre un client et un serveur \\
+    % Dire à l'oral que client = navigateur généralement, et serveur = site web
+    -> Problème : Tout le traffic est en clair \\
+    % Donner des exemples à l'oral : interception du wifi, ou physiquement au niveau du cable ethernet, ...
+    HTTPS : Extension de HTTP pour chiffrer un échange entre un client et un serveur \\
+    -> Assure la confidentialité des données (mot de passe, numéro de carte bancaire, ...) \\
+
+    Malgré ce chiffrement, des attaques restent possibles...
+
+\end{frame}
+
+\begin{frame}{Introduction}
+    {\Large \centerline{Plan}}
+
+    1. Fonctionnement de HTTP et HTTPS \\
+    2. Etat de l'art des attaques sur SSL/TLS \\
+    3. Presentation de notre implémentation \\
+        a. Environnement qemunet \\
+        b. SSLstrip \\
+        c. SSLstrip+ \\
+        d. SSLstrip NTP \\
+        e. HTTPS interception \\
+
+\end{frame}
+
+\section{Fonctionnement de HTTP}
+
+\begin{frame}{Fonctionnement de HTTP}
+    Procotole de communication client-serveur \\
+    Le client demande une ressource à un serveur via une requête HTTP \\
+    % Généralement une page html
+    Le serveur envoie au client la ressource demandée en réponse \\
+    Un navigateur web permet d'automatiser ce processus \\
+    De plus ce dernier permet d'afficher la page avec la mise en forme html/css
+
+\end{frame}
+
+\begin{frame}{Exemple d'une requête HTTP}
+    \includegraphics[scale=0.50]{../medias/perdu.png}
+    % Faire une petite démo en live (avec la même requête)
+\end{frame}
+
+\begin{frame}{HTTPS : la version chiffrée de HTTP}
+
+
+\end{frame}
+
+\section{Etat de l'art}
+
+\begin{frame}{Historique des attaques sur SSL/TLS}
+    \includegraphics[scale=0.19]{../medias/history-tls-attacks.png}
+\end{frame}
+
+\section{Environnement}
+
+\begin{frame}{Environnement}
+    \begin{block}{Bloc simple}
+        Toto
+    \end{block}
+\end{frame}
+
+\section{Attaque SSLstrip}
+\begin{frame}{Attaque SSLstrip}
+    \includegraphics[scale=0.4]{../medias/sslstrip/attack.png}
+\end{frame}
+
+\section{Attaque SSLstrip+}
+\begin{frame}{Attaque SSLstrip+}
+    \includegraphics[scale=0.32]{../medias/sslstrip2/attack.png}
+\end{frame}
+
+\section{Attaque SSLstrip NTP}
+\begin{frame}{Attaque SSLstrip NTP}
+    \includegraphics[scale=0.32]{../medias/sslstrip-ntp/attack.png}
+\end{frame}
+
+\section{Attaque HTTPS interception}
+\begin{frame}{Attaque HTTPS interception}
+    \includegraphics[scale=0.4]{../medias/https-interception/attack.png}
+\end{frame}
+
+
+
+
+
+
 
 \end{document}
