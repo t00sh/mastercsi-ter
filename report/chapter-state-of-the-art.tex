@@ -88,7 +88,7 @@ Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLstrip}
 
 \vspace{1em}
 
-L'attaque BEAST (Browser Exploit Against SSL/TLS) concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en Man-in-the-Middle, peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Cette technique est qualifiée d'attaque à clair connu. La faille du protocole réside dans le chiffrement par bloc. En effet, les blocs sont chiffrés les uns après les autres en utilisant le précédent \cite{beast}.
+L'attaque BEAST (Browser Exploit Against SSL/TLS) concerne SSL 3.0 et TLS 1.0. L'attaquant, placé en homme du milieu peut déchiffrer les données échangées entre le serveur et le client grâce à une vulnérabilité d'implémentation du mode CBC, Cipher Block Chaining. L'attaque se fait côté client en injectant des paquets dans le flux TLS. Cette technique est qualifiée d'attaque à clair connu. La faille du protocole réside dans le chiffrement par bloc. En effet, les blocs sont chiffrés les uns après les autres en utilisant le précédent \cite{beast}.
 
 Voici le déroulement de l'attaque :
 
@@ -119,7 +119,7 @@ Voici le déroulement de l'attaque :
 
 CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier correspondant au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
 
-Cette attaque nécessite que l'attaquant se place en MITM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
+Cette attaque nécessite que l'attaquant se place en HDM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -259,7 +259,7 @@ Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER
 
 L'attaque Berserk utilise un bug présent dans la fonction de parsing des signatures au format ASN.1, de la bibliothèque NSS. Il est en effet possible grâce à ce bug, de générer des signatures RSA correctes lorsque l'exposant public est petit (généralement 3). Il s'agit en fait d'une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1 (Public Key Cryptography Standard 1).
 
-Il est alors possible grâce à cette attaque de générer de faux certificats X.509 possédant une signature RSA correcte, et donc de mettre en place une attaque man-in-the-middle entre un site HTTPS vulnérable et ses utilisateurs \cite{berserk}.
+Il est alors possible grâce à cette attaque de générer de faux certificats X.509 possédant une signature RSA correcte, et donc de mettre en place une attaque homme du milieu entre un site HTTPS vulnérable et ses utilisateurs \cite{berserk}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,7 +319,7 @@ Cette nouvelle version de SSLstrip permet de contourner une sécurité ajoutée 
 
 Avec cette protection, on ne va donc plus pouvoir simplement strippé le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
 
-Pour cette attaque, l'attaquant doit se situer en man in the middle. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine : il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter et remplacer par l'adresse IP réelle du serveur.
+Pour cette attaque, l'attaquant doit se situer en homme du milieu. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine : il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter et remplacer par l'adresse IP réelle du serveur.
 
 Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
 
@@ -403,7 +403,7 @@ La vulnérabilité WeakDH concerne les paramètres du protocole Diffie-Hellman u
 
 \vspace{1em}
 
-Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment de de la poignée de main initiale. Cette dernière étant un algorithme permettant d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en MITM, peut écouter toutes connexions TLS qui utilisent de la cryptographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requiert un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglementation des années 90
+Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment de de la poignée de main initiale. Cette dernière étant un algorithme permettant d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en HDM, peut écouter toutes connexions TLS qui utilisent de la cryptographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requiert un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglementation des années 90
 \cite{logjam}.
 
 

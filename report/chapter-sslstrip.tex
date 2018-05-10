@@ -13,7 +13,7 @@ L'attaque SSLstrip a été présentée pour la première fois en 2009 par l'amé
 
 Pour que l'attaquant puisse utiliser SSLstrip, il doit pouvoir se placer en homme du milieu entre le client et le serveur. C'est à dire qu'il doit être capable d'intercepter le trafic entre ces deux derniers, et pouvoir le modifier à sa guise. Bien sûr, l'attaquant n'a aucun intérêt à substituer une requête du client pour envoyer n'importe quoi à la place, car le serveur ne comprendra pas la requête et fermera la connexion TCP. Il va donc falloir être astucieux dans la manière dont on agit.
 
-Pour pouvoir se placer en MITM, il y a plusieurs façons de procéder. Une des façons les plus simples consiste à se placer dans le réseau privé de la victime, et de faire de l'ARP spoofing/poisonning. L'idée étant de faire croire au routeur qu'il parle à la victime, et vice versa, en falsifiant leurs tables ARP respectives (cette table donnant la correspondance entre adresse mac et adresse ip). L'attaquant va ainsi pouvoir lire tout le trafic qui circule entre la victime et le routeur (donc entre la victime et le serveur).
+Pour pouvoir se placer en HDM, il y a plusieurs façons de procéder. Une des façons les plus simples consiste à se placer dans le réseau privé de la victime, et de faire de l'ARP spoofing/poisonning. L'idée étant de faire croire au routeur qu'il parle à la victime, et vice versa, en falsifiant leurs tables ARP respectives (cette table donnant la correspondance entre adresse mac et adresse ip). L'attaquant va ainsi pouvoir lire tout le trafic qui circule entre la victime et le routeur (donc entre la victime et le serveur).
 
 Une fois placé en homme du milieu, l'attaquant peut donc voir et intercepter le trafic envoyé par la victime vers le serveur. Bien sûr, si ce trafic est chiffré, par exemple avec le protocole SSL/TLS, alors l'attaquant ne pourra rien en tirer, à moins de trouver une faille dans le chiffrement utilisé. Ici, on ne va pas essayer de casser TLS, mais plus de profiter du fait que toutes les requêtes envoyées par le client ne sont pas chiffrées (ce qui est de moins en moins le cas de nos jours).
 
@@ -39,7 +39,7 @@ Les actions à mettre en place pour réaliser l'attaque sont les suivantes :
 
 \begin{enumerate}
 \item Regarder le trafic HTTP
-\item Changer les liens HTTPS par des HTTPS et garder en mémoire cette conversion
+\item Changer les liens HTTPS par des HTTP et garder en mémoire cette conversion
 \item Lorsque le client fait HTTP pour une URL qui devrait être en HTTPS, il faut envoyer au serveur la même requête en HTTPS
 \item Conserver une carte des liens relatifs, CSS, JavaScript
 \item Pour essayer de conserver le même aspect visuel, on doit faire de même pour les favicon en renvoyant la favicon de notre choix
