@@ -68,17 +68,31 @@
 \end{frame}
 
 \begin{frame}{HTTPS : la version chiffrée de HTTP}
+    S pour secure \\
+    C'est un deuxième protocole qui est rajouté par dessus HTTP \\
+    Historiquement SSL, aujourd'hui remplacé par TLS \\
+    Applique un chiffrement sur toute la communication HTTP \\
 
+    Limitation : un attaquant peut toujours voir l'IP/port de destination (nécessaire pour TCP/IP)
 
 \end{frame}
 
 \section{Etat de l'art}
+
+\begin{frame}{Attaques sur HTTPS}
+    HTTPS est la combinaison de deux protocoles très différents \\
+    -> Un attaquant a plus de matière pour attaquer une communication \\
+    
+\end{frame}
 
 \begin{frame}{Historique des attaques sur SSL/TLS}
     \includegraphics[scale=0.19]{../medias/history-tls-attacks.png}
 \end{frame}
 
 \section{Environnement}
+
+\begin{frame}{Qemunet}
+\end{frame}
 
 \begin{frame}{Environnement}
     \begin{block}{Bloc simple}
@@ -87,21 +101,42 @@
 \end{frame}
 
 \section{Attaque SSLstrip}
+
+\begin{frame}{Fonctionnement d'un lien dans une page html}
+
+\end{frame}
+
 \begin{frame}{Attaque SSLstrip}
     \includegraphics[scale=0.4]{../medias/sslstrip/attack.png}
 \end{frame}
 
 \section{Attaque SSLstrip+}
+
+\begin{frame}{Fonctionnement de DNS}
+\end{frame}
+
 \begin{frame}{Attaque SSLstrip+}
     \includegraphics[scale=0.32]{../medias/sslstrip2/attack.png}
 \end{frame}
 
 \section{Attaque SSLstrip NTP}
+
+\begin{frame}{Fonctionnement de NTP}
+\end{frame}
+
 \begin{frame}{Attaque SSLstrip NTP}
     \includegraphics[scale=0.32]{../medias/sslstrip-ntp/attack.png}
 \end{frame}
 
 \section{Attaque HTTPS interception}
+
+\begin{frame}{Certificat numérique}
+    -> Permet d'authentifier la communication \\
+    -> Sur internet, cela sert essentiellement à s'assurer de l'identité du serveur \\
+    -> Nécessité d'une authorité de certification (un tiers) \\
+
+\end{frame}
+
 \begin{frame}{Attaque HTTPS interception}
     \includegraphics[scale=0.4]{../medias/https-interception/attack.png}
 \end{frame}
