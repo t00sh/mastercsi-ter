@@ -1,56 +1,84 @@
-\documentclass{beamer}
-\usepackage{graphicx}
-\usepackage{array}
-\usepackage{amsmath, nccmath}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[french]{babel}
 
-\usetheme{Boadilla}
+\documentclass{bredelebeamer}
 
-%%% Metadata %%%
-\title[Attaques sur HTTPS]{Attaque Man-In-The-Middle de HTTPS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[Attaques sur connexions HTTPS]{Attaques man-in-the-middle de HTTPS}
 \subtitle{SSLStrip, HTTPS-Interception...}
-\author[S. Duret - A. Risi - B. Guevel]{Simon Duret\\Amélie Risi\\Brendan Guevel}
-\institute[]{Université de Bordeaux}
-\date{14 Mai 2018}
+\author[S. Duret - A. Risi - B. Guevel]{Simon Duret \\ Amélie Risi \\ Brendan Guevel}
+\institute[]{
+  \includegraphics[scale=0.2]{../medias/universite-bordeaux.pdf}
+}
+
+\date{14 mai 2018}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{document}
 
-%%% Title page %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titre                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-	\titlepage
+  \titlepage
 \end{frame}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introduction            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Introduction}
-    {\Large \centerline{HTTP est \textbf{le} protocole central du net}}
 
-    Assure la transmission des données entre un client et un serveur \\
-    % Dire à l'oral que client = navigateur généralement, et serveur = site web
-    -> Problème : Tout le traffic est en clair \\
-    % Donner des exemples à l'oral : interception du wifi, ou physiquement au niveau du cable ethernet, ...
-    HTTPS : Extension de HTTP pour chiffrer un échange entre un client et un serveur \\
-    -> Assure la confidentialité des données (mot de passe, numéro de carte bancaire, ...) \\
+  {\Large \centerline{HTTP est \emph{le} protocole central du net}}
+  \hspace{40cm}
 
-    Malgré ce chiffrement, des attaques restent possibles...
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        % Dire à l'oral que client = navigateur généralement, et serveur = site web
+      \item{Assure la transmission des données}
+      \item{Architecture client/serveur}
+      \end{itemize}
+      \begin{alertblock}{Problème}
+        \begin{itemize}
+        % Donner des exemples à l'oral : interception du wifi, ou physiquement au niveau du cable ethernet, ...
+        \item{Tout le trafic est en clair}
+        \end{itemize}
+      \end{alertblock}
+
+      \begin{exampleblock}{Solution}
+        \begin{itemize}
+        \item{HTTPS : extension de HTTP}
+          % (mot de passe, numéro de carte bancaire, ...)
+        \item{Confidentialité et authentification}
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{../medias/www.png}
+    \end{column}
+  \end{columns}
+
+  \hspace{20cm}
+
+  {\Large \centerline{Malgré cette protection, des attaques restent possibles...}}
+
 
 \end{frame}
 
-\begin{frame}{Introduction}
-    {\Large \centerline{Plan}}
-
-    1. Fonctionnement de HTTP et HTTPS \\
-    2. Etat de l'art des attaques sur SSL/TLS \\
-    3. Presentation de notre implémentation \\
-        a. Environnement qemunet \\
-        b. SSLStrip \\
-        c. SSLStrip+ \\
-        d. SSLStrip NTP \\
-        e. HTTPS interception \\
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Plan                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Plan}
+  \tableofcontents
 \end{frame}
 
-\section{Fonctionnement de HTTP}
+\section{Fonctionnement de HTTP/HTTPS}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Fonctionnement de HTTP %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Fonctionnement de HTTP}
     Procotole de communication client-serveur \\
@@ -62,10 +90,18 @@
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Exemple de HTTP        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}{Exemple d'une requête HTTP}
-    \includegraphics[scale=0.50]{../medias/perdu.png}
+    \includegraphics[width=\linewidth]{../medias/perdu.png}
     % Faire une petite démo en live (avec la même requête)
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  HTTPS                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{HTTPS : la version chiffrée de HTTP}
     S pour secure \\
@@ -77,16 +113,56 @@
 \end{frame}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Certificats            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Gestion des certificats}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  TLS                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Le protocole SSL/TLS}
+  \includegraphics[width=\linewidth]{../medias/protocole-tls.png}
+\end{frame}
+
 \section{Etat de l'art}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Attaques HTTPS         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}{Attaques sur HTTPS}
-    HTTPS est la combinaison de deux protocoles très différents \\
-    -> Un attaquant a plus de matière pour attaquer une communication \\
-    
+
+  {\Large \centerline{Plusieurs angles d'attaques :}}
+
+  \begin{exampleblock}{Failles d'implémentation}
+    \begin{itemize}
+    \item Bibliothèques (openssl)
+    \item Navigateurs (Internet Explorer)
+    \end{itemize}
+    \end{exampleblock}
+
+  \begin{exampleblock}{Cryptographie}
+    \begin{itemize}
+    \item Mode de chiffrement (CBC)
+    \item Algorithmes (RC4)
+    \end{itemize}
+  \end{exampleblock}
+
+  \begin{exampleblock}{Protocole}
+    \begin{itemize}
+      \item{Downgrade attack (POODLE)}
+    \end{itemize}
+  \end{exampleblock}
+
 \end{frame}
 
 \begin{frame}{Historique des attaques sur SSL/TLS}
-    \includegraphics[scale=0.19]{../medias/history-tls-attacks.png}
+    \includegraphics[width=\linewidth]{../medias/history-tls-attacks.png}
 \end{frame}
 
 \section{Environnement}
@@ -98,38 +174,38 @@
 \end{frame}
 
 \begin{frame}{Topologie}
-    \includegraphics[scale=0.4]{../medias/topology.png}
+    \includegraphics[width=\linewidth]{../medias/topology.png}
 \end{frame}
 
-\section{Attaque SSLStrip}
+\section{SSLStrip}
 
 \begin{frame}{Fonctionnement d'un lien dans une page html}
 
 \end{frame}
 
 \begin{frame}{Attaque SSLStrip}
-    \includegraphics[scale=0.4]{../medias/sslstrip/attack.png}
+    \includegraphics[width=\linewidth]{../medias/sslstrip/attack.png}
 \end{frame}
 
-\section{Attaque SSLStrip+}
+\section{SSLStrip+}
 
 \begin{frame}{Fonctionnement de DNS}
 \end{frame}
 
 \begin{frame}{Attaque SSLStrip+}
-    \includegraphics[scale=0.32]{../medias/sslstrip2/attack.png}
+    \includegraphics[width=\linewidth]{../medias/sslstrip2/attack.png}
 \end{frame}
 
-\section{Attaque SSLStrip NTP}
+\section{SSLStrip NTP}
 
 \begin{frame}{Fonctionnement de NTP}
 \end{frame}
 
 \begin{frame}{Attaque SSLStrip NTP}
-    \includegraphics[scale=0.32]{../medias/sslstrip-ntp/attack.png}
+    \includegraphics[width=\linewidth]{../medias/sslstrip-ntp/attack.png}
 \end{frame}
 
-\section{Attaque HTTPS interception}
+\section{HTTPS interception}
 
 \begin{frame}{Certificat numérique}
     -> Permet d'authentifier la communication \\
@@ -138,13 +214,8 @@
 \end{frame}
 
 \begin{frame}{Attaque HTTPS interception}
-    \includegraphics[scale=0.4]{../medias/https-interception/attack.png}
+    \includegraphics[width=\linewidth]{../medias/https-interception/attack.png}
 \end{frame}
-
-
-
-
-
 
 
 \end{document}
