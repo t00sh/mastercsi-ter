@@ -89,7 +89,7 @@ Ici on voit dans le code source de la page que notre proxy a remplacé les liens
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen5.png}}
 \end{figure}
 
-Nous constatons que nous arrivons sur le domaine www.opeth.secure en HTTP : notre navigation n'est pas sécurisée !
+Nous constatons que nous arrivons sur le domaine \path{www.opeth.secure} en HTTP : notre navigation n'est pas sécurisée !
 
 \begin{figure}[H]
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen6.png}}
@@ -105,7 +105,7 @@ Le script complet de l'attaque peut être consulté à l'annexe \ref{appendix:ss
 
 \section{Limitations de notre attaque}
 
-Dans cette attaque, nous supposons que le client effectue des requêtes NTP. Ceci n'est en fait pas toujours le cas, et il arrive que des clients n'utilisent pas NTP pour mettre leurs horloge à jour.
+Dans cette attaque, nous supposons que le client effectue des requêtes NTP. Ceci n'est en fait pas toujours le cas, et il arrive que des clients n'utilisent pas NTP pour mettre leur horloge à jour.
 
 De plus, ici notre attaque fonctionne relativement rapidement car notre client a été configuré pour effectuer ses requêtes toutes les secondes. En pratique, l'attente d'une requête NTP peut être beaucoup plus longue et est souvent de l'ordre de plusieurs heures.
 
