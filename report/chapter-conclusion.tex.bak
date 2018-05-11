@@ -18,4 +18,4 @@ Cette attaque pose également la question de la sécurité des autorités de cer
 
 Différentes solutions existent pour résoudre ce problème, mais peu d'entre elles sont déployées à grande échelle. Nous avons vu par exemple l'utilisation de DANE/TLSA utilisant les registres de noms DNS comme tiers de confiance. Ou encore le Certificat Transparency afin de détecter le plus tôt possible l'émission de certificat frauduleux par une autorité de certification publique.
 
-Nous voyons que malgré l'utilisation massive du protocole HTTPS, sa sécurité peut être compromise si l'on ne prends pas gare. Un effort doit donc être fait pour renforcer les configurations des sites web, et l'utilisation des différentes contremesures doit être appliquée autant que possible.
+Nous voyons que malgrès l'utilisation massive du protocole HTTPS, sa sécurité peut être compromise si l'on ne prends pas gare. Un effort doit donc être fait pour renforcer les configurations des sites web, et l'utilisation des différentes contremesures doit être appliquée autant que possible.

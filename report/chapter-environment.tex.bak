@@ -60,7 +60,7 @@ Pour que la machine puisse accéder au réseau, nous devons lui spécifier une a
 
 Mais, dans le cadre de l'attaque, il faut aussi les informations pour la résolution du nom de domaine en rapport avec l'adresse IP du serveur. Nous en reparlerons plus en détail ultérieurement, car nous utilisons différentes solutions suivant les attaques.
 
-De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il est nécessaire de créer une autorité de certification (voir section \hyperref[sec:certificats]{Gestion des certificats}). Une fois celle-ci créée, on peut ajouter ce certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance. Cela est réalisé grâce à l'outil certutils de nss-tools de la façon suivante :
+De plus, comme nous allons utiliser du HTTPS, il nous a fallût créer des certificats reconnus par le navigateur client. Pour cela, il est nécessaire de créer une authorité de certification (voir section \hyperref[sec:certificats]{Gestion des certificats}). Une fois celle-ci créée, on peut ajouter ce certificat dans les fichiers configuration de Firefox afin qu'il le considère comme de confiance. Cela est réalisé grâce à l'outil certutils de nss-tools de la façon suivante :
 
 \begin{minted}{bash}
   su - toto -c 'certutil -A -n "ca@ca.local" -t "C,C,C" -i /mnt/host/cert.pem -d /home/toto/.mozilla/firefox/*.default'
