@@ -19,7 +19,7 @@
 
 %%% Title page %%%
 \begin{frame}
-  \titlepage
+	\titlepage
 \end{frame}
 
 \begin{frame}{Introduction}
@@ -74,8 +74,8 @@
     Applique un chiffrement sur toute la communication HTTP \\
 
     Limitation : un attaquant peut toujours voir l'IP/port de destination (nécessaire pour TCP/IP)
-
 \end{frame}
+
 
 \section{Etat de l'art}
 
@@ -91,13 +91,14 @@
 
 \section{Environnement}
 
-\begin{frame}{Qemunet}
+\begin{frame}{Environnement}
+    \begin{block}{Qemunet}
+		Outil pour créer un réseau virtuel
+    \end{block}
 \end{frame}
 
-\begin{frame}{Environnement}
-    \begin{block}{Bloc simple}
-        Toto
-    \end{block}
+\begin{frame}{Topologie}
+    \includegraphics[scale=0.4]{../medias/topology.png}
 \end{frame}
 
 \section{Attaque SSLstrip}
@@ -134,7 +135,6 @@
     -> Permet d'authentifier la communication \\
     -> Sur internet, cela sert essentiellement à s'assurer de l'identité du serveur \\
     -> Nécessité d'une authorité de certification (un tiers) \\
-
 \end{frame}
 
 \begin{frame}{Attaque HTTPS interception}
