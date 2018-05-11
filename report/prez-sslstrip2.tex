@@ -1,6 +1,25 @@
 \section{SSLStrip+}
 
 \begin{frame}{Fonctionnement de HSTS}
+  \begin{exampleblock}{HTTP Strict Transport Security}
+    \begin{itemize}
+    \item RFC 6797
+    \item Entête HTTP 'Strict-Transport-Security'
+    \item Date d'expiration
+    \end{itemize}
+  \end{exampleblock}
+
+  \begin{alertblock}{Problème}
+    \begin{itemize}
+    \item Ne protège pas la première connexion
+    \end{itemize}
+  \end{alertblock}
+
+  \begin{block}{Solution}
+    \begin{itemize}
+    \item HSTS preload
+    \end{itemize}
+  \end{block}
 
 \end{frame}
 
