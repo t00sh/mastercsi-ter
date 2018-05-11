@@ -9,7 +9,7 @@
 
 \section{Description de l'attaque}
 
-L'attaque SSLstrip a été présentée pour la première fois en 2009 par l'américain Moxie Marlinspike à la conférence en sécurité Blackhat. C'est une attaque très simple qui va permettre à un attaquant de pouvoir récupérer des informations confidentielles telles qu'un mot de passe ou un cookie de session. Cependant, l'attaque n'est plus vraiment d'actualité, nous reviendrons là dessus à la fin.
+L'attaque SSLstrip a été présentée pour la première fois en 2009 par l'américain Moxie Marlinspike à la conférence de sécurité Blackhat. C'est une attaque très simple qui va permettre à un attaquant de pouvoir récupérer des informations confidentielles telles qu'un mot de passe ou un cookie de session. Cependant, l'attaque n'est plus vraiment d'actualité, nous reviendrons là dessus à la fin.
 
 Pour que l'attaquant puisse utiliser SSLstrip, il doit pouvoir se placer en homme du milieu entre le client et le serveur. C'est à dire qu'il doit être capable d'intercepter le trafic entre ces deux derniers, et pouvoir le modifier à sa guise. Bien sûr, l'attaquant n'a aucun intérêt à substituer une requête du client pour envoyer n'importe quoi à la place, car le serveur ne comprendra pas la requête et fermera la connexion TCP. Il va donc falloir être astucieux dans la manière dont on agit.
 
@@ -57,8 +57,7 @@ Pour la résolution des noms de domaines, nous utilisons les fichiers \path{/etc
 
 \subsection{Démonstration}
 
-Pour les démonstrations de nos attaques, nous utilisons l'outil qemunet : \url{https://gitlab.inria.fr/esnard/qemunet}. Ce dernier utilise qemu et vde pour permettre la création de réseaux virtuels facilement.
-Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt qemunet) :
+Pour lancer l'attaque, nous utilisons l'outil qemunet comme ceci :
 
 \begin{minted}{bash}
 ./qemunet/qemunet.sh -x -S sslstrip
@@ -204,4 +203,4 @@ Le script complet de l'attaque peut être consulté à l'annexe \ref{appendix:ss
 
 Cependant, l'attaque n'est plus vraiment d'actualité car les sites internet modernes (ou plutôt, ceux qui pensent à la sécurité de leurs utilisateurs), utilisent HTTPS sur toutes les pages de leur site web, ce qui empêche l'attaquant d'intercepter ne serait-ce qu'une requête HTTP, et de la modifier. De plus, une autre protection, nommée HSTS, permet au serveur d'indiquer à un client de toujours se connecter en HTTPS sur certaines pages. Ainsi, si un attaquant parvient à intercepter une requête HTTP, et à remplacer les liens HTTPS vers des liens HTTP dans le code HTML, le navigateur du client émettra une exception, car il aura gardé en mémoire qu'il doit se connecter en HTTPS sur telle page spécifique. Néanmoins il existe des moyens de contourner cet ajout, nous en parlerons dans la prochaine attaque.
 
-Notre implémentation est volontairement minimaliste, et nous ne traitons pas certains détails. Par exemple, les redirections (code HTTP 3XX) n'ont pas été rééllement pris en compte par notre script, mais peuvent être également attaquées. Aussi, notre outil s'occupe simplement de rediriger les requêtes vers un domaine fixé à l'avance. Un vrai programme mémoriserait les différentes requêtes en redirigeant vers le bon domaine à chaque fois.
+Notre implémentation est volontairement minimaliste, et nous ne traitons pas certains détails. Par exemple, les redirections (code HTTP 3XX) n'ont pas été rééllement prisent en compte par notre script, mais peuvent être également attaquées. Aussi, notre outil s'occupe simplement de rediriger les requêtes vers un domaine fixé à l'avance. Un vrai programme mémoriserait les différentes requêtes en redirigeant vers le bon domaine à chaque fois.
