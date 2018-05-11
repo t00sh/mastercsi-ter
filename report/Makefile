@@ -2,6 +2,10 @@
 
 PRESENTATION_TEX = presentation.tex
 PRESENTATION_PDF = presentation.pdf
+PRESENTATION_DEP = prez-conclusion.tex prez-environment.tex prez-etat-art.tex
+PRESENTATION_DEP += prez-http-https.tex prez-https-interception.tex
+PRESENTATION_DEP += prez-introduction.tex prez-plan.tex prez-sslstrip2.tex
+PRESENTATION_DEP += prez-sslstrip-ntp.tex prez-sslstrip.tex
 
 REPORT_PDF = report.pdf
 REPORT_TEX = report.tex
@@ -17,7 +21,7 @@ $(REPORT_PDF): $(REPORT_TEX) $(REPORT_DEP) Makefile
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 
-$(PRESENTATION_PDF): $(PRESENTATION_TEX) Makefile
+$(PRESENTATION_PDF): $(PRESENTATION_TEX) $(PRESENTATION_DEP) Makefile
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
