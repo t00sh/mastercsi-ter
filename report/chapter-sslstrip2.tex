@@ -26,7 +26,7 @@ Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et
 
 \section{Notre attaque}
 
-Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer l'environnement. Rappelons que l'attaquant est déjà positionné en homme du milieu, et que nous avons choisi de mettre sa machine dans le même réseau que la machine victime. Comme pour l'attaque précédente, nous utilisons l'outil \verb+qemunet+ développé par l'Inria qui nous permet de créer un environnement minimaliste et léger. Il nous faut donc vous expliquer sa mise en place.
+Tout d'abord, afin de pouvoir mettre en place l'attaque, il nous faut configurer l'environnement. Rappelons que l'attaquant est déjà positionné en homme du milieu, et que nous avons choisi de mettre sa machine dans le même réseau que la machine victime. Il nous faut donc vous expliquer sa mise en place.
 
 \subsection{Mise en place de l'environnement}
 
@@ -60,7 +60,7 @@ Nous commençons par rediriger les requêtes HTTP (port 80) sur le port de notre
 
 \subsection{Démonstration}
 
-Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnement de l'attaque via une démonstration. Pour lancer l'environnement de test, il faut utiliser la commande suivante (on aura récupéré préalablement le dépôt \textbf{qemunet}) :
+Après ces présentations de mise en place, nous pouvons vous montrer le fonctionnement de l'attaque via une démonstration. Pour lancer l'environnement de test, nous utilisons qemunet de la manière suivante :
 
 \begin{minted}{bash}
   ./qemunet/qemunet.sh -x -S sslstrip2

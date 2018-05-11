@@ -19,7 +19,7 @@ Une fois que l'horloge du client a été compromise et le HSTS du domaine expir�
 
 \section{Notre attaque}
 
-Dans ce projet de TER, nous avons eu à réaliser un Proof-Of-Concept de cette attaque. Voici les détails de notre implémentation.
+Dans ce projet de TER, nous avons eu à réaliser une preuve de concept de cette attaque. Voici les détails de notre implémentation.
 
 \subsection{Mise en place de l'environnement}
 
@@ -38,7 +38,7 @@ Il a fallut utiliser un client NTP sur cette machine pour cette attaque. Nous ut
 
 \subsubsection{Configuration de la machine attaquante - immortal}
 
-C'est sur cette machine que se trouve le Proof-Of-Concept de l'attaque. Nous avons également utilisé le script Delorean \cite{delorean} comme décrit dans le papier de l'attaque afin d'usurper les requêtes NTP de la machine grave. L'attaque se lance grâce au script \path{/mnt/host/attack.sh} :
+C'est sur cette machine que se trouve la preuve de concept de l'attaque. Nous avons également utilisé le script Delorean \cite{delorean} comme décrit dans le papier de l'attaque afin d'usurper les requêtes NTP de la machine grave. L'attaque se lance grâce au script \path{/mnt/host/attack.sh} :
 
 \inputminted[bgcolor=lbcolor, breaklines]{bash}{../sslstrip-ntp/immortal/attack.sh}
 
@@ -46,7 +46,7 @@ Nous commençons par rediriger les requêtes HTTP sur le port de notre proxy, pu
 
 \subsection{Démonstration}
 
-Dans cette partie, nous allons illustrer l'attaque SSLStrip NTP dans l'environnement que nous avons mis en place. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt \textbf{qemunet}) :
+Dans cette partie, nous allons illustrer l'attaque SSLStrip NTP dans l'environnement que nous avons mis en place. Pour lancer l'environnement de test, il suffit de lancer qemunet de la manière suivante :
 
 \begin{minted}{bash}
 ./qemunet/qemunet.sh -x -S sslstrip-ntp
