@@ -11,7 +11,7 @@
 
 La méthode que nous allons voir pour intercepter un trafic HTTPS n'est pas vraiment une attaque. Pour être menée à bien, la machine, placée en homme du milieu, doit avoir installée sa propre autorité de certification, et surtout l'avoir rentrée sur la machine du client, en amont.
 
-C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il existe des cas où cette situation se trouve. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leurs activités. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS, du moins c'est ce qu'on pourrait penser.
+C'est une chose qui peut être assez dure à réaliser pour un attaquant, mais il existe des cas où cette situation peut se présenter. Dans le cadre d'une entreprise, il n'est pas rare que les requêtes HTTP des employés passent par un proxy, pour suivre leurs activités. Les responsables n'ont par contre, a priori pas moyen de lire les requêtes HTTPS, du moins c'est ce qu'on pourrait penser.
 
 Car c'est en fait au contraire assez simple à réaliser dans la mesure où il est facile de rajouter une autorité de certification à la main dans les navigateurs web de tous les employés.
 
@@ -104,7 +104,7 @@ def __listen(self):
 
 \subsubsection{Étape 3 : pendant l'attaque}
 
-Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du Proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été présent dans le navigateur, celui-ci aurait émis une alerte.
+Lorsque l'attaque est en cours, le certificat présenté au client n'est plus celui d'opeth, mais celui du proxy, signé par l'autorité de certification. À noter qu'ici si l'autorité de certification du proxy n'avait pas été présent dans le navigateur, celui-ci aurait émis une alerte.
 
 Ci-dessous on voit que le certificat présenté est celui du proxy (immortal), et non plus celui du serveur. On voit bien que les empreintes SHA256 sont différentes.
 
