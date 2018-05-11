@@ -25,7 +25,7 @@
 
 L'interception et le déchiffrement des flux HTTPS (et plus généralement SSL/TLS), est un problème inhérent au fonctionnement du protocole et des CA (certificat authorities).
 
-Un équipement positionné en homme du milieu sur le réseau a la possibilité de fonctionner à la manière d'un proxy : les connexions initiées par les clients pourront être déchiffrées par le proxy, puis rechiffrées vers le serveur. Pour être réalisé de manière transparente, l'idée est de présenter un faux certificat (qui pourra être généré à la volée) au client, qui si il est accepté, permettra le déchiffrement complet des communications entre lui et le serveur.
+Un équipement positionné en homme du milieu sur le réseau a la possibilité de fonctionner à la manière d'un proxy : les connexions initiées par les clients pourront être déchiffrées par le proxy, puis rechiffrées vers le serveur. Pour être réalisé de manière transparente, l'idée est de présenter un faux certificat (qui pourra être généré à la volée) au client, qui s'il est accepté, permettra le déchiffrement complet des communications entre lui et le serveur.
 
 Pour que ce faux certificat soit accepté, il faut bien sûr que les noms de domaines entre le site visité et le certificat concordent, et que celui-ci soit signé par une autorité de certification connue du client. La manière la plus simple étant d'auto-signer le certificat, en ajoutant sa clef publique dans le navigateur du client. Nous avons également vu par le passé que les autorités de certifications ne sont pas à l'abri d'attaques informatiques, et que de faux certificats légitimes peuvent être émis (on se souviendra par exemple de DigiNotar en 2011) \cite{https-interception}.
 
@@ -66,9 +66,9 @@ SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. L
 
 \vspace{1em}
 
-L'attaque SSLStrip ne vise pas les connexion HTTPS chiffrées et authentifiées, mais plutôt les connexions HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (https://) par leur version non-sécurisée (http://) en prenant également en compte les éventuelles redirections (code HTTP 302).
+L'attaque SSLstrip ne vise pas les connexion HTTPS chiffrées et authentifiées, mais plutôt les connexions HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (\path{https://}) par leur version non-sécurisée (\path{http://}) en prenant également en compte les éventuelles redirections (code HTTP 302).
 
-Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connexion HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
+Le client, s'il n'est pas attentif, utilisera alors des connexions HTTP non sécurisées lors de sa navigation à la place d'une connexion HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
 
 Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLStrip}.
 
@@ -117,7 +117,7 @@ Voici le déroulement de l'attaque :
 
 \vspace{1em}
 
-CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier correspondant au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
+CRIME (compression ratio info-leak made easy), utilise une faille de l'algorithme de compression utilisé par TLS. Cette attaque vise surtout les cookies de sessions. L'idée est d'envoyer des caractères aléatoires dans un cookie forgé et de comparer la compression de ce dernier avec le cookie originel du client. Si le cookie forgé est partiellement compressé, on peut inférer qu'une partie de ce dernier corresponde au cookie du client. On procède ainsi par étapes successives pour retrouver le cookie et voler la session de la victime.
 
 Cette attaque nécessite que l'attaquant se place en HDM pour pouvoir observer la taille du chiffré envoyé par le client mais également pouvoir envoyer des requêtes forgées par l'attaquant lui-même \cite{crime}.
 
@@ -139,7 +139,7 @@ Cette attaque nécessite que l'attaquant se place en HDM pour pouvoir observer l
 \vspace{1em}
 
 
-L'attaque BREACH (Browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois ci ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
+L'attaque BREACH (Browser reconnaissance and exfiltration via adaptive compression of hypertext) est en grande partie similaire à CRIME vue plus haut. Cette fois-ci, ce n'est pas la compression TLS mais plutôt celle effectuée par HTTP qui est visée \cite{breach}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,9 +165,9 @@ RC4 utilise un état interne de 256 octets (qui est une permutation des octets d
 
 En 1995, Andrew Roos a mis en évidence certaines corrélations entre les octets du keystream et ceux de la permutation interne : il était alors possible grâce à des équations linéaires de retrouver certains octets de la permutation avec la connaissance d'octets du keystream.
 
-Dans les années suivantes, de nombreux chercheurs ont découvert des biais statistiques important de le flot pseudo-aléatoire, notamment en 2013 par AlFardan, Bernstein, Paterson, Poettering et Schuldt \cite{rc4}. C'est en 2015 que l'algorithme a été officiellement cassé dans TLS, par des chercheurs de l'université de KU Leuven en Belgique où ils ont réussi à retrouver un cookie de session chiffré avec RC4 en moins de 75 heures.
+Dans les années suivantes, de nombreux chercheurs ont découvert des biais statistiques important dans le flot pseudo-aléatoire, notamment en 2013 par AlFardan, Bernstein, Paterson, Poettering et Schuldt \cite{rc4}. C'est en 2015 que l'algorithme a été officiellement cassé dans TLS, par des chercheurs de l'université de KU Leuven en Belgique où ils ont réussi à retrouver un cookie de session chiffré avec RC4 en moins de 75 heures.
 
-Le nom donné a cette attaque a été RC4-NOMORE (RC4 Numerous Occurrence MOnitoring \& Recovery Exploit) et fonctionne comme suit : tout d'abords, l'attaquant placé en homme du milieu va injecter du code JavaScript dans le trafic HTTP de la victime. Le code JavaScript va alors envoyer avec le protocole TLS le cookie sur le réseau un grand nombre de fois (plusieurs milliers de requêtes par secondes), permettant ainsi à l'homme du milieu de récupérer un nombre important de cookies chiffrés.
+Le nom donné a cette attaque a été RC4-NOMORE (RC4 Numerous Occurrence MOnitoring \& Recovery Exploit) et fonctionne comme suit : tout d'abord, l'attaquant placé en homme du milieu va injecter du code JavaScript dans le trafic HTTP de la victime. Le code JavaScript va alors envoyer avec le protocole TLS le cookie sur le réseau un grand nombre de fois (plusieurs milliers de requêtes par secondes), permettant ainsi à l'homme du milieu de récupérer un nombre important de cookies chiffrés.
 
 Grâce au biais statistique de RC4, l'attaquant va être en capacité de calculer une liste de cookie probables à l'aide des données chiffrées reçues à l'étape précédente. En soumettant chacun de ces cookies au site visé, l'attaquant va pouvoir réussir à déterminer lequel était le bon.
 
@@ -190,7 +190,7 @@ Les chercheurs ont annoncé que le taux de succès de cette attaque pour déchif
 
 \vspace{1em}
 
-Lucky 13 est une attaque cryptographique, exploitant des canaux auxiliaires de certaines implémentations de TLS (OpenSSL et GnuTLS), notamment lorsque le mode CBC (Cipher Block Chaining) est utilisé.
+Lucky-13 est une attaque cryptographique, exploitant des canaux auxiliaires de certaines implémentations de TLS (OpenSSL et GnuTLS), notamment lorsque le mode CBC (Cipher Block Chaining) est utilisé.
 
 Cette attaque a été initialement découverte par des chercheurs de l'université de Londres et a été qualifiée de théorique pour le moment.
 
@@ -212,7 +212,7 @@ Une fois ces données déchiffrées, il est nécessaire d'effectuer l'ensemble d
 
 Le problème mis en avant par l'attaque Lucky-13 concerne la dernière étape, c'est à dire l'extraction du MAC reçu dans le paquet TLS. Le temps de cette étape dépend en effet du padding, et les temps d'accès mémoire pourront être différents si le padding est correct ou incorrect. Il s'agit d'un canal auxiliaire de type ``cache timing''.
 
-L'attaquant a alors la possibilité d'obtenir un oracle de padding qui détermine si un paquet a un padding correct ou non en fonction du temps de réponse, ce qui peut conduire à une attaque de type CBC-Padding-Oracle lorsque c'est le mode CBC qui est utilisé (et donc permettre le déchiffrement complet du message).
+L'attaquant a alors la possibilité d'obtenir un oracle de padding qui détermine si un paquet a un padding correct ou non en fonction du temps de réponse, ce qui peut conduire à une attaque de type CBC-Padding-Oracle lorsque le mode CBC qui est utilisé (et donc permettre le déchiffrement complet du message).
 
 Lucky-13 a permis de mettre en avant que la construction Mac-Then-Encrypt utilisée dans TLS était dangereuse, et qu'une construction Encrypt-Then-Mac a l'avantage d'être beaucoup plus robuste à ce type d'attaque, étant donné qu'un paquet incorrect est rejeté beaucoup plus tôt \cite{lucky13}.
 
@@ -232,7 +232,7 @@ Lucky-13 a permis de mettre en avant que la construction Mac-Then-Encrypt utilis
 
 \vspace{1em}
 
-Il s'agit d'une vulnérabilité présente dans la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connexion active (à la manière d'un ping), et une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. En réponse à ce dernier, le serveur vulnérable répond avec un paquet contenant une partie de sa mémoire.
+Il s'agit d'une vulnérabilité présente dans la bibliothèque cryptographique OpenSSL, notamment dans l'extension Heartbeat de SSL/TLS (RFC 6520). Ce protocole permet de maintenir la connexion active (à la manière d'un ping), malheureusement une erreur de programmation dans la bibliothèque permettait de provoquer une fuite de la mémoire d'un serveur impacté. Dans ce cas, le client peut envoyer un paquet Heartbeat avec un champ ``longueur'' excédant la longueur réelle du paquet. En réponse à ce dernier, le serveur vulnérable répond avec un paquet contenant une partie de sa mémoire.
 
 Il est alors possible de récupérer à travers cette vulnérabilité un certain nombre d'informations confidentielles : clefs de sessions, clefs privées, cookies de sessions, mots de passe utilisateurs...\cite{heartbleed}.
 
@@ -257,7 +257,7 @@ Cette vulnérabilité concerne la bibliothèque Mozilla Network Security Service
 
 Les messages ASN.1 sont constitués de diverses parties codées à l'aide de BER (Basic Encoding Rule) et DER (Distinguished Encoding Rules). Il s'agit d'un format permettant de sérialiser des structures de données et qui est très utilisé pour représenter les objets cryptographiques (clefs, signatures...). C'est notamment ce format qui est utilisé dans les certificats X.509, largement utilisés sur Internet.
 
-L'attaque Berserk utilise un bug présent dans la fonction de parsing des signatures au format ASN.1, de la bibliothèque NSS. Il est en effet possible grâce à ce bug, de générer des signatures RSA correctes lorsque l'exposant public est petit (généralement 3). Il s'agit en fait d'une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1 (Public Key Cryptography Standard 1).
+L'attaque Berserk utilise un bug présent dans la fonction de parsing des signatures au format ASN.1, de la bibliothèque NSS. En effet, il est possible grâce à ce bug, de générer des signatures RSA correctes lorsque l'exposant public est petit (généralement 3). Il s'agit en fait d'une variation de l'attaque de Bleichenbacher sur le padding PKCS\#1 (Public Key Cryptography Standard 1).
 
 Il est alors possible grâce à cette attaque de générer de faux certificats X.509 possédant une signature RSA correcte, et donc de mettre en place une attaque homme du milieu entre un site HTTPS vulnérable et ses utilisateurs \cite{berserk}.
 
@@ -293,9 +293,9 @@ La vulnérabilité en elle-même vient de la façon dont sont encodés les blocs
     \item Il doit avoir un retour sur le texte chiffré par SSL.
 \end{enumerate}
 
-Ces deux conditions peuvent s'exécuter avec par exemple une attaque en homme du milieu. L'attaquant doit toutefois avoir un contrôle également sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
+Ces deux conditions peuvent s'exécuter avec, par exemple une attaque en homme du milieu. Toutefois, l'attaquant doit également avoir un contrôle sur le client pour modifier le padding, ce qui est une tâche supplémentaire à effectuer.
 
-En modifiant le padding, l'attaque permet de récupérer un byte d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut amener l'attaquant à envoyer énormément de requêtes pour obtenir le message dans son intégralité.
+En modifiant le padding, l'attaque permet de récupérer un octet d'information du message initial en envoyant un maximum de 256 requêtes. Cela peut amener l'attaquant à envoyer énormément de requêtes pour obtenir le message dans son intégralité.
 
 L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef utilisée pour le chiffrement \cite{poodle}.
 
@@ -317,11 +317,11 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 
 Cette nouvelle version de SSLStrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
 
-Avec cette protection, on ne va donc plus pouvoir simplement strippé le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
+Avec cette protection, on ne va donc plus pouvoir simplement stripper le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquant de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
 
-Pour cette attaque, l'attaquant doit se situer en homme du milieu. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est par exemple https://www.domain.secure, on va le remplacer par http://wwww.domain.secure. On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine : il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter et remplacer par l'adresse IP réelle du serveur.
+Pour cette attaque, l'attaquant doit se situer en homme du milieu. Lorsque le client va se connecter au serveur sur une page en HTTP, l'attaquant va intercepter la réponse du serveur, et modifier sur cette page les liens qui renvoient vers du HTTPS. Si le lien est par exemple \path{https://www.domain.secure}, on va le remplacer par \path{http://wwww.domain.secure}. On peut enlever le 's' ici, car le navigateur ne connaît pas ce nom de domaine : il ne l'a encore jamais visité. Il va donc envoyer une requête DNS que l'attaquant va intercepter et remplacer par l'adresse IP réelle du serveur.
 
-Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
+Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que \path{wwww.domain.secure} correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur \path{wwww.domain.secure}, il va donc accepter d'envoyer sa requête en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
 
 Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLStrip+}.
 
@@ -403,7 +403,7 @@ La vulnérabilité WeakDH concerne les paramètres du protocole Diffie-Hellman u
 
 \vspace{1em}
 
-Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment de de la poignée de main initiale. Cette dernière étant un algorithme permettant d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en HDM, peut écouter toutes connexions TLS qui utilisent de la cryptographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requiert un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglementation des années 90
+Logjam concerne l'algorithme Diffie-Hellman qui est mis en place lors du protocole TLS au moment de de la poignée de main initiale. Cette dernière étant un algorithme permettant d'échanger les clés et négocier la connexion sécurisée. L'attaquant, placé en homme du millieu, peut écouter toutes connexions TLS qui utilisent de la cryptographie basée sur 512 bits. L'attaque affecte les serveurs qui prennent en charge les chiffrements DHE\_EXPORT. Ce chiffrement requiert un nombre premier court de 512 bits. Précisons que cette faiblesse a été créée volontairement pour satisfaire une réglementation des années 90
 \cite{logjam}.
 
 
@@ -461,7 +461,7 @@ Sloth (Security Losses from Obsolete and Truncated Transcript Hashes) s'intéres
 
 \vspace{1em}
 
-Sweet32 est une attaque qui vise les algorithmes symétriques utilisant des blocs inférieurs ou égaux à 64 bits utilisant le mode CBC. Il faut utiliser encore une fois une attaque par collision basée sur le paradoxe des anniversaires. En collectant environ 32Go de données chiffrées, l'attaquant a alors une grande probabilité de trouver deux blocs chiffrés identiques. En ayant une connaissance d'une partie du texte en clair il a la possibilité de déchiffrer certains blocs. Cette attaque a particulièrement affaibli les algorithmes 3-DES et blowfish, tous deux opérant sur des blocs de 64bits \cite{sweet32}.
+Sweet32 est une attaque qui vise les algorithmes symétriques ayant des blocs inférieurs ou égaux à 64 bits utilisant le mode CBC. Il faut utiliser encore une fois une attaque par collision basée sur le paradoxe des anniversaires. En collectant environ 32Go de données chiffrées, l'attaquant a alors une grande probabilité de trouver deux blocs chiffrés identiques. En ayant une connaissance d'une partie du texte en clair il a la possibilité de déchiffrer certains blocs. Cette attaque a particulièrement affaibli les algorithmes 3-DES et blowfish, tous deux opérant sur des blocs de 64bits \cite{sweet32}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -497,7 +497,7 @@ Lorsque le navigateur a enregistré un nom de domaine protégé par HSTS, celui-
 
 Pour firefox par exemple, cette base de donnée est stockée dans le fichier \path{SiteSecurityServiceState.txt} présent dans le profile Mozilla firefox.
 
-Voici par à quoi correspond une entrée de ce fichier, ici pour le domaine www.youtube.com :
+Voici par à quoi correspond une entrée de ce fichier, ici pour le domaine \path{www.youtube.com} :
 
 \begin{minted}[bgcolor=lbcolor, breaklines]{text}
 www.youtube.com:HSTS    24      17594   155170223888,1,0,2
