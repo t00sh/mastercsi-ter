@@ -146,7 +146,7 @@ def __recv(self, csock):
             fw_sock.send(data)
 \end{minted}
 
-A la fin, on transforme tous les liens https trouvé en http et on recalcule la taille de la requête (entête Content-Length).
+À la fin, on transforme tous les liens https trouvé en http et on recalcule la taille de la requête (entête Content-Length).
 
 \subparagraph{Transformation des liens \\}
 
@@ -159,7 +159,7 @@ def __replace_https_to_http(self, data):
 
 \subparagraph{Recalcule de l'entête Content-Length \\}
 
-Il faut ensuite recalculer l'entête Content-Length, en se basant sur le début des données HTTP situées après la séquence "{\textbackslash}r{\textbackslash}n{\textbackslash}r{\textbackslash}n" :
+Ensuite, il faut recalculer l'entête Content-Length, en se basant sur le début des données HTTP situées après la séquence "{\textbackslash}r{\textbackslash}n{\textbackslash}r{\textbackslash}n" :
 
 \begin{minted}{python}
 def __replace_content_length(self, data):
@@ -176,7 +176,7 @@ def __replace_content_length(self, data):
 
 Lorsque l'attaque est lancée, on peut voir que tous les liens \path{https://} sont remplacés par \path{http://}.
 
-La machine immortal est donc capable d'intercepter les échanges réalisés sur la page secure.php. Ici on voit dans l'encadré rouge, que le lien \path{https://} a bien été remplacé par un lien non sécurisé \path{http://} :
+La machine immortal est donc capable d'intercepter les échanges réalisés sur la page \path{secure.php}. Ici on voit dans l'encadré rouge, que le lien \path{https://} a bien été remplacé par un lien non sécurisé \path{http://} :
 
 \begin{figure}[H]
   \caption{Le 's' de "https" a disparu}
