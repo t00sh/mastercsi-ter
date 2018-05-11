@@ -5,13 +5,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Fonctionnement de HTTP}
-    Procotole de communication client-serveur \\
-    Le client demande une ressource à un serveur via une requête HTTP \\
-    % Généralement une page html
-    Le serveur envoie au client la ressource demandée en réponse \\
-    Un navigateur web permet d'automatiser ce processus \\
-    De plus ce dernier permet d'afficher la page avec la mise en forme html/css
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Protocole client-serveur}
+                \begin{itemize}
+                    \item{Client : requête HTTP}
+                    \item{Serveur : envoi de la ressource}
+                \end{itemize}
+            \end{block}
+        \end{column}
 
+        \begin{column}{0.5\textwidth}
+            \begin{exampleblock}{Navigateur web}
+                \begin{itemize}
+                    \item{Rend le processus transparent}
+                    \item{Met en forme le html/css}
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+
+    \hspace{40cm}
+
+    \includegraphics[width=\linewidth]{../medias/requete-http.png}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,12 +44,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{HTTPS : la version chiffrée de HTTP}
-    S pour secure \\
-    C'est un deuxième protocole qui est rajouté par dessus HTTP \\
-    Historiquement SSL, aujourd'hui remplacé par TLS \\
-    Applique un chiffrement sur toute la communication HTTP \\
+    \includegraphics[width=\linewidth]{../medias/http-ssl.png}
 
-    Limitation : un attaquant peut toujours voir l'IP/port de destination (nécessaire pour TCP/IP)
+    \hspace{10cm}
+
+    % Dire à l'oral **qu'on ne touche pas à HTTP** et qu'on rajoute simplement le chiffrement par dessus
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{exampleblock}{Protocole SSL/TLS}
+                \begin{itemize}
+                    \item{Authentification du serveur}
+                    \item{Confidentialité des données}
+                    \item{Intégrité des données}
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Utilisé pour}
+                \begin{itemize}
+                    \item{Navigation web : HTTPS}
+                    \item{Protocole mail : SMTPS}
+                    \item{VPN : OpenVPN}
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \hspace{20cm}
+
+    {\Large \centerline{\alert{Limitation} : IP/port de destination toujours visible (pour routage)}}
 \end{frame}
 
 
@@ -42,9 +81,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Gestion des certificats}
-  -> Permet d'authentifier la communication \\
-  -> Sur internet, cela sert essentiellement à s'assurer de l'identité du serveur \\
-  -> Nécessité d'une authorité de certification (un tiers) \\
+    % Permet d'authentifier la communication \\
+    % Sur internet, cela sert essentiellement à s'assurer de l'identité du serveur \\
+    % Nécessité d'une authorité de certification (un tiers) \\
+    \includegraphics[width=\linewidth]{../medias/autorite-certification.png}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,5 +92,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Le protocole SSL/TLS}
-  \includegraphics[width=\linewidth]{../medias/protocole-tls.png}
+    \includegraphics[width=\linewidth]{../medias/protocole-tls.png}
 \end{frame}
