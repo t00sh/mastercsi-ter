@@ -7,12 +7,12 @@
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip2/attack.png}}
 \end{figure}
 
-Comme vu précédemment, une contre-mesure a été mise en place afin de déclarer aux clients d'un serveur qu'ils doivent utiliser une connexion sécurisée en HTTPS pour leur futures connexions avec celui-ci. Vous pouvez vous reporter à la section \hyperref[sec:hsts]{Contremesures} pour plus de précision.
+Comme vu précédemment, une contre-mesure a été mise en place afin de déclarer aux clients d'un serveur qu'ils doivent utiliser une connexion sécurisée en HTTPS pour leur futures connexions avec celui-ci : c'est le HSTS. Vous pouvez vous reporter à la section \hyperref[sec:hsts]{Contremesures} pour plus de précision.
 
 Notre but est donc de contourner le HSTS en réutilisant l'attaque SSLStrip. Malheureusement, on ne peut pas la réutiliser directement car le navigateur a gardé en mémoire que toutes connexions sur cette page doivent se faire en HTTPS.
 
 \section{Description de l'attaque}
-Cette extension de SSLStrip a été pensée par LeonardoNve en 2014. Elle permet donc de passer au travers l'une des nouvelles contre-mesures mise en place sur les navigateurs. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client et le serveur afin de le faire réagir comme suit.
+Cette extension de SSLStrip a été pensée par LeonardoNve en 2014. Elle permet de contourner la protection HSTS. En effet, si l'attaquant se place en homme du milieu, il va pouvoir intercepter le trafic entre le client et le serveur afin de le faire réagir comme suit.
 
 Lorsque le client va se connecter au serveur sur une page HTTP, l'attaquant va modifier cette page en remplaçant tous les liens HTTPS en HTTP mais aussi en changeant le nom de domaine. Changer le nom de domaine changera le comportement du navigateur. En effet, comme le navigateur ne connaît pas ce nom de domaine, il n'enverra pas d'exception liée à HSTS.
 
@@ -22,7 +22,7 @@ Si le lien est \path{https://www.domain.secure}, on peut le remplacer par \path{
 
 Il faut noter que l'on enlève le \verb+s+ de \verb+https+ et que l'on remplace \verb+www+ par \verb+wwww+ ce qui change bien le nom de domaine.
 
-Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \path{wwww.domain.secure} correspond au serveur distant. La connexion sera donc en HTTP et donc en clair.
+Ainsi, l'attaquant fait croire au navigateur que cette requête est légitime et que \path{wwww.domain.secure} correspond au serveur distant. La connexion sera en HTTP et donc en clair.
 
 \section{Notre attaque}
 
@@ -103,6 +103,7 @@ Nous pouvons maintenant lancer l'attaque depuis la machine immortal :
 \paragraph{Explication du code \\}
 
 Le code du proxy est dans le dossier de la machine immortal, le fichier \path{sslstrip2.py}.
+Ce code ressemble beaucoup à celui de SSLStrip, il est donc normal qu'il y ait des éléments quasi identiques.
 
 \subparagraph{Réception des requêtes \\}
 
@@ -143,15 +144,6 @@ def __recv(self, csock):
 
 À la fin, on transforme tous les liens HTTPS trouvés en HTTP en remplaçant le nom de domaine \path{www.opeth.secure} par le faux nom de domaine \path{wwww.opeth.secure}, on met l'entête Host vers le bon domaine et on recalcule la taille de la requête (entête Content-Lenght)
 
-\subparagraph{Transformation des liens \\}
-
-Dans cette fonction, nous utilisons une expression régulière afin de remplacer tous les liens \path{https://www.opeth.secure} en \path{http://wwww.opeth.secure}.
-
-\begin{minted}{python}
-def __replace_https_to_http(self, data):
-    return re.sub(b'https://' + bytes(FORWARD_HOST_HSTS),
-                  b'http://' + bytes(FAKE_HOST), data)
-\end{minted}
 
 \subparagraph{Modification de l'entête Host}
 
@@ -163,21 +155,6 @@ def __replace_host(self, data):
                   b'Host: ' + bytes(FORWARD_HOST_HSTS), data)
 \end{minted}
 
-
-\subparagraph{Recalcul de l'entête Content-Length}
-
-La taille de la requête étant modifiée par le proxy, celui-ci doit recalculer l'entête Content-Length en se basant sur la chaîne "{\textbackslash}r{\textbackslash}n{\textbackslash}r{\textbackslash}n" signalant la fin des entêtes dans le protocole HTTP.
-
-\begin{minted}{python}
-def __replace_content_length(self, data):
-    try:
-        idx = data.index(b"\r\n\r\n")
-        length = len(data) - idx - 4
-        return re.sub(b'Content-Length: (\d+)',
-                      b'Content-Length: %d' % length, data, 1)
-    except:
-        return data
-\end{minted}
 
 \subsubsection{Étape 3 : Pendant l'attaque}
 

@@ -40,10 +40,10 @@ Les actions à mettre en place pour réaliser l'attaque sont les suivantes :
 \begin{enumerate}
 \item Regarder le trafic HTTP
 \item Changer les liens HTTPS par des HTTP et garder en mémoire cette conversion
-\item Lorsque le client fait HTTP pour une URL qui devrait être en HTTPS, il faut envoyer au serveur la même requête en HTTPS
+\item Lorsque le client fait une requête HTTP pour une URL qui devrait être en HTTPS, il faut envoyer au serveur la même requête en HTTPS
 \item Conserver une carte des liens relatifs, CSS, JavaScript
-\item Pour essayer de conserver le même aspect visuel, on doit faire de même pour les favicon en renvoyant la favicon de notre choix
-\item A éliminer des en-têtes de requêtes, les encodages, les cookies et les pages en cache.
+\item Faire de même pour les favicon afin essayer de conserver le même aspect visuel
+\item Garder les en-têtes de requêtes, les encodages, les cookies et les pages en cache
 \item Lors des requêtes POST envoyées par SSL, avec login et password, il faut faire expirer les cookies pour que l'utilisateur renvoie une requête sans cookies
 \end{enumerate}
 

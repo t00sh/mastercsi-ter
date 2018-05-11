@@ -25,7 +25,7 @@
 
 L'interception et le déchiffrement des flux HTTPS (et plus généralement SSL/TLS), est un problème inhérent au fonctionnement du protocole et des CA (certificat authorities).
 
-Un équipement positionné en homme du milieu sur le réseau a la possibilité de fonctionner à la manière d'un proxy : les connexions initiées par les clients pourront être déchiffrées par le proxy, puis rechiffrées vers le serveur. Pour être réalisé de manière transparente, l'idée est de présenter un faux certificat (qui pourra être généré à la volée) au client, qui s'il est accepté, permettra le déchiffrement complet des communications entre lui et le serveur.
+Un équipement positionné en homme du milieu sur le réseau a la possibilité de fonctionner à la manière d'un proxy : les connexions initiées par les clients pourront être déchiffrées par le proxy, puis rechiffrées vers le serveur. Pour être réalisé de manière transparente, l'idée est de présenter un faux certificat (qui pourra être généré à la volée) au client, qui, s'il est accepté, permettra le déchiffrement complet des communications entre lui et le serveur.
 
 Pour que ce faux certificat soit accepté, il faut bien sûr que les noms de domaines entre le site visité et le certificat concordent, et que celui-ci soit signé par une autorité de certification connue du client. La manière la plus simple étant d'auto-signer le certificat, en ajoutant sa clef publique dans le navigateur du client. Nous avons également vu par le passé que les autorités de certifications ne sont pas à l'abri d'attaques informatiques, et que de faux certificats légitimes peuvent être émis (on se souviendra par exemple de DigiNotar en 2011) \cite{https-interception}.
 
