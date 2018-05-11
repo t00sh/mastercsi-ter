@@ -1,17 +1,17 @@
-\chapter{Attaque SSLstrip}
+\chapter{Attaque SSLStrip}
 
 \label{sec:sslstrip}
 
 \begin{figure}[H]
-  \caption{Attaque SSLstrip (diagramme Dia)}
+  \caption{Attaque SSLStrip (diagramme Dia)}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/attack.png}}
 \end{figure}
 
 \section{Description de l'attaque}
 
-L'attaque SSLstrip a été présentée pour la première fois en 2009 par l'américain Moxie Marlinspike à la conférence de sécurité Blackhat. C'est une attaque très simple qui va permettre à un attaquant de pouvoir récupérer des informations confidentielles telles qu'un mot de passe ou un cookie de session. Cependant, l'attaque n'est plus vraiment d'actualité, nous reviendrons là dessus à la fin.
+L'attaque SSLStrip a été présentée pour la première fois en 2009 par l'américain Moxie Marlinspike à la conférence de sécurité Blackhat. C'est une attaque très simple qui va permettre à un attaquant de pouvoir récupérer des informations confidentielles telles qu'un mot de passe ou un cookie de session. Cependant, l'attaque n'est plus vraiment d'actualité, nous reviendrons là dessus à la fin.
 
-Pour que l'attaquant puisse utiliser SSLstrip, il doit pouvoir se placer en homme du milieu entre le client et le serveur. C'est à dire qu'il doit être capable d'intercepter le trafic entre ces deux derniers, et pouvoir le modifier à sa guise. Bien sûr, l'attaquant n'a aucun intérêt à substituer une requête du client pour envoyer n'importe quoi à la place, car le serveur ne comprendra pas la requête et fermera la connexion TCP. Il va donc falloir être astucieux dans la manière dont on agit.
+Pour que l'attaquant puisse utiliser SSLStrip, il doit pouvoir se placer en homme du milieu entre le client et le serveur. C'est à dire qu'il doit être capable d'intercepter le trafic entre ces deux derniers, et pouvoir le modifier à sa guise. Bien sûr, l'attaquant n'a aucun intérêt à substituer une requête du client pour envoyer n'importe quoi à la place, car le serveur ne comprendra pas la requête et fermera la connexion TCP. Il va donc falloir être astucieux dans la manière dont on agit.
 
 Pour pouvoir se placer en HDM, il y a plusieurs façons de procéder. Une des façons les plus simples consiste à se placer dans le réseau privé de la victime, et de faire de l'ARP spoofing/poisonning. L'idée étant de faire croire au routeur qu'il parle à la victime, et vice versa, en falsifiant leurs tables ARP respectives (cette table donnant la correspondance entre adresse mac et adresse ip). L'attaquant va ainsi pouvoir lire tout le trafic qui circule entre la victime et le routeur (donc entre la victime et le serveur).
 
@@ -70,7 +70,7 @@ Pour lancer l'attaque, nous utilisons l'outil qemunet comme ceci :
 Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave, que tout se passe normalement et que la requête POST passe bien en HTTPS (immortal est donc incapable de voir les identifiants envoyés) :
 
 \begin{figure}[H]
-  \caption{Attaque SSLstrip (avant l'attaque)}
+  \caption{Attaque SSLStrip (avant l'attaque)}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip/screen1.png}}
 \end{figure}
 

@@ -15,7 +15,7 @@ L'attaque SSLStrip originale n'est en effet plus possible lorsque l'on essaye de
 
 Le protocole NTP (Network Time Protocol) permet de synchroniser l'horloge d'un équipement informatique avec un serveur NTP. Il s'agit d'un protocole stateless basé sur UDP et absolument pas sécurisé. L'attaque présentée par Jose Selvi consiste à usurper les requêtes NTP pour renvoyer une date erronée au client, et ainsi faire expirer les entrées HSTS. Pour réaliser cela, l'auteur se base sur un outil Python appelé Delorean, qui se comporte comme un serveur NTP et pour lequel on peut définir la date de réponse.
 
-Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, il est possible d'utiliser l'attaque SSLstrip originale afin de stripper les URL des pages web, même pour les domaines censés être protégés par HSTS.
+Une fois que l'horloge du client a été compromise et le HSTS du domaine expiré, il est possible d'utiliser l'attaque SSLStrip originale afin de stripper les URL des pages web, même pour les domaines censés être protégés par HSTS.
 
 \section{Notre attaque}
 
@@ -42,11 +42,11 @@ C'est sur cette machine que se trouve le Proof-Of-Concept de l'attaque. Nous avo
 
 \inputminted[bgcolor=lbcolor, breaklines]{bash}{../sslstrip-ntp/immortal/attack.sh}
 
-Nous commençons par rediriger les requêtes HTTP sur le port de notre proxy, puis les requêtes NTP vers le port de Delorean. Nous calculons ensuite le temps d'expiration des entrées HSTS à l'aide de l'outil curl. Finalement, nous lançons le serveur Delorean ainsi que notre proxy implémentant l'attaque SSLstrip.
+Nous commençons par rediriger les requêtes HTTP sur le port de notre proxy, puis les requêtes NTP vers le port de Delorean. Nous calculons ensuite le temps d'expiration des entrées HSTS à l'aide de l'outil curl. Finalement, nous lançons le serveur Delorean ainsi que notre proxy implémentant l'attaque SSLStrip.
 
 \subsection{Démonstration}
 
-Dans cette partie, nous allons illustrer l'attaque SSLstrip NTP dans l'environnement que nous avons mis en place. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt \textbf{qemunet}) :
+Dans cette partie, nous allons illustrer l'attaque SSLStrip NTP dans l'environnement que nous avons mis en place. Pour lancer l'environnement de test, il faut lancer la commande suivante (on aura récupéré au préalable le dépôt \textbf{qemunet}) :
 
 \begin{minted}{bash}
 ./qemunet/qemunet.sh -x -S sslstrip-ntp
@@ -59,7 +59,7 @@ Dans cette partie, nous allons illustrer l'attaque SSLstrip NTP dans l'environne
 Lorsque l'attaque n'est pas encore lancée, nous pouvons voir sur la machine grave que tout se passe normalement et que la requête POST passe bien en HTTPS ; immortal est donc incapable de voir les identifiants envoyés :
 
 \begin{figure}[H]
-  \caption{Attaque SSLstrip NTP (avant l'attaque)}
+  \caption{Attaque SSLStrip NTP (avant l'attaque)}
   \fbox{\includegraphics[width=\textwidth]{../medias/sslstrip-ntp/screen1.png}}
 \end{figure}
 

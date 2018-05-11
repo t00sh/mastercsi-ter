@@ -54,7 +54,7 @@ SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. L
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{SSLstrip (2009)}
+\subsection{SSLStrip (2009)}
 
 \begin{tabularx}{0.96\textwidth}{|c|X|}
   \hline
@@ -66,11 +66,11 @@ SSLsniff est une attaque ciblant le navigateur Internet Explorer de Microsoft. L
 
 \vspace{1em}
 
-L'attaque SSLstrip ne vise pas les connexion HTTPS chiffrées et authentifiées, mais plutôt les connexions HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (https://) par leur version non-sécurisée (http://) en prenant également en compte les éventuelles redirections (code HTTP 302).
+L'attaque SSLStrip ne vise pas les connexion HTTPS chiffrées et authentifiées, mais plutôt les connexions HTTP falsifiables facilement. Un attaquant situé en homme du milieu peut modifier les réponses d'un serveur, afin de remplacer tous les liens sécurisés (https://) par leur version non-sécurisée (http://) en prenant également en compte les éventuelles redirections (code HTTP 302).
 
 Le client, si il n'est pas attentif, utilisera alors des connections HTTP non sécurisée lors de sa navigation à la place d'une connexion HTTPS. Afin de rester transparent pour le serveur, l'attaquant peut alors rediriger les requêtes HTTP du client, vers leurs équivalent HTTPS vers le serveur \cite{sslstrip-website}.
 
-Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLstrip}.
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip]{SSLStrip}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -303,7 +303,7 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Attaque SSLstrip2 ou SSLstrip+ (2014)}
+\subsection{Attaque SSLStrip2 ou SSLStrip+ (2014)}
 
 \begin{tabularx}{0.96\textwidth}{|c|X|}
   \hline
@@ -315,7 +315,7 @@ L'avantage de cette attaque est qu'elle ne nécessite pas de connaître la clef 
 
 \vspace{1em}
 
-Cette nouvelle version de SSLstrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
+Cette nouvelle version de SSLStrip permet de contourner une sécurité ajoutée à TLS : le HSTS (voir section \hyperref[sec:hsts]{Contremesures - HSTS}).
 
 Avec cette protection, on ne va donc plus pouvoir simplement strippé le 's' de HTTPS pour inciter le client à envoyer sa requête en HTTP (et ainsi permettre à l'attaquer de voir tout le trafic en clair). Le navigateur émettra en effet une exception car il aura gardé en mémoire dans une base de donnée qu'il doit toujours se connecter en HTTPS sur le serveur en question.
 
@@ -323,12 +323,12 @@ Pour cette attaque, l'attaquant doit se situer en homme du milieu. Lorsque le cl
 
 Ainsi il va pouvoir faire croire au navigateur du client que tout est légitime, et que wwww.domain.secure correspond bien au serveur distant. Le navigateur n'ayant pas enregistré dans sa base donnée qu'il devait se connecter en HTTPS sur wwww.domain.secure, il va donc accepter d'envoyer sa requête en HTTP, laissant encore une fois tout son trafic au clair aux yeux de l'attaquant !
 
-Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip+}.
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLStrip+}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{SSLstrip-NTP (2014}
+\subsection{SSLStrip-NTP (2014}
 
 \begin{tabularx}{0.96\textwidth}{|c|X|}
   \hline
@@ -340,11 +340,11 @@ Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip2]{SSLstrip
 
 \vspace{1em}
 
-Cette amélioration de l'attaque SSLstrip originale a été présentée pour la première fois par Jose Selvi à la Blackhat Europe de 2014. Celle-ci permet de contourner la sécurité offerte par HSTS (HTTP Strict Transport Security), dans le cas où l'attaquant est capable de modifier le trafic NTP entre le client et le serveur NTP.
+Cette amélioration de l'attaque SSLStrip originale a été présentée pour la première fois par Jose Selvi à la Blackhat Europe de 2014. Celle-ci permet de contourner la sécurité offerte par HSTS (HTTP Strict Transport Security), dans le cas où l'attaquant est capable de modifier le trafic NTP entre le client et le serveur NTP.
 
-L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLstrip originale pour stripper les liens HTTPS des pages web visitées par la victime \cite{sslstrip-ntp}.
+L'attaque consiste à expirer les entrées HSTS de la machine cliente en modifiant l'horloge ce celle-ci, grâce à l'usurpation des requêtes NTP. Une fois les entrées HSTS expirées, l'attaquant peut utiliser l'attaque SSLStrip originale pour stripper les liens HTTPS des pages web visitées par la victime \cite{sslstrip-ntp}.
 
-Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip-ntp]{SSLstrip NTP}.
+Cette attaque est détaillée dans le chapitre \hyperref[sec:sslstrip-ntp]{SSLStrip NTP}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -491,7 +491,7 @@ La vulnérabilité ROBOT (Return Of the Bleichenbacher's Oracle Threat), est une
 
 HTTP Strict Transport Security (HSTS) est un mécanisme de sécurité décrit dans la RFC6797 permettant à un serveur HTTP de déclarer à ses clients que ces derniers doivent toujours utiliser une communication sécurisée en HTTPS pour leurs futures communications avec lui. Pour cela, le serveur envoie l'entête ``Strict-Transport-Security'', en précisant la durée pendant laquelle le client devra utiliser une connexion sécurisée \cite{hsts}.
 
-Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLstrip initiale. Bien entendu, cette contremesure ne protège pas la première connexion initiée par le client. Pour protéger la première connexion, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
+Ce mécanisme a été mis en place notamment pour contrer l'attaque SSLStrip initiale. Bien entendu, cette contremesure ne protège pas la première connexion initiée par le client. Pour protéger la première connexion, les navigateurs récents ont mis en place une liste pré-chargée des domaines utilisant HSTS. Par exemple, il est possible d'enregistrer un domaine pour le navigateur Chrome sur le site \url{https://hstspreload.org/} pour faire figurer le domaine dans cette liste.
 
 Lorsque le navigateur a enregistré un nom de domaine protégé par HSTS, celui-ci remplacera tous les liens http:// par leurs équivalent https:// pour le domaine (ou sous-domaine) concerné. De plus, si le certificat est invalide (auto-signé par exemple), le navigateur affichera un message d'erreur et empêchera l'utilisateur de se connecter au site.
 
