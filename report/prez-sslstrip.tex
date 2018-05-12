@@ -4,18 +4,20 @@
 %  Principes              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Mettre du code colonne de droite
+
 \begin{frame}[fragile]{Attaque SSLStrip - principes}
   \begin{block}{But de l'attaque}
     \begin{itemize}
     \item Récupérer le trafic en clair
     \end{itemize}
   \end{block}
+  % Not Full HTTPS
   \begin{block}{Fonctionnement}
     \begin{enumerate}
       \item Modifier la réponse HTTP du serveur
       \item Remplacer les liens HTTPS en HTTP
       \item Sauvegarde en mémoire
-      \item Requête POST = Expiration cookies
     \end{enumerate}
   \end{block}
 \end{frame}
