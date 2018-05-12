@@ -1,16 +1,22 @@
 \section{SSLStrip}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  ???                   %
+%  Principes              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]{Attaque SSLStrip - principes}
   \begin{block}{But de l'attaque}
     \begin{itemize}
-      \item Récupérer le trafic en clair
+    \item Récupérer le trafic en clair
+    \end{itemize}
+  \end{block}
+  \begin{block}{Fonctionnement}
+    \begin{enumerate}
       \item Modifier la réponse HTTP du serveur
       \item Remplacer les liens HTTPS en HTTP
-    \end{itemize}
+      \item Sauvegarde en mémoire
+      \item Requête POST = Expiration cookies
+    \end{enumerate}
   \end{block}
 \end{frame}
 
