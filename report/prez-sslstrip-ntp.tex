@@ -1,9 +1,29 @@
 \section{SSLStrip NTP}
 
 \begin{frame}{Attaque SSLStrip-NTP}
-  - NTP : synchronisation de l'horloge avec un serveur distant
-  - Usurpation de NTP pour expirer HSTS
-  - Retour à SSLStrip
+
+  \begin{block}{Protocole NTP}
+    \begin{itemize}
+    \item{Synchroniser l'horloge avec un serveur}
+    \item{Protocole non-sécurisé}
+    \item{Basé sur UDP}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Principes}
+    \begin{itemize}
+    \item{Attaquer le trafic NTP}
+    \item{Expirer l'entrée HSTS}
+    \end{itemize}
+  \end{block}
+
+  \begin{exampleblock}{Outils}
+    \begin{itemize}
+    \item{Delorean, ntpd, sntpc}
+    \end{itemize}
+  \end{exampleblock}
+
+  {\Large \centerline{Retour à SSLStrip...}}
 \end{frame}
 
 \begin{frame}{Attaque SSLStrip NTP}

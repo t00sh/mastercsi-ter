@@ -25,5 +25,5 @@ CA/*.srl
 *.log
 *.toc
 *.vrb
-_minted-report
+_minted-*
 report/*.pdf
