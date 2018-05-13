@@ -44,38 +44,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]{Attaque SSLStrip+}
-  \begin{columns}
-    \begin{column}{0.7\textwidth}
-      \begin{block}{Principes}
-        \begin{itemize}
-        \item{Attaquer le trafic DNS}
-        \item{Utiliser un faux nom de domaine}
-        \item{Remplacer les URL sécurisées par le faux nom}
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.3\textwidth}
-    \begin{exampleblock}{Outil }
-      \begin{itemize}
-      \item{Dnsmasq}
-      \end{itemize}
-    \end{exampleblock}
+  \begin{block}{Principes}
+    \begin{itemize}
+    \item{Attaquer le trafic DNS}
+    \item{Utiliser un faux nom de domaine}
+    \item{Remplacer les URL sécurisées par le faux nom}
+    \end{itemize}
+  \end{block}
 
-    \end{column}
-  \end{columns}
   \begin{figure}
-    Remplacement des liens HTTP :
-    \begin{minted}{python}
-def __replace_https_to_http(self, data):
-    return re.sub(b'https://' + bytes(FORWARD_HOST_HSTS), b'http://' + bytes(FAKE_HOST), data)
-        \end{minted}
-        Modification de l'entête 'Host' :
-        \begin{minted}{python}
-def __replace_host(self, data):
-    return re.sub(b'Host: ' + bytes(FAKE_HOST), b'Host: ' + bytes(FORWARD_HOST_HSTS), data)
-        \end{minted}
-      \end{figure}
-
+    \includegraphics[width=0.86\linewidth]{../medias/sslstrip2/attack.png}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Attaque SSLStrip+}
@@ -87,12 +66,4 @@ def __replace_host(self, data):
     \includegraphics[width=1.0\linewidth]{../medias/sslstrip2/screen6.png}
   \end{figure}
 
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SSLStrip+ overview               %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Attaque SSLStrip+}
-    \includegraphics[width=\linewidth]{../medias/sslstrip2/attack.png}
 \end{frame}
