@@ -7,20 +7,43 @@
 % Mettre du code colonne de droite
 
 \begin{frame}[fragile]{Attaque SSLStrip - principes}
-  \begin{block}{But de l'attaque}
-    \begin{itemize}
-    \item Récupérer le trafic en clair
-    \end{itemize}
-  \end{block}
-  % Not Full HTTPS
-  \begin{block}{Fonctionnement}
-    \begin{enumerate}
-      \item Modifier la réponse HTTP du serveur
-      \item Remplacer les liens HTTPS en HTTP
-      \item Sauvegarde en mémoire
-    \end{enumerate}
-  \end{block}
+      \begin{alertblock}{Cadre de l'attaque}
+        \begin{itemize}
+        \item Site accessible en HTTPS \textbf{ET} en HTTP
+        \item Juste une partie du site en HTTPS
+        \item Attaque possible
+        \end{itemize}
+      \end{alertblock}
+      \begin{block}{But de l'attaque}
+        \begin{itemize}
+        \item Se positionner entre client et serveur
+        \item Empêcher connexion HTTPS
+        \item Récupérer le trafic en clair
+        \end{itemize}
+      \end{block}
+      % Not Full HTTPS
+      \begin{block}{Fonctionnement}
+        \begin{enumerate}
+        \item Modifier la réponse HTTP du serveur
+        \item Remplacer les liens HTTPS en HTTP
+        \item Sauvegarde en mémoire
+        \end{enumerate}
+      \end{block}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Exemple page HTML      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Exemple page HTML}
+  \begin{figure}
+    \includegraphics[width=0.9\linewidth]{../medias/sslstrip/screen2.png}
+  \end{figure}
+  \begin{figure}
+    \includegraphics[width=0.9\linewidth]{../medias/sslstrip/screen5.png}
+  \end{figure}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Attaque générale       %
