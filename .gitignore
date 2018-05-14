@@ -27,3 +27,4 @@ CA/*.srl
 *.vrb
 _minted-*
 report/*.pdf
+slides/*.pdf
